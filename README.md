@@ -31,6 +31,45 @@ documents. Elle consomme les endpoints du back-end Spring Boot existant
   client de consulter l'avancement de son dossier sans authentification.
 - Tableaux paginés côté serveur avec recherche filtrée côté client par page.
 
+## Déploiement
+
+- **Back-end** : `https://mofawid-backend.onrender.com`
+- **Front-end** : `https://hussier.onrender.com`
+
+Le build de production (`.env.production`) appelle **directement** le back-end :
+
+```
+VITE_API_URL="https://mofawid-backend.onrender.com/api"
+```
+
+> Si l'URL du back-end change, mettez à jour `.env.production` puis relancez
+> `npm run build` et redéployez le front.
+
+Comme le front et le back sont sur **deux origines différentes**, le back-end
+**doit autoriser l'origine du front** (CORS), sinon le navigateur bloque les
+appels. À ajouter côté back-end Spring Boot :
+
+```java
+@Configuration
+public class CorsConfig implements WebMvcConfigurer {
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+            .allowedOrigins(
+                "https://hussier.onrender.com",
+                "http://localhost:5173"
+            )
+            .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
+            .allowedHeaders("*")
+            .allowCredentials(true);
+    }
+}
+```
+
+Si Spring Security est utilisé, activez CORS dans la chaîne de filtres :
+`.cors(Customizer.withDefaults())` et laissez passer les pré-vols `OPTIONS`
+(`.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()`).
+
 ## Stack
 
 - React 18 + Vite 5 + TypeScript (strict)
