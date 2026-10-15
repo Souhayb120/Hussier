@@ -176,14 +176,14 @@ export default function TenantsPage() {
                           <Pencil className="h-4 w-4" />
                         </Button>
                         <Button
-                          variant="ghost"
-                          size="icon"
+                          variant="secondary"
+                          size="sm"
                           aria-label={t('tenants.createAdmin')}
                           title={t('tenants.createAdmin')}
-                          className="text-brand-700 hover:bg-brand-50"
+                          icon={<ShieldCheck className="h-4 w-4" />}
                           onClick={() => setAdminTarget(tenant)}
                         >
-                          <ShieldCheck className="h-4 w-4" />
+                          {t('tenants.createAdmin')}
                         </Button>
                         <Button
                           variant="ghost"
