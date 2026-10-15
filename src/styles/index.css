@@ -1,0 +1,120 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+  }
+
+  html[dir='ltr'] body {
+    font-family: 'IBM Plex Sans', system-ui, 'Segoe UI', Tahoma, sans-serif;
+  }
+
+  html[dir='rtl'] body {
+    font-family: 'IBM Plex Sans Arabic', 'Cairo', system-ui, 'Segoe UI', Tahoma, sans-serif;
+  }
+
+  body {
+    @apply bg-canvas text-ink antialiased;
+    min-height: 100vh;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-semibold tracking-tight;
+  }
+
+  :focus-visible {
+    @apply outline-none ring-2 ring-brand-600 ring-offset-2 ring-offset-canvas;
+  }
+
+  ::selection {
+    @apply bg-brand-100 text-brand-900;
+  }
+
+  input,
+  textarea,
+  select,
+  button {
+    font: inherit;
+  }
+}
+
+@layer components {
+  .card {
+    @apply rounded-lg border border-line bg-surface shadow-card;
+  }
+
+  .input {
+    @apply w-full rounded-md border border-line bg-surface px-3.5 py-2.5 text-sm text-ink
+      placeholder:text-ink-soft transition
+      hover:border-brand-300
+      focus:border-brand-600 focus:ring-4 focus:ring-brand-600/15 focus:outline-none
+      disabled:cursor-not-allowed disabled:bg-canvas disabled:text-ink-soft;
+  }
+
+  .label {
+    @apply mb-1.5 block text-sm font-medium text-ink;
+  }
+
+  .hint {
+    @apply mt-1 text-xs text-ink-muted;
+  }
+
+  .error-text {
+    @apply mt-1 text-xs font-medium text-red-600;
+  }
+
+  .divider {
+    @apply h-px w-full bg-line;
+  }
+
+  .tabnum {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@layer utilities {
+  .scroll-thin {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(74, 87, 83, 0.35) transparent;
+  }
+
+  .scroll-thin::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  .scroll-thin::-webkit-scrollbar-thumb {
+    background-color: rgba(74, 87, 83, 0.3);
+    border-radius: 999px;
+  }
+
+  .scroll-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
