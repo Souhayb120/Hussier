@@ -188,7 +188,7 @@ try {
   if ((docsPage.content || []).length === 0) {
     const docDefinitions = [
       {
-        kind: 'PROCES_VERBAL',
+        kind: 'PROCES_VERBAL_CONSTAT',
         content:
           'Procès-verbal de constat\n\nLe présent procès-verbal atteste des diligences accomplies dans le cadre du dossier susvisé. '
           + 'Les constatations sont consignées conformément aux dispositions en vigueur.',

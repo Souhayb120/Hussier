@@ -1,12 +1,13 @@
 import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
 
-// Le back-end n'a pas de configuration CORS.
-// Le proxy de développement transmet /api -> back-end Mofawid.
-// L'URL cible est lue dans MOFAWID_API (.env), avec repli sur Render.
+// En développement, le proxy Vite redirige /api vers le backend Mofawid.
+// La cible est lue dans MOFAWID_API (.env) — aucun URL durci dans le code.
+// En production (npm run build), ce fichier ne sert pas : le navigateur appelle
+// directement VITE_API_URL défini dans .env.production.
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
-  const apiTarget = env.MOFAWID_API || 'https://mofawid-backend.onrender.com'
+  const apiTarget = env.MOFAWID_API || 'http://localhost:8080'
 
   return {
     plugins: [react()],

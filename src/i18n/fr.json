@@ -111,11 +111,26 @@
     "closed": "Clôturé"
   },
   "documentKind": {
-    "PROCES_VERBAL": "Procès-verbal",
-    "RAPPORT": "Rapport",
+    "PROCES_VERBAL_CONSTAT": "Procès-verbal de constat",
+    "PROCES_VERBAL_NOTIFICATION": "Procès-verbal de signification",
+    "NOTIFICATION_JUGEMENT": "Signification de jugement ou d'arrêt",
+    "NOTIFICATION_CONVOCATION": "Signification de convocation",
     "MISE_EN_DEMEURE": "Mise en demeure",
-    "NOTIFICATION": "Notification",
-    "AUTRE": "Autre"
+    "SOMMATION_DE_PAYER": "Sommation de payer",
+    "SOMMATION_INTERPELLATIVE": "Sommation interpellative",
+    "PROCES_VERBAL_EXECUTION": "Procès-verbal d'exécution",
+    "PROCES_VERBAL_TENTATIVE_EXECUTION": "Procès-verbal de tentative d'exécution",
+    "PROCES_VERBAL_EXPULSION": "Procès-verbal d'expulsion",
+    "PROCES_VERBAL_SAISIE_MOBILIERE": "Procès-verbal de saisie mobilière",
+    "PROCES_VERBAL_SAISIE_ARRET": "Procès-verbal de saisie-arrêt",
+    "PROCES_VERBAL_INVENTAIRE": "Procès-verbal d'inventaire",
+    "PROCES_VERBAL_VENTE_AUX_ENCHERES": "Procès-verbal de vente aux enchères",
+    "OFFRE_REELLE_DE_PAIEMENT": "Offre réelle de paiement",
+    "PROCES_VERBAL_DEPOT": "Procès-verbal de dépôt",
+    "MISE_EN_DEMEURE_RECOUVREMENT": "Mise en demeure de recouvrement",
+    "PROCES_VERBAL_RECOUVREMENT_AMIABLE": "Procès-verbal de recouvrement amiable",
+    "PROCES_VERBAL_ASSEMBLEE_GENERALE": "Procès-verbal d'assemblée générale",
+    "AUTRE": "Autre document"
   },
   "documentStatus": {
     "DRAFT": "Brouillon",
@@ -347,6 +362,7 @@
     "generateAi": "Générer un brouillon avec l'IA",
     "generateAiHint": "Génère un brouillon à partir du dossier, des missions et des observations.",
     "generateAiConfirm": "Générer un brouillon à partir des informations du dossier ?",
+    "aiChooseKind": "Choisissez le type de document à générer. Le brouillon sera produit à partir des informations du dossier.",
     "kind": "Type",
     "status": "Statut",
     "content": "Contenu",

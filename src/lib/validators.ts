@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { DOCUMENT_KINDS } from '../api/client'
 
 /* Schémas partagés — les messages sont des clés i18n (« validation.* »). */
 
@@ -34,7 +35,7 @@ export const observationSchema = z.object({
 })
 
 export const documentSchema = z.object({
-  kind: z.enum(['PROCES_VERBAL', 'RAPPORT', 'MISE_EN_DEMEURE', 'NOTIFICATION', 'AUTRE']),
+  kind: z.enum(DOCUMENT_KINDS),
   content: z.string().trim().optional().or(z.literal('')),
 })
 

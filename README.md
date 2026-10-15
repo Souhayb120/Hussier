@@ -79,7 +79,7 @@ Si Spring Security est utilisé, activez CORS dans la chaîne de filtres :
 
 ## Pré-requis
 
-1. Back-end Mofawid accessible (par défaut **https://mofawid-backend.onrender.com**,
+1. Back-end Mofawid accessible (par défaut **http://localhost:8080**,
    configurable via la variable `MOFAWID_API` dans `.env`).
 2. Node.js 18+.
 
@@ -91,7 +91,7 @@ npm run dev
 ```
 
 L'application s'ouvre sur **http://localhost:5173** (proxy `/api` →
-`MOFAWID_API`, par défaut `https://mofawid-backend.onrender.com`).
+`MOFAWID_API`, par défaut `http://localhost:8080`).
 La page de connexion liste les comptes de démonstration disponibles.
 
 > Pour tester le suivi client sans compte : ouvrez

@@ -6,9 +6,10 @@
  *   /api/missions/{id}/observations, /api/users, /api/tenants,
  *   /api/cases/{id}/tracking-code, /api/public/tracking/{code}
  *
- * Le proxy Vite (vite.config.ts) redirige /api vers le back-end Mofawid
- * (https://mofawid-backend.onrender.com, configurable via MOFAWID_API).
- * Pour pointer directement une URL absolue, définir VITE_API_URL.
+ * En développement, les requêtes /api passent par le proxy Vite
+ * (vite.config.ts, cible lue dans MOFAWID_API).
+ * En production, VITE_API_URL (.env.production) pointe vers l'URL absolue
+ * du back-end déployé. Sans configuration, on garde la base relative /api.
  * ========================================================================== */
 
 const API_BASE = import.meta.env.VITE_API_URL || '/api'
@@ -25,12 +26,36 @@ export type CaseStatus =
   | 'CLOSED'
 export type MissionStatus = 'ASSIGNED' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED'
 export type ObservationKind = 'DIRECT' | 'DECLARATION' | 'UNVERIFIED'
-export type DocumentKind =
-  | 'PROCES_VERBAL'
-  | 'RAPPORT'
-  | 'MISE_EN_DEMEURE'
-  | 'NOTIFICATION'
-  | 'AUTRE'
+
+/**
+ * Types de documents — alignés sur l'énumération back-end
+ * `com.example.mofawid.Enums.DocumentKind`.
+ * Source unique pour les formulaires et la génération de brouillon IA.
+ */
+export const DOCUMENT_KINDS = [
+  'PROCES_VERBAL_CONSTAT',
+  'PROCES_VERBAL_NOTIFICATION',
+  'NOTIFICATION_JUGEMENT',
+  'NOTIFICATION_CONVOCATION',
+  'MISE_EN_DEMEURE',
+  'SOMMATION_DE_PAYER',
+  'SOMMATION_INTERPELLATIVE',
+  'PROCES_VERBAL_EXECUTION',
+  'PROCES_VERBAL_TENTATIVE_EXECUTION',
+  'PROCES_VERBAL_EXPULSION',
+  'PROCES_VERBAL_SAISIE_MOBILIERE',
+  'PROCES_VERBAL_SAISIE_ARRET',
+  'PROCES_VERBAL_INVENTAIRE',
+  'PROCES_VERBAL_VENTE_AUX_ENCHERES',
+  'OFFRE_REELLE_DE_PAIEMENT',
+  'PROCES_VERBAL_DEPOT',
+  'MISE_EN_DEMEURE_RECOUVREMENT',
+  'PROCES_VERBAL_RECOUVREMENT_AMIABLE',
+  'PROCES_VERBAL_ASSEMBLEE_GENERALE',
+  'AUTRE',
+] as const
+
+export type DocumentKind = (typeof DOCUMENT_KINDS)[number]
 export type DocumentStatus = 'DRAFT' | 'DRAFT_AI' | 'AWAITING_APPROVAL' | 'APPROVED'
 export type PaymentStatus = 'UNPAID' | 'PARTIALLY_PAID' | 'PAID'
 
@@ -378,8 +403,12 @@ export const api = {
     update: (id: string, body: DocumentPayload) =>
       request<DocumentResponse>(`/documents/${id}`, { method: 'PUT', body: JSON.stringify(body) }),
     remove: (id: string) => request<void>(`/documents/${id}`, { method: 'DELETE' }),
-    generateAiDraft: (caseId: string) =>
-      request<DocumentResponse>(`/cases/${caseId}/ai-draft`, { method: 'POST' }),
+    /** `kind` est requis par le back-end (`?kind=...`) et fixe le type du brouillon. */
+    generateAiDraft: (caseId: string, kind: DocumentKind) =>
+      request<DocumentResponse>(
+        `/cases/${caseId}/ai-draft?kind=${encodeURIComponent(kind)}`,
+        { method: 'POST' },
+      ),
     submit: (id: string) =>
       request<DocumentResponse>(`/documents/${id}/submit`, { method: 'PATCH' }),
     approve: (id: string) =>

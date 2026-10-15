@@ -111,11 +111,26 @@
     "closed": "مغلق"
   },
   "documentKind": {
-    "PROCES_VERBAL": "محضر",
-    "RAPPORT": "تقرير",
+    "PROCES_VERBAL_CONSTAT": "محضر معاينة",
+    "PROCES_VERBAL_NOTIFICATION": "محضر تبليغ",
+    "NOTIFICATION_JUGEMENT": "محضر تبليغ حكم أو قرار قضائي",
+    "NOTIFICATION_CONVOCATION": "محضر تبليغ استدعاء",
     "MISE_EN_DEMEURE": "إنذار",
-    "NOTIFICATION": "تبليغ",
-    "AUTRE": "أخرى"
+    "SOMMATION_DE_PAYER": "إنذار بالأداء",
+    "SOMMATION_INTERPELLATIVE": "إنذار استجوابي",
+    "PROCES_VERBAL_EXECUTION": "محضر تنفيذ",
+    "PROCES_VERBAL_TENTATIVE_EXECUTION": "محضر محاولة تنفيذ",
+    "PROCES_VERBAL_EXPULSION": "محضر تنفيذ الإفراغ",
+    "PROCES_VERBAL_SAISIE_MOBILIERE": "محضر حجز منقول",
+    "PROCES_VERBAL_SAISIE_ARRET": "محضر حجز لدى الغير",
+    "PROCES_VERBAL_INVENTAIRE": "محضر جرد",
+    "PROCES_VERBAL_VENTE_AUX_ENCHERES": "محضر بيع بالمزاد",
+    "OFFRE_REELLE_DE_PAIEMENT": "عرض حقيقي للأداء",
+    "PROCES_VERBAL_DEPOT": "محضر إيداع",
+    "MISE_EN_DEMEURE_RECOUVREMENT": "إنذار بالتحصيل",
+    "PROCES_VERBAL_RECOUVREMENT_AMIABLE": "محضر تحصيل ودي",
+    "PROCES_VERBAL_ASSEMBLEE_GENERALE": "محضر جمعية عامة",
+    "AUTRE": "وثيقة أخرى"
   },
   "documentStatus": {
     "DRAFT": "مسودة",
@@ -347,6 +362,7 @@
     "generateAi": "إنشاء مسودة بالذكاء الاصطناعي",
     "generateAiHint": "تُنشئ مسودة انطلاقًا من الملف والمهام والمعاينات.",
     "generateAiConfirm": "إنشاء مسودة اعتمادًا على معلومات الملف؟",
+    "aiChooseKind": "اختر نوع الوثيقة المراد إنشاؤها. ستُنشأ المسودة انطلاقًا من معلومات الملف.",
     "kind": "النوع",
     "status": "الحالة",
     "content": "المحتوى",

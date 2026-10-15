@@ -16,6 +16,7 @@ import {
 } from 'lucide-react'
 import {
   api,
+  DOCUMENT_KINDS,
   type DocumentKind,
   type DocumentResponse,
 } from '../../api/client'
@@ -39,13 +40,7 @@ import {
 import { apiErrorKey, useFormatters } from '../../lib/format'
 import { truncate } from '../../lib/utils'
 
-const DOC_KINDS: DocumentKind[] = [
-  'PROCES_VERBAL',
-  'RAPPORT',
-  'MISE_EN_DEMEURE',
-  'NOTIFICATION',
-  'AUTRE',
-]
+const DEFAULT_KIND: DocumentKind = 'PROCES_VERBAL_CONSTAT'
 
 /* --------------------------- Formulaire document ------------------------- */
 
@@ -72,7 +67,7 @@ function DocumentFormDialog({
     formState: { errors },
   } = useForm<DocumentValues>({
     resolver: zodResolver(documentSchema),
-    defaultValues: { kind: 'PROCES_VERBAL', content: '' },
+    defaultValues: { kind: DEFAULT_KIND, content: '' },
   })
 
   useEffect(() => {
@@ -80,7 +75,7 @@ function DocumentFormDialog({
     reset(
       document
         ? { kind: document.kind, content: document.content ?? '' }
-        : { kind: 'PROCES_VERBAL', content: '' },
+        : { kind: DEFAULT_KIND, content: '' },
     )
   }, [open, document, reset])
 
@@ -128,7 +123,7 @@ function DocumentFormDialog({
           error={errors.kind ? t(errors.kind.message as string) : undefined}
         >
           <Select {...register('kind')}>
-            {DOC_KINDS.map((kind) => (
+            {DOCUMENT_KINDS.map((kind) => (
               <option key={kind} value={kind}>
                 {t(`documentKind.${kind}`)}
               </option>
@@ -227,6 +222,68 @@ function DocumentViewDialog({
   )
 }
 
+/* --------------------------- Brouillon IA -------------------------------- */
+
+function AiDraftDialog({
+  open,
+  onClose,
+  onConfirm,
+  working,
+}: {
+  open: boolean
+  onClose: () => void
+  onConfirm: (kind: DocumentKind) => void
+  working: boolean
+}) {
+  const { t } = useTranslation()
+  const [kind, setKind] = useState<DocumentKind>(DEFAULT_KIND)
+
+  useEffect(() => {
+    if (open) setKind(DEFAULT_KIND)
+  }, [open])
+
+  return (
+    <Dialog
+      open={open}
+      onClose={onClose}
+      title={t('documents.generateAi')}
+      size="sm"
+      footer={
+        <>
+          <Button variant="ghost" onClick={onClose} disabled={working}>
+            {t('common.cancel')}
+          </Button>
+          <Button
+            variant="primary"
+            icon={<Sparkles className="h-4 w-4" />}
+            onClick={() => onConfirm(kind)}
+            loading={working}
+          >
+            {t('documents.generateAi')}
+          </Button>
+        </>
+      }
+    >
+      <div className="space-y-4">
+        <p className="text-sm leading-relaxed text-ink-muted">{t('documents.aiChooseKind')}</p>
+        <Field label={t('documents.kind')} required>
+          <Select
+            value={kind}
+            onChange={(e) => setKind(e.target.value as DocumentKind)}
+            disabled={working}
+          >
+            {DOCUMENT_KINDS.map((k) => (
+              <option key={k} value={k}>
+                {t(`documentKind.${k}`)}
+              </option>
+            ))}
+          </Select>
+        </Field>
+      </div>
+    </Dialog>
+  )
+}
+
 /* ------------------------------ Liste documents -------------------------- */
 
 export function DocumentsPanel({ caseId }: { caseId: string }) {
@@ -243,7 +300,7 @@ export function DocumentsPanel({ caseId }: { caseId: string }) {
   const [formOpen, setFormOpen] = useState(false)
   const [editing, setEditing] = useState<DocumentResponse | null>(null)
   const [viewingId, setViewingId] = useState<string | null>(null)
-  const [aiConfirm, setAiConfirm] = useState(false)
+  const [aiOpen, setAiOpen] = useState(false)
   const [pendingDelete, setPendingDelete] = useState<DocumentResponse | null>(null)
   const [pendingSubmit, setPendingSubmit] = useState<DocumentResponse | null>(null)
   const [pendingApprove, setPendingApprove] = useState<DocumentResponse | null>(null)
@@ -264,18 +321,18 @@ export function DocumentsPanel({ caseId }: { caseId: string }) {
   }
 
   const aiM = useMutation({
-    mutationFn: () => api.documents.generateAiDraft(caseId),
+    mutationFn: (kind: DocumentKind) => api.documents.generateAiDraft(caseId, kind),
     onSuccess: (data) => {
       invalidate()
       toast(t('documents.aiGenerated'))
-      setAiConfirm(false)
+      setAiOpen(false)
       setViewingId(data.id)
       setPage(0)
     },
     onError: (error) => {
       const status = (error as { status?: number }).status
       toast(status === 403 ? t('errors.forbidden') : t('documents.aiFailed'), 'error')
-      setAiConfirm(false)
+      setAiOpen(false)
     },
   })
 
@@ -333,7 +390,7 @@ export function DocumentsPanel({ caseId }: { caseId: string }) {
             variant="secondary"
             icon={<Bot className="h-4 w-4" />}
             disabled={actionsDisabled}
-            onClick={() => setAiConfirm(true)}
+            onClick={() => setAiOpen(true)}
             title={t('documents.generateAiHint')}
           >
             {aiM.isPending ? t('documents.aiWorking') : t('documents.generateAi')}
@@ -370,7 +427,7 @@ export function DocumentsPanel({ caseId }: { caseId: string }) {
             title={t('documents.empty')}
             description={t('documents.emptyHint')}
             action={
-              <Button icon={<Bot className="h-4 w-4" />} onClick={() => setAiConfirm(true)}>
+              <Button icon={<Bot className="h-4 w-4" />} onClick={() => setAiOpen(true)}>
                 {t('documents.generateAi')}
               </Button>
             }
@@ -490,16 +547,11 @@ export function DocumentsPanel({ caseId }: { caseId: string }) {
         onEdit={openEdit}
       />
 
-      <ConfirmDialog
-        open={aiConfirm}
-        onClose={() => setAiConfirm(false)}
-        onConfirm={() => aiM.mutate()}
-        title={t('documents.generateAi')}
-        message={t('documents.generateAiConfirm')}
-        confirmLabel={t('documents.generateAi')}
-        cancelLabel={t('common.cancel')}
-        loading={aiM.isPending}
-        tone="primary"
+      <AiDraftDialog
+        open={aiOpen}
+        onClose={() => setAiOpen(false)}
+        onConfirm={(kind) => aiM.mutate(kind)}
+        working={aiM.isPending}
       />
       <ConfirmDialog
         open={pendingSubmit !== null}
