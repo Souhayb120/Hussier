@@ -12,7 +12,7 @@
  *   Usage : npm run seed
  * ========================================================================== */
 
-const BASE = process.env.MOFAWID_API || 'http://localhost:8080'
+const BASE = process.env.MOFAWID_API || 'https://mofawid-backend.onrender.com'
 const DEMO_PASSWORD = 'Admin@123' // mot de passe admin démo
 const PREFIX = 'demo'
 

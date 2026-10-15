@@ -40,7 +40,8 @@ documents. Elle consomme les endpoints du back-end Spring Boot existant
 
 ## Pré-requis
 
-1. Back-end Mofawid démarré sur **http://localhost:8080**.
+1. Back-end Mofawid accessible (par défaut **https://mofawid-backend.onrender.com**,
+   configurable via la variable `MOFAWID_API` dans `.env`).
 2. Node.js 18+.
 
 ## Démarrage
@@ -50,7 +51,8 @@ npm install
 npm run dev
 ```
 
-L'application s'ouvre sur **http://localhost:5173** (proxy `/api` → `:8080`).
+L'application s'ouvre sur **http://localhost:5173** (proxy `/api` →
+`MOFAWID_API`, par défaut `https://mofawid-backend.onrender.com`).
 La page de connexion liste les comptes de démonstration disponibles.
 
 > Pour tester le suivi client sans compte : ouvrez

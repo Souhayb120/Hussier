@@ -6,10 +6,12 @@
  *   /api/missions/{id}/observations, /api/users, /api/tenants,
  *   /api/cases/{id}/tracking-code, /api/public/tracking/{code}
  *
- * Le proxy Vite (vite.config.ts) redirige /api vers http://localhost:8080.
+ * Le proxy Vite (vite.config.ts) redirige /api vers le back-end Mofawid
+ * (https://mofawid-backend.onrender.com, configurable via MOFAWID_API).
+ * Pour pointer directement une URL absolue, définir VITE_API_URL.
  * ========================================================================== */
 
-const API_BASE = '/api'
+const API_BASE = import.meta.env.VITE_API_URL || '/api'
 const TOKEN_KEY = 'mofawid.token'
 
 /* ------------------------------- Types ---------------------------------- */
