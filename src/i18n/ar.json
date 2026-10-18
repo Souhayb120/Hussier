@@ -278,6 +278,7 @@
     "notFound": "الملف غير موجود.",
     "tabSummary": "ملخص",
     "tabDocuments": "الوثائق",
+    "tabAttachments": "المرفقات",
     "tabMissions": "المهام",
     "tabBilling": "الأتعاب",
     "tabTracking": "تتبع العميل",
@@ -392,6 +393,27 @@
     "untitled": "بدون عنوان",
     "statusCount": "{{count}} وثيقة"
   },
+  "attachments": {
+    "title": "المرفقات",
+    "subtitle": "الملفات المضافة إلى الملف.",
+    "count": "{{count}} مرفق",
+    "empty": "لا توجد مرفقات.",
+    "emptyHint": "أضف الملفات باستخدام النموذج أعلاه.",
+    "selectFiles": "المرفقات",
+    "selectFilesHint": "حدّد ملفًا واحدًا أو عدة ملفات (اختياري).",
+    "addTitle": "إضافة مرفق",
+    "addHint": "حدّد ملفًا واحدًا أو عدة ملفات ثم اضغط على رفع.",
+    "upload": "رفع",
+    "download": "تحميل",
+    "created": "تمت إضافة المرفقات.",
+    "uploadFailed": "فشل رفع بعض المرفقات.",
+    "removeFile": "إزالة الملف",
+    "uploading": "جارٍ إرسال الملفات…",
+    "uploadFailedAfterCreate": "تم إنشاء الملف، لكن تعذّر إرسال بعض المرفقات.",
+    "deleted": "تم حذف المرفق.",
+    "confirmDeleteTitle": "حذف المرفق",
+    "confirmDelete": "سيتم حذف المرفق «{{name}}» نهائيًا."
+  },
   "users": {
     "title": "المستخدمون",
     "subtitle": "أدر مستخدمي مكتبك.",
@@ -456,6 +478,7 @@
     "forbidden": "ليس لديك صلاحية لهذا الإجراء.",
     "notFound": "العنصر غير موجود.",
     "validation": "بعض المعلومات المُدخلة غير صحيحة.",
+    "fileTooLarge": "حجم الملف كبير جدًا.",
     "loadFailed": "فشل التحميل."
   },
   "validation": {

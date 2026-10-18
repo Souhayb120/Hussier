@@ -278,6 +278,7 @@
     "notFound": "Dossier introuvable.",
     "tabSummary": "Résumé",
     "tabDocuments": "Documents",
+    "tabAttachments": "Pièces jointes",
     "tabMissions": "Missions",
     "tabBilling": "Facturation",
     "tabTracking": "Suivi client",
@@ -392,6 +393,27 @@
     "untitled": "Sans titre",
     "statusCount": "{{count}} document(s)"
   },
+  "attachments": {
+    "title": "Pièces jointes",
+    "subtitle": "Fichiers ajoutés au dossier.",
+    "count": "{{count}} pièce(s) jointe(s)",
+    "empty": "Aucune pièce jointe.",
+    "emptyHint": "Ajoutez des fichiers à l'aide du formulaire ci-dessus.",
+    "selectFiles": "Pièces jointes",
+    "selectFilesHint": "Sélectionnez un ou plusieurs fichiers (facultatif).",
+    "addTitle": "Ajouter une pièce jointe",
+    "addHint": "Sélectionnez un ou plusieurs fichiers, puis cliquez sur Téléverser.",
+    "upload": "Téléverser",
+    "download": "Télécharger",
+    "created": "Pièce(s) jointe(s) ajoutée(s).",
+    "uploadFailed": "L'envoi de certaines pièces jointes a échoué.",
+    "removeFile": "Retirer le fichier",
+    "uploading": "Envoi des fichiers…",
+    "uploadFailedAfterCreate": "Le dossier a été créé, mais l'envoi de certaines pièces jointes a échoué.",
+    "deleted": "Pièce jointe supprimée.",
+    "confirmDeleteTitle": "Supprimer la pièce jointe",
+    "confirmDelete": "La pièce jointe « {{name}} » sera supprimée définitivement."
+  },
   "users": {
     "title": "Utilisateurs",
     "subtitle": "Gérez les membres de votre étude.",
@@ -456,6 +478,7 @@
     "forbidden": "Vous n'avez pas les droits pour cette action.",
     "notFound": "Élément introuvable.",
     "validation": "Certaines informations saisies sont invalides.",
+    "fileTooLarge": "Le fichier est trop volumineux.",
     "loadFailed": "Le chargement a échoué."
   },
   "validation": {

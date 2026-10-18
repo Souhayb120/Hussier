@@ -80,6 +80,21 @@ export function toDateTimeInput(value?: string | null): string {
   return value.slice(0, 16)
 }
 
+/** Formate une taille de fichier (octets) en unité lisible (o, Ko, Mo, Go). */
+export function formatFileSize(bytes?: number | null): string {
+  if (bytes === null || bytes === undefined || Number.isNaN(bytes)) return '—'
+  if (bytes < 1024) return `${bytes} o`
+  const units = ['Ko', 'Mo', 'Go'] as const
+  let value = bytes / 1024
+  let index = 0
+  while (value >= 1024 && index < units.length - 1) {
+    value /= 1024
+    index += 1
+  }
+  const rounded = value >= 10 ? Math.round(value) : Math.round(value * 10) / 10
+  return `${rounded} ${units[index]}`
+}
+
 /** Indique si une échéance (yyyy-MM-dd) est dépassée. */
 export function isOverdue(deadline?: string | null): boolean {
   if (!deadline) return false
@@ -101,6 +116,8 @@ export function apiErrorKey(error: unknown): string {
       return 'errors.forbidden'
     case 404:
       return 'errors.notFound'
+    case 413:
+      return 'errors.fileTooLarge'
     case 400:
     case 422:
       return 'errors.validation'

@@ -20,6 +20,7 @@ export type Capability =
   | 'documents:prepare' // créer, éditer, générer un brouillon IA, soumettre
   | 'documents:approve' // approuver (verrouille le document, clôture le dossier)
   | 'documents:delete'
+  | 'attachments:manage' // ajouter et supprimer les pièces jointes d'un dossier
   | 'billing:manage' // consulter, créer et mettre à jour la facturation d'un dossier
   | 'tracking:manage' // générer le code de suivi client d'un dossier
   | 'users:manage'
@@ -38,6 +39,7 @@ const ROLE_CAPABILITIES: Record<Role, readonly Capability[]> = {
     'documents:prepare',
     'documents:approve',
     'documents:delete',
+    'attachments:manage',
     'billing:manage',
     'tracking:manage',
     'users:manage',
@@ -48,6 +50,7 @@ const ROLE_CAPABILITIES: Record<Role, readonly Capability[]> = {
     'cases:create',
     'cases:edit',
     'documents:prepare',
+    'attachments:manage',
     'billing:manage',
     'tracking:manage',
   ],

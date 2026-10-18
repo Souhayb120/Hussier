@@ -10,6 +10,7 @@ import {
   FileText,
   Hash,
   MapPin,
+  Paperclip,
   Pencil,
   Phone,
   ScanSearch,
@@ -32,6 +33,7 @@ import {
   Tabs,
   type TabItem,
 } from '../components/ui'
+import { AttachmentsPanel } from '../components/domain/AttachmentsPanel'
 import { BillingPanel } from '../components/domain/BillingPanel'
 import { CaseFormDialog } from '../components/domain/CaseFormDialog'
 import { ClientTrackingPanel } from '../components/domain/ClientTrackingPanel'
@@ -52,11 +54,12 @@ export default function CaseDetailPage() {
   const canSeeBilling = can('billing:manage')
   const canSeeTracking = can('tracking:manage')
 
-  // Onglet piloté par l'URL (?tab=documents|missions|billing|tracking) — partageable et stable au rechargement.
+  // Onglet piloté par l'URL (?tab=documents|attachments|missions|billing|tracking) — partageable et stable au rechargement.
   const [searchParams, setSearchParams] = useSearchParams()
   const tabParam = searchParams.get('tab')
   const tab =
     tabParam === 'documents' ||
+    tabParam === 'attachments' ||
     (tabParam === 'missions' && canSeeMissions) ||
     (tabParam === 'billing' && canSeeBilling) ||
     (tabParam === 'tracking' && canSeeTracking)
@@ -101,6 +104,11 @@ export default function CaseDetailPage() {
       id: 'documents',
       label: t('cases.tabDocuments'),
       icon: <FileText className="h-4 w-4" />,
+    })
+    items.push({
+      id: 'attachments',
+      label: t('cases.tabAttachments'),
+      icon: <Paperclip className="h-4 w-4" />,
     })
     if (canSeeBilling) {
       items.push({ id: 'billing', label: t('cases.tabBilling'), icon: <Wallet className="h-4 w-4" /> })
@@ -242,6 +250,8 @@ export default function CaseDetailPage() {
       )}
 
       {tab === 'documents' && <DocumentsPanel caseId={item.id} />}
+
+      {tab === 'attachments' && <AttachmentsPanel caseId={item.id} />}
 
       {tab === 'missions' && canSeeMissions && <CaseMissionsTab caseId={item.id} />}
 

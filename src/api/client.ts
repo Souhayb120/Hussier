@@ -100,6 +100,20 @@ export interface CasePayload {
   deadline: string
 }
 
+/**
+ * Pièce jointe d'un dossier — POST /api/cases/{caseId}/attachments.
+ * Aligné sur `AttachmentResponseDTO` (back-end).
+ */
+export interface AttachmentResponse {
+  id: string
+  originalName: string
+  contentType: string
+  size: number
+  uploadedAt: string
+  caseId: string
+  uploadedById: string | null
+}
+
 export interface MissionResponse {
   id: string
   caseId: string
@@ -302,7 +316,10 @@ export function decodeToken(value: string): { username: string; role: Role } | n
 
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   const headers = new Headers(options.headers)
-  if (options.body !== undefined) headers.set('Content-Type', 'application/json')
+  // Ne jamais forcer Content-Type sur un FormData : le navigateur doit
+  // générer lui-même la frontière multipart (boundary).
+  const isFormData = typeof FormData !== 'undefined' && options.body instanceof FormData
+  if (options.body !== undefined && !isFormData) headers.set('Content-Type', 'application/json')
   if (token) headers.set('Authorization', `Bearer ${token}`)
 
   let res: Response
@@ -330,6 +347,34 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   } catch {
     return text as unknown as T
   }
+}
+
+/**
+ * Récupère un binaire (ex. pièce jointe) via une requête authentifiée.
+ * On ne peut pas ouvrir directement l'URL dans un nouvel onglet : le jeton
+ * d'accès vit dans l'en-tête Authorization, pas dans l'URL.
+ */
+async function requestBlob(path: string): Promise<Blob> {
+  const headers = new Headers()
+  if (token) headers.set('Authorization', `Bearer ${token}`)
+
+  let res: Response
+  try {
+    res = await fetch(API_BASE + path, { headers })
+  } catch {
+    throw new ApiError(0, 'network')
+  }
+
+  if (res.status === 401) {
+    onUnauthorized?.()
+    throw new ApiError(401, 'unauthorized')
+  }
+
+  if (!res.ok) {
+    throw new ApiError(res.status, await extractErrorMessage(res))
+  }
+
+  return res.blob()
 }
 
 async function extractErrorMessage(res: Response): Promise<string> {
@@ -366,6 +411,32 @@ export const api = {
     update: (id: string, body: CasePayload) =>
       request<CaseResponse>(`/cases/${id}`, { method: 'PUT', body: JSON.stringify(body) }),
     remove: (id: string) => request<void>(`/cases/${id}`, { method: 'DELETE' }),
+  },
+
+  attachments: {
+    listByCase: (caseId: string, page = 0, size = 20) =>
+      request<Page<AttachmentResponse>>(
+        `/cases/${caseId}/attachments?page=${page}&size=${size}`,
+      ),
+    /** Envoi multipart — le Content-Type est généré par le navigateur. */
+    upload: (caseId: string, file: File) => {
+      const body = new FormData()
+      body.append('file', file)
+      return request<AttachmentResponse>(`/cases/${caseId}/attachments`, {
+        method: 'POST',
+        body,
+      })
+    },
+    remove: (attachmentId: string) =>
+      request<void>(`/attachments/${attachmentId}`, { method: 'DELETE' }),
+    /**
+     * Récupère le contenu du fichier en Blob (requête authentifiée).
+     * `inline` sert à l'affichage (PDF/images) ; sinon téléchargement.
+     */
+    download: (attachmentId: string, inline = false) =>
+      requestBlob(
+        `/attachments/${attachmentId}/download${inline ? '?inline=true' : ''}`,
+      ),
   },
 
   billing: {
