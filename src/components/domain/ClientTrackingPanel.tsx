@@ -49,8 +49,8 @@ export function ClientTrackingPanel({ caseId }: { caseId: string }) {
     },
     onError: (error) => {
       const status = (error as { status?: number }).status
-      // Le back-end lève une RuntimeException si un code existe déjà (→ 500).
-      const duplicate = status === 500 || status === 409
+      // Le back-end renvoie 400 (BadRequestException) si un code existe déjà.
+      const duplicate = status === 400 || status === 409
       toast(t(duplicate ? 'tracking.alreadyExists' : apiErrorKey(error)), 'error')
     },
   })

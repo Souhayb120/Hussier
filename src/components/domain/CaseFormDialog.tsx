@@ -197,7 +197,11 @@ export function CaseFormDialog({
         </Field>
 
         <div className="grid gap-4 sm:grid-cols-2">
-          <Field label={t('cases.phone')}>
+          <Field
+            label={t('cases.phone')}
+            required
+            error={errors.phone ? t(errors.phone.message as string) : undefined}
+          >
             <Input {...register('phone')} inputMode="tel" />
           </Field>
           <Field
@@ -217,7 +221,11 @@ export function CaseFormDialog({
           <Input {...register('subject')} />
         </Field>
 
-        <Field label={t('cases.description')}>
+        <Field
+          label={t('cases.description')}
+          required
+          error={errors.description ? t(errors.description.message as string) : undefined}
+        >
           <Textarea {...register('description')} placeholder={t('cases.descriptionPlaceholder')} rows={3} />
         </Field>
 

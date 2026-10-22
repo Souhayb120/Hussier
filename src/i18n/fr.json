@@ -111,26 +111,13 @@
     "closed": "Clôturé"
   },
   "documentKind": {
-    "PROCES_VERBAL_CONSTAT": "Procès-verbal de constat",
-    "PROCES_VERBAL_NOTIFICATION": "Procès-verbal de signification",
-    "NOTIFICATION_JUGEMENT": "Signification de jugement ou d'arrêt",
-    "NOTIFICATION_CONVOCATION": "Signification de convocation",
-    "MISE_EN_DEMEURE": "Mise en demeure",
-    "SOMMATION_DE_PAYER": "Sommation de payer",
-    "SOMMATION_INTERPELLATIVE": "Sommation interpellative",
-    "PROCES_VERBAL_EXECUTION": "Procès-verbal d'exécution",
-    "PROCES_VERBAL_TENTATIVE_EXECUTION": "Procès-verbal de tentative d'exécution",
-    "PROCES_VERBAL_EXPULSION": "Procès-verbal d'expulsion",
-    "PROCES_VERBAL_SAISIE_MOBILIERE": "Procès-verbal de saisie mobilière",
-    "PROCES_VERBAL_SAISIE_ARRET": "Procès-verbal de saisie-arrêt",
-    "PROCES_VERBAL_INVENTAIRE": "Procès-verbal d'inventaire",
-    "PROCES_VERBAL_VENTE_AUX_ENCHERES": "Procès-verbal de vente aux enchères",
-    "OFFRE_REELLE_DE_PAIEMENT": "Offre réelle de paiement",
-    "PROCES_VERBAL_DEPOT": "Procès-verbal de dépôt",
-    "MISE_EN_DEMEURE_RECOUVREMENT": "Mise en demeure de recouvrement",
-    "PROCES_VERBAL_RECOUVREMENT_AMIABLE": "Procès-verbal de recouvrement amiable",
-    "PROCES_VERBAL_ASSEMBLEE_GENERALE": "Procès-verbal d'assemblée générale",
-    "AUTRE": "Autre document"
+    "NOTIFICATION": "PV de notification (محضر تبليغ)",
+    "NOTIFICATION_INFORMATIF": "PV informatif (محضر اخباري)",
+    "NOTIFICATION_REFUS": "PV de refus de réception (محضر رفض التوصل)",
+    "CONSTAT_LIEU": "Constat d'un lieu",
+    "CONSTAT_WHATSAPP": "Constat de messages WhatsApp",
+    "CONSTAT_EMAIL": "Constat d'e-mails",
+    "CONSTAT_REUNION": "Constat d'une réunion"
   },
   "documentStatus": {
     "DRAFT": "Brouillon",
@@ -271,8 +258,8 @@
     "iceHint": "Identifiant Commun de l'Entreprise",
     "address": "Adresse",
     "phone": "Téléphone",
-    "description": "Description",
-    "descriptionPlaceholder": "Contexte, demandes, pièces…",
+    "description": "Texte de la demande du client",
+    "descriptionPlaceholder": "Copiez la demande du client : elle est citée telle quelle dans le PV (« والذي جاء فيه … »).",
     "deadlineLabel": "Date d'échéance",
     "detailTitle": "Détail du dossier",
     "notFound": "Dossier introuvable.",
@@ -287,7 +274,9 @@
     "noMissions": "Aucune mission liée à ce dossier.",
     "goToMission": "Ouvrir la mission",
     "documentsCount": "{{count}} document(s)",
-    "missionsCount": "{{count}} mission(s)"
+    "missionsCount": "{{count}} mission(s)",
+    "tabParties": "Parties",
+    "refHint": "Numéro du registre de l'étude (مرجعنا)"
   },
   "missions": {
     "title": "Missions",
@@ -352,7 +341,10 @@
     "editDateTime": "Modifier la date et l'heure",
     "draftSaved": "Brouillon conservé sur cet appareil.",
     "addFailed": "Impossible d'envoyer l'observation. Votre texte est conservé — réessayez.",
-    "count": "{{count}} observation(s)"
+    "count": "{{count}} observation(s)",
+    "sectionTitle": "Titre de la section",
+    "sectionTitlePlaceholder": "ex : معاينة المصعد الكهربائي",
+    "sectionTitleHint": "Les observations sont regroupées par section dans le PV (أولا، ثانيا…)."
   },
   "documents": {
     "title": "Documents",
@@ -391,7 +383,9 @@
     "confirmApproveTitle": "Approuver le document",
     "confirmApprove": "Approuver ce document ? Il sera verrouillé et ne pourra plus être modifié ; le dossier sera clôturé.",
     "untitled": "Sans titre",
-    "statusCount": "{{count}} document(s)"
+    "statusCount": "{{count}} document(s)",
+    "approvedBy": "Approuvé par {{name}} le {{date}}",
+    "kindHint": "Ce qu'il faut avant de générer"
   },
   "attachments": {
     "title": "Pièces jointes",
@@ -412,7 +406,9 @@
     "uploadFailedAfterCreate": "Le dossier a été créé, mais l'envoi de certaines pièces jointes a échoué.",
     "deleted": "Pièce jointe supprimée.",
     "confirmDeleteTitle": "Supprimer la pièce jointe",
-    "confirmDelete": "La pièce jointe « {{name}} » sera supprimée définitivement."
+    "confirmDelete": "La pièce jointe « {{name}} » sera supprimée définitivement.",
+    "caption": "Légende (dans le PV)",
+    "captionPlaceholder": "ex : مراسلة 2026/07/08 بشأن ملف السيارة"
   },
   "users": {
     "title": "Utilisateurs",
@@ -469,7 +465,22 @@
     "adminCreated": "Administrateur créé.",
     "active": "Active",
     "inactive": "Inactive",
-    "primaryAdmin": "Administrateur principal"
+    "primaryAdmin": "Administrateur principal",
+    "letterhead": "En-tête des procès-verbaux",
+    "letterheadHint": "Ces informations apparaissent en haut de chaque PV.",
+    "huissierNameAr": "Nom de l'huissier (arabe)",
+    "huissierNameFr": "Nom de l'huissier (français)",
+    "appealCourtAr": "Cour d'appel (arabe)",
+    "appealCourtArPlaceholder": "ex : الدار البيضاء",
+    "appealCourtFr": "Cour d'appel (français)",
+    "appealCourtFrPlaceholder": "ex : Casablanca",
+    "firstInstanceCourtAr": "Tribunaux de première instance (arabe)",
+    "firstInstanceCourtArPlaceholder": "ex : المحاكم الابتدائية بالدار البيضاء",
+    "addressFr": "Adresse (français)",
+    "email": "E-mail",
+    "city": "Ville",
+    "startNumber": "Premier numéro du registre",
+    "startNumberHint": "Pour continuer le registre papier (ex : 2282). Les dossiers seront numérotés 2026/2282, 2026/2283…"
   },
   "errors": {
     "generic": "Une erreur est survenue. Veuillez réessayer.",
@@ -494,5 +505,90 @@
     "title": "Page introuvable",
     "message": "La page que vous recherchez n'existe pas ou a été déplacée.",
     "backHome": "Retour à l'accueil"
+  },
+  "documentKindHint": {
+    "NOTIFICATION": "La personne a reçu l'acte. Nécessite la partie « destinataire » et une visite « remis ».",
+    "NOTIFICATION_INFORMATIF": "La notification n'a pas pu être faite (adresse incomplète, personne absente…).",
+    "NOTIFICATION_REFUS": "La personne (ou un proche) a refusé de recevoir l'acte. Toutes les visites sont reprises.",
+    "CONSTAT_LIEU": "Constat d'un bâtiment, parking, local… rédigé à partir des observations par section.",
+    "CONSTAT_WHATSAPP": "Transcription mot à mot de messages WhatsApp (téléphone, contact, messages).",
+    "CONSTAT_EMAIL": "Transcription d'e-mails avec les captures numérotées (pièces jointes).",
+    "CONSTAT_REUNION": "Présents, déclarations de chacun, heure de début et de fin."
+  },
+  "partyRole": {
+    "REQUESTER": "Requérant (طالب الإجراء)",
+    "TARGET": "Destinataire / partie adverse (المطلوب ضده)",
+    "OTHER": "Autre"
+  },
+  "partyType": {
+    "PERSON": "Personne physique",
+    "COMPANY": "Société"
+  },
+  "deliveryResult": {
+    "DELIVERED_IN_PERSON": "Remis en main propre",
+    "DELIVERED_TO_OTHER": "Remis à un tiers",
+    "REFUSED": "Refus de réception",
+    "NOBODY_THERE": "Personne n'a répondu",
+    "ADDRESS_INCOMPLETE": "Adresse incomplète",
+    "ADDRESS_NOT_FOUND": "Adresse introuvable",
+    "MOVED": "A déménagé"
+  },
+  "parties": {
+    "title": "Parties",
+    "subtitle": "Personnes et sociétés citées dans le procès-verbal.",
+    "add": "Ajouter une partie",
+    "newTitle": "Nouvelle partie",
+    "editTitle": "Modifier la partie",
+    "role": "Rôle",
+    "type": "Type",
+    "fullName": "Nom complet / raison sociale",
+    "cin": "CIN",
+    "rc": "RC",
+    "legalRepresentative": "Représentant légal",
+    "legalRepresentativePlaceholder": "ex : مديرها العام",
+    "address": "Adresse",
+    "phone": "Téléphone",
+    "capacity": "Qualité (صفة)",
+    "capacityPlaceholder": "ex : مكري، أجير",
+    "companyNeedsRc": "Une société doit avoir son RC ou son représentant légal.",
+    "empty": "Aucune partie.",
+    "emptyHint": "Ajoutez au moins le requérant et, pour une notification, le destinataire.",
+    "created": "Partie ajoutée.",
+    "updated": "Partie mise à jour.",
+    "deleted": "Partie supprimée.",
+    "confirmDeleteTitle": "Supprimer la partie",
+    "confirmDelete": "« {{name}} » sera supprimé(e) de ce dossier."
+  },
+  "attempts": {
+    "title": "Visites de notification",
+    "subtitle": "Chaque passage à l'adresse, dans l'ordre.",
+    "add": "Ajouter une visite",
+    "attemptedAt": "Date et heure",
+    "attemptedAtHint": "Vide = maintenant",
+    "result": "Résultat",
+    "receiverName": "Personne rencontrée",
+    "receiverCin": "CIN de la personne",
+    "receiverCapacity": "Qualité de la personne",
+    "receiverCapacityPlaceholder": "ex : والده، زوجته، الحارس",
+    "signed": "A signé la copie",
+    "visitCardLeft": "Carte de visite laissée",
+    "notes": "Remarques",
+    "notesPlaceholder": "ex : le numéro de l'immeuble n'est pas indiqué",
+    "receiverRequired": "Le nom de la personne rencontrée est obligatoire.",
+    "capacityRequired": "La qualité de la personne qui a reçu est obligatoire.",
+    "empty": "Aucune visite.",
+    "emptyHint": "Ajoutez chaque passage à l'adresse (même sans succès).",
+    "created": "Visite enregistrée.",
+    "startFirst": "Démarrez la mission pour ajouter des visites."
+  },
+  "presence": {
+    "title": "Personne présente (constat)",
+    "hint": "« بحضور وتحت عهدة ومسؤولية … بصفته … »",
+    "name": "Nom de la personne présente",
+    "capacity": "Qualité",
+    "capacityPlaceholder": "ex : مسؤولة الموارد البشرية",
+    "save": "Enregistrer",
+    "saved": "Personne présente enregistrée.",
+    "none": "Aucune personne présente renseignée."
   }
 }

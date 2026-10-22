@@ -17,6 +17,7 @@ import {
   Card,
   EmptyState,
   Field,
+  Input,
   Pagination,
   Skeleton,
   Textarea,
@@ -56,7 +57,11 @@ function loadDraft(missionId: string): ObservationValues | null {
   try {
     const raw = localStorage.getItem(draftKeyFor(missionId))
     if (!raw) return null
-    const parsed = JSON.parse(raw) as { kind?: unknown; description?: unknown }
+    const parsed = JSON.parse(raw) as {
+      kind?: unknown
+      description?: unknown
+      sectionTitle?: unknown
+    }
     if (
       typeof parsed.kind !== 'string' ||
       !KINDS.includes(parsed.kind as ObservationKind) ||
@@ -64,7 +69,11 @@ function loadDraft(missionId: string): ObservationValues | null {
     ) {
       return null
     }
-    return { kind: parsed.kind as ObservationKind, description: parsed.description }
+    return {
+      kind: parsed.kind as ObservationKind,
+      description: parsed.description,
+      sectionTitle: typeof parsed.sectionTitle === 'string' ? parsed.sectionTitle : '',
+    }
   } catch {
     return null
   }
@@ -86,7 +95,7 @@ export function ObservationsPanel({
 
   const form = useForm<ObservationValues>({
     resolver: zodResolver(observationSchema),
-    defaultValues: loadDraft(missionId) ?? { kind: 'DIRECT', description: '' },
+    defaultValues: loadDraft(missionId) ?? { kind: 'DIRECT', description: '', sectionTitle: '' },
   })
   const {
     register,
@@ -99,19 +108,23 @@ export function ObservationsPanel({
 
   const description = watch('description')
   const kind = watch('kind')
+  const sectionTitle = watch('sectionTitle')
 
   /* Conserve le brouillon localement (terrain, batterie faible, coupure réseau). */
   useEffect(() => {
     if (!form.formState.isDirty || saveError) return
     const id = window.setTimeout(() => {
       try {
-        localStorage.setItem(draftKeyFor(missionId), JSON.stringify({ kind, description }))
+        localStorage.setItem(
+          draftKeyFor(missionId),
+          JSON.stringify({ kind, description, sectionTitle }),
+        )
       } catch {
         /* stockage indisponible */
       }
     }, 350)
     return () => window.clearTimeout(id)
-  }, [form.formState.isDirty, missionId, kind, description, saveError])
+  }, [form.formState.isDirty, missionId, kind, description, sectionTitle, saveError])
 
   const listQ = useQuery({
     queryKey: ['observations', missionId, { page }],
@@ -124,8 +137,9 @@ export function ObservationsPanel({
       api.observations.create(missionId, {
         kind: values.kind,
         description: values.description.trim(),
+        sectionTitle: values.sectionTitle?.trim() || undefined,
       }),
-    onSuccess: () => {
+    onSuccess: (_data, values) => {
       queryClient.invalidateQueries({ queryKey: ['observations', missionId] })
       toast(t('observations.created'))
       try {
@@ -134,7 +148,8 @@ export function ObservationsPanel({
         /* noop */
       }
       setSaveError(false)
-      reset({ kind: 'DIRECT', description: '' })
+      // On garde le titre de section : plusieurs constatations vont souvent dans la même section.
+      reset({ kind: 'DIRECT', description: '', sectionTitle: values.sectionTitle ?? '' })
       setPage(0)
     },
     onError: (error) => {
@@ -204,6 +219,17 @@ export function ObservationsPanel({
                 })}
               </div>
             </fieldset>
+
+            <Field
+              label={t('observations.sectionTitle')}
+              hint={t('observations.sectionTitleHint')}
+            >
+              <Input
+                {...register('sectionTitle')}
+                dir="auto"
+                placeholder={t('observations.sectionTitlePlaceholder')}
+              />
+            </Field>
 
             <Field
               label={t('observations.description')}
@@ -322,7 +348,12 @@ function ObservationRow({ observation }: { observation: ObservationResponse }) {
             {fmt.dateTime(observation.observedAt)}
           </span>
         </div>
-        <p className="mt-1.5 whitespace-pre-wrap text-sm leading-relaxed text-ink">
+        {observation.sectionTitle && (
+          <p className="mt-1.5 text-sm font-semibold text-ink" dir="auto">
+            {observation.sectionTitle}
+          </p>
+        )}
+        <p className="mt-1.5 whitespace-pre-wrap text-sm leading-relaxed text-ink" dir="auto">
           {observation.description}
         </p>
       </div>

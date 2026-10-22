@@ -111,26 +111,13 @@
     "closed": "مغلق"
   },
   "documentKind": {
-    "PROCES_VERBAL_CONSTAT": "محضر معاينة",
-    "PROCES_VERBAL_NOTIFICATION": "محضر تبليغ",
-    "NOTIFICATION_JUGEMENT": "محضر تبليغ حكم أو قرار قضائي",
-    "NOTIFICATION_CONVOCATION": "محضر تبليغ استدعاء",
-    "MISE_EN_DEMEURE": "إنذار",
-    "SOMMATION_DE_PAYER": "إنذار بالأداء",
-    "SOMMATION_INTERPELLATIVE": "إنذار استجوابي",
-    "PROCES_VERBAL_EXECUTION": "محضر تنفيذ",
-    "PROCES_VERBAL_TENTATIVE_EXECUTION": "محضر محاولة تنفيذ",
-    "PROCES_VERBAL_EXPULSION": "محضر تنفيذ الإفراغ",
-    "PROCES_VERBAL_SAISIE_MOBILIERE": "محضر حجز منقول",
-    "PROCES_VERBAL_SAISIE_ARRET": "محضر حجز لدى الغير",
-    "PROCES_VERBAL_INVENTAIRE": "محضر جرد",
-    "PROCES_VERBAL_VENTE_AUX_ENCHERES": "محضر بيع بالمزاد",
-    "OFFRE_REELLE_DE_PAIEMENT": "عرض حقيقي للأداء",
-    "PROCES_VERBAL_DEPOT": "محضر إيداع",
-    "MISE_EN_DEMEURE_RECOUVREMENT": "إنذار بالتحصيل",
-    "PROCES_VERBAL_RECOUVREMENT_AMIABLE": "محضر تحصيل ودي",
-    "PROCES_VERBAL_ASSEMBLEE_GENERALE": "محضر جمعية عامة",
-    "AUTRE": "وثيقة أخرى"
+    "NOTIFICATION": "محضر تبليغ",
+    "NOTIFICATION_INFORMATIF": "محضر اخباري",
+    "NOTIFICATION_REFUS": "محضر رفض التوصل",
+    "CONSTAT_LIEU": "محضر معاينة مكان",
+    "CONSTAT_WHATSAPP": "محضر معاينة رسائل واتساب",
+    "CONSTAT_EMAIL": "محضر معاينة بريد إلكتروني",
+    "CONSTAT_REUNION": "محضر معاينة اجتماع"
   },
   "documentStatus": {
     "DRAFT": "مسودة",
@@ -271,8 +258,8 @@
     "iceHint": "المعرّف الموحد للمقاولة",
     "address": "العنوان",
     "phone": "الهاتف",
-    "description": "الوصف",
-    "descriptionPlaceholder": "السياق، الطلبات، الوثائق…",
+    "description": "نص الطلب",
+    "descriptionPlaceholder": "انسخ طلب الزبون كما هو: يقتبس حرفيا في المحضر («والذي جاء فيه …»).",
     "deadlineLabel": "تاريخ الأجل",
     "detailTitle": "تفاصيل الملف",
     "notFound": "الملف غير موجود.",
@@ -287,7 +274,9 @@
     "noMissions": "لا توجد مهام مرتبطة بهذا الملف.",
     "goToMission": "فتح المهمة",
     "documentsCount": "{{count}} وثيقة",
-    "missionsCount": "{{count}} مهمة"
+    "missionsCount": "{{count}} مهمة",
+    "tabParties": "الأطراف",
+    "refHint": "رقم سجل المكتب (مرجعنا)"
   },
   "missions": {
     "title": "المهام",
@@ -352,7 +341,10 @@
     "editDateTime": "تعديل التاريخ والوقت",
     "draftSaved": "نُسخ المسودة محفوظ على هذا الجهاز.",
     "addFailed": "تعذّر إرسال المعاينة. نُصّك محفوظ — حاول مجددًا.",
-    "count": "{{count}} معاينة"
+    "count": "{{count}} معاينة",
+    "sectionTitle": "عنوان القسم",
+    "sectionTitlePlaceholder": "مثال: معاينة المصعد الكهربائي",
+    "sectionTitleHint": "تجمع الملاحظات حسب الأقسام في المحضر (أولا، ثانيا…)."
   },
   "documents": {
     "title": "الوثائق",
@@ -391,7 +383,9 @@
     "confirmApproveTitle": "اعتماد الوثيقة",
     "confirmApprove": "اعتماد هذه الوثيقة؟ سيتم قفلها ولن يمكن تعديلها بعد الآن؛ وسيُغلق الملف.",
     "untitled": "بدون عنوان",
-    "statusCount": "{{count}} وثيقة"
+    "statusCount": "{{count}} وثيقة",
+    "approvedBy": "صادق عليه {{name}} بتاريخ {{date}}",
+    "kindHint": "ما يجب قبل الإنشاء"
   },
   "attachments": {
     "title": "المرفقات",
@@ -412,7 +406,9 @@
     "uploadFailedAfterCreate": "تم إنشاء الملف، لكن تعذّر إرسال بعض المرفقات.",
     "deleted": "تم حذف المرفق.",
     "confirmDeleteTitle": "حذف المرفق",
-    "confirmDelete": "سيتم حذف المرفق «{{name}}» نهائيًا."
+    "confirmDelete": "سيتم حذف المرفق «{{name}}» نهائيًا.",
+    "caption": "التعليق (في المحضر)",
+    "captionPlaceholder": "مثال: مراسلة 2026/07/08 بشأن ملف السيارة"
   },
   "users": {
     "title": "المستخدمون",
@@ -469,7 +465,22 @@
     "adminCreated": "تم إنشاء المدير.",
     "active": "نشط",
     "inactive": "غير نشط",
-    "primaryAdmin": "المدير الرئيسي"
+    "primaryAdmin": "المدير الرئيسي",
+    "letterhead": "رأسية المحاضر",
+    "letterheadHint": "تظهر هذه المعلومات في أعلى كل محضر.",
+    "huissierNameAr": "اسم المفوض القضائي (بالعربية)",
+    "huissierNameFr": "اسم المفوض القضائي (بالفرنسية)",
+    "appealCourtAr": "محكمة الاستئناف (بالعربية)",
+    "appealCourtArPlaceholder": "مثال: الدار البيضاء",
+    "appealCourtFr": "محكمة الاستئناف (بالفرنسية)",
+    "appealCourtFrPlaceholder": "مثال: Casablanca",
+    "firstInstanceCourtAr": "المحاكم الابتدائية (بالعربية)",
+    "firstInstanceCourtArPlaceholder": "مثال: المحاكم الابتدائية بالدار البيضاء",
+    "addressFr": "العنوان (بالفرنسية)",
+    "email": "البريد الإلكتروني",
+    "city": "المدينة",
+    "startNumber": "أول رقم في السجل",
+    "startNumberHint": "لمتابعة السجل الورقي (مثال: 2282). ترقم الملفات 2026/2282، 2026/2283…"
   },
   "errors": {
     "generic": "حدث خطأ. حاول مرة أخرى.",
@@ -494,5 +505,90 @@
     "title": "الصفحة غير موجودة",
     "message": "الصفحة التي تبحث عنها غير موجودة أو تم نقلها.",
     "backHome": "العودة إلى الرئيسية"
+  },
+  "documentKindHint": {
+    "NOTIFICATION": "المعني بالأمر توصل بالوثيقة. يتطلب طرفا من نوع «المطلوب ضده» وزيارة «توصل».",
+    "NOTIFICATION_INFORMATIF": "تعذر التبليغ (عنوان غير محدد، لا أحد…).",
+    "NOTIFICATION_REFUS": "المعني بالأمر أو من ينوب عنه رفض التوصل. تذكر جميع الزيارات.",
+    "CONSTAT_LIEU": "معاينة عمارة أو مرآب أو محل… انطلاقا من الملاحظات حسب الأقسام.",
+    "CONSTAT_WHATSAPP": "تفريغ حرفي لرسائل واتساب (الهاتف، جهة الاتصال، الرسائل).",
+    "CONSTAT_EMAIL": "تفريغ رسائل البريد الإلكتروني مع الصور المرقمة (المرفقات).",
+    "CONSTAT_REUNION": "الحاضرون، تصريحات كل طرف، ساعة البداية والنهاية."
+  },
+  "partyRole": {
+    "REQUESTER": "طالب الإجراء",
+    "TARGET": "المبلغ إليه / المطلوب ضده",
+    "OTHER": "آخر"
+  },
+  "partyType": {
+    "PERSON": "شخص ذاتي",
+    "COMPANY": "شركة"
+  },
+  "deliveryResult": {
+    "DELIVERED_IN_PERSON": "توصل شخصيا",
+    "DELIVERED_TO_OTHER": "توصل من ينوب عنه",
+    "REFUSED": "رفض التوصل",
+    "NOBODY_THERE": "لم يجبنا أحد",
+    "ADDRESS_INCOMPLETE": "العنوان غير محدد",
+    "ADDRESS_NOT_FOUND": "عنوان غير موجود",
+    "MOVED": "انتقل من العنوان"
+  },
+  "parties": {
+    "title": "الأطراف",
+    "subtitle": "الأشخاص والشركات المذكورون في المحضر.",
+    "add": "إضافة طرف",
+    "newTitle": "طرف جديد",
+    "editTitle": "تعديل الطرف",
+    "role": "الصفة في الملف",
+    "type": "النوع",
+    "fullName": "الاسم الكامل / اسم الشركة",
+    "cin": "رقم البطاقة الوطنية",
+    "rc": "السجل التجاري",
+    "legalRepresentative": "الممثل القانوني",
+    "legalRepresentativePlaceholder": "مثال: مديرها العام",
+    "address": "العنوان",
+    "phone": "الهاتف",
+    "capacity": "الصفة",
+    "capacityPlaceholder": "مثال: مكري، أجير",
+    "companyNeedsRc": "يجب إدخال السجل التجاري أو الممثل القانوني للشركة.",
+    "empty": "لا توجد أطراف.",
+    "emptyHint": "أضف على الأقل طالب الإجراء، والمطلوب ضده في حالة التبليغ.",
+    "created": "تمت إضافة الطرف.",
+    "updated": "تم تعديل الطرف.",
+    "deleted": "تم حذف الطرف.",
+    "confirmDeleteTitle": "حذف الطرف",
+    "confirmDelete": "سيتم حذف «{{name}}» من هذا الملف."
+  },
+  "attempts": {
+    "title": "زيارات التبليغ",
+    "subtitle": "كل انتقال إلى العنوان بالترتيب.",
+    "add": "إضافة زيارة",
+    "attemptedAt": "التاريخ والساعة",
+    "attemptedAtHint": "فارغ = الآن",
+    "result": "النتيجة",
+    "receiverName": "الشخص الذي وجدناه",
+    "receiverCin": "رقم بطاقته الوطنية",
+    "receiverCapacity": "صفته",
+    "receiverCapacityPlaceholder": "مثال: والده، زوجته، الحارس",
+    "signed": "وقع على النسخة",
+    "visitCardLeft": "تم ترك بطاقة الزيارة",
+    "notes": "ملاحظات",
+    "notesPlaceholder": "مثال: العنوان لم يحدد رقم العقار",
+    "receiverRequired": "اسم الشخص الذي وجدناه إلزامي.",
+    "capacityRequired": "صفة الشخص الذي توصل إلزامية.",
+    "empty": "لا توجد زيارات.",
+    "emptyHint": "أضف كل انتقال إلى العنوان حتى إذا لم ينجح التبليغ.",
+    "created": "تم تسجيل الزيارة.",
+    "startFirst": "ابدأ المهمة لإضافة الزيارات."
+  },
+  "presence": {
+    "title": "الشخص الحاضر (المعاينة)",
+    "hint": "«بحضور وتحت عهدة ومسؤولية … بصفته …»",
+    "name": "اسم الشخص الحاضر",
+    "capacity": "الصفة",
+    "capacityPlaceholder": "مثال: مسؤولة الموارد البشرية",
+    "save": "حفظ",
+    "saved": "تم حفظ الشخص الحاضر.",
+    "none": "لم يتم إدخال أي شخص حاضر."
   }
 }

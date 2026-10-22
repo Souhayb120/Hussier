@@ -4,7 +4,8 @@
  * Toutes les routes exposées par le back-end sont regroupées ici :
  *   /api/auth, /api/cases, /api/documents, /api/missions,
  *   /api/missions/{id}/observations, /api/users, /api/tenants,
- *   /api/cases/{id}/tracking-code, /api/public/tracking/{code}
+ *   /api/cases/{id}/tracking-code, /api/public/tracking/{code},
+ *   /api/cases/{id}/parties, /api/parties/{id}, /api/missions/{id}/attempts
  *
  * En développement, les requêtes /api passent par le proxy Vite
  * (vite.config.ts, cible lue dans MOFAWID_API).
@@ -33,29 +34,38 @@ export type ObservationKind = 'DIRECT' | 'DECLARATION' | 'UNVERIFIED'
  * Source unique pour les formulaires et la génération de brouillon IA.
  */
 export const DOCUMENT_KINDS = [
-  'PROCES_VERBAL_CONSTAT',
-  'PROCES_VERBAL_NOTIFICATION',
-  'NOTIFICATION_JUGEMENT',
-  'NOTIFICATION_CONVOCATION',
-  'MISE_EN_DEMEURE',
-  'SOMMATION_DE_PAYER',
-  'SOMMATION_INTERPELLATIVE',
-  'PROCES_VERBAL_EXECUTION',
-  'PROCES_VERBAL_TENTATIVE_EXECUTION',
-  'PROCES_VERBAL_EXPULSION',
-  'PROCES_VERBAL_SAISIE_MOBILIERE',
-  'PROCES_VERBAL_SAISIE_ARRET',
-  'PROCES_VERBAL_INVENTAIRE',
-  'PROCES_VERBAL_VENTE_AUX_ENCHERES',
-  'OFFRE_REELLE_DE_PAIEMENT',
-  'PROCES_VERBAL_DEPOT',
-  'MISE_EN_DEMEURE_RECOUVREMENT',
-  'PROCES_VERBAL_RECOUVREMENT_AMIABLE',
-  'PROCES_VERBAL_ASSEMBLEE_GENERALE',
-  'AUTRE',
+  'NOTIFICATION',
+  'NOTIFICATION_INFORMATIF',
+  'NOTIFICATION_REFUS',
+  'CONSTAT_LIEU',
+  'CONSTAT_WHATSAPP',
+  'CONSTAT_EMAIL',
+  'CONSTAT_REUNION',
 ] as const
 
 export type DocumentKind = (typeof DOCUMENT_KINDS)[number]
+
+/** Types de notification : le bon type dépend du résultat de la dernière visite. */
+export const NOTIFICATION_KINDS: readonly DocumentKind[] = [
+  'NOTIFICATION',
+  'NOTIFICATION_INFORMATIF',
+  'NOTIFICATION_REFUS',
+]
+
+export type PartyRole = 'REQUESTER' | 'TARGET' | 'OTHER'
+export type PartyType = 'PERSON' | 'COMPANY'
+
+/** Résultat d'une visite de notification — aligné sur DeliveryResult (back-end). */
+export const DELIVERY_RESULTS = [
+  'DELIVERED_IN_PERSON',
+  'DELIVERED_TO_OTHER',
+  'REFUSED',
+  'NOBODY_THERE',
+  'ADDRESS_INCOMPLETE',
+  'ADDRESS_NOT_FOUND',
+  'MOVED',
+] as const
+export type DeliveryResult = (typeof DELIVERY_RESULTS)[number]
 export type DocumentStatus = 'DRAFT' | 'DRAFT_AI' | 'AWAITING_APPROVAL' | 'APPROVED'
 export type PaymentStatus = 'UNPAID' | 'PARTIALLY_PAID' | 'PAID'
 
@@ -109,6 +119,7 @@ export interface AttachmentResponse {
   originalName: string
   contentType: string
   size: number
+  caption: string | null
   uploadedAt: string
   caseId: string
   uploadedById: string | null
@@ -125,8 +136,16 @@ export interface MissionResponse {
   title: string
   description: string | null
   scheduledAt: string | null
+  presentPersonName: string | null
+  presentPersonCapacity: string | null
   status: MissionStatus
   createdAt: string
+}
+
+/** PATCH /api/missions/{id}/presence — personne présente lors du constat. */
+export interface MissionPresencePayload {
+  presentPersonName: string
+  presentPersonCapacity: string
 }
 
 export interface MissionPayload {
@@ -142,12 +161,15 @@ export interface ObservationResponse {
   missionId: string
   kind: ObservationKind
   description: string
+  sectionTitle: string | null
   observedAt: string
 }
 
 export interface ObservationPayload {
   kind: ObservationKind
   description: string
+  /** Titre de la section dans le PV (« أولا: معاينة المصعد »). */
+  sectionTitle?: string
 }
 
 export interface DocumentResponse {
@@ -158,6 +180,62 @@ export interface DocumentResponse {
   status: DocumentStatus
   content: string | null
   createdAt: string
+  approvedAt: string | null
+  approvedByUsername: string | null
+}
+
+/** Partie citée dans le procès-verbal — /api/cases/{caseId}/parties. */
+export interface PartyResponse {
+  id: string
+  caseId: string
+  role: PartyRole
+  type: PartyType
+  fullName: string
+  cin: string | null
+  rc: string | null
+  legalRepresentative: string | null
+  address: string | null
+  phone: string | null
+  capacity: string | null
+  createdAt: string
+}
+
+export interface PartyPayload {
+  role: PartyRole
+  type: PartyType
+  fullName: string
+  cin?: string
+  rc?: string
+  legalRepresentative?: string
+  address?: string
+  phone?: string
+  capacity?: string
+}
+
+/** Visite de notification — /api/missions/{missionId}/attempts. */
+export interface DeliveryAttemptResponse {
+  id: string
+  missionId: string
+  attemptedAt: string
+  result: DeliveryResult
+  receiverName: string | null
+  receiverCin: string | null
+  receiverCapacity: string | null
+  signed: boolean | null
+  visitCardLeft: boolean | null
+  notes: string | null
+  createdAt: string
+}
+
+export interface DeliveryAttemptPayload {
+  attemptedAt?: string
+  result: DeliveryResult
+  receiverName?: string
+  receiverCin?: string
+  receiverCapacity?: string
+  signed?: boolean
+  visitCardLeft?: boolean
+  notes?: string
 }
 
 export interface DocumentPayload {
@@ -240,15 +318,34 @@ export interface TenantResponse {
   status: string
   adress: string | null
   phone: string | null
+  huissierNameAr: string | null
+  huissierNameFr: string | null
+  appealCourtAr: string | null
+  appealCourtFr: string | null
+  firstInstanceCourtAr: string | null
+  addressFr: string | null
+  email: string | null
+  city: string | null
+  startNumber: number | null
   createdAt: string
 }
 
+/** Inclut l'en-tête des procès-verbaux (رأسية المحضر) et le 1er numéro du registre. */
 export interface TenantPayload {
   name: string
   slug: string
   status?: string
   adress?: string
   phone?: string
+  huissierNameAr?: string
+  huissierNameFr?: string
+  appealCourtAr?: string
+  appealCourtFr?: string
+  firstInstanceCourtAr?: string
+  addressFr?: string
+  email?: string
+  city?: string
+  startNumber?: number
 }
 
 /* ----------------------------- Erreurs ---------------------------------- */
@@ -419,9 +516,11 @@ export const api = {
         `/cases/${caseId}/attachments?page=${page}&size=${size}`,
       ),
     /** Envoi multipart — le Content-Type est généré par le navigateur. */
-    upload: (caseId: string, file: File) => {
+    upload: (caseId: string, file: File, caption?: string) => {
       const body = new FormData()
       body.append('file', file)
+      // Légende sous la photo dans le procès-verbal (« الصورة رقم 1 »).
+      if (caption && caption.trim()) body.append('caption', caption.trim())
       return request<AttachmentResponse>(`/cases/${caseId}/attachments`, {
         method: 'POST',
         body,
@@ -439,6 +538,18 @@ export const api = {
       ),
   },
 
+  parties: {
+    listByCase: (caseId: string) => request<PartyResponse[]>(`/cases/${caseId}/parties`),
+    create: (caseId: string, body: PartyPayload) =>
+      request<PartyResponse>(`/cases/${caseId}/parties`, {
+        method: 'POST',
+        body: JSON.stringify(body),
+      }),
+    update: (id: string, body: PartyPayload) =>
+      request<PartyResponse>(`/parties/${id}`, { method: 'PUT', body: JSON.stringify(body) }),
+    remove: (id: string) => request<void>(`/parties/${id}`, { method: 'DELETE' }),
+  },
+
   billing: {
     get: (caseId: string) => request<BillingResponse>(`/cases/${caseId}/billing`),
     create: (caseId: string, body: BillingPayload) =>
@@ -454,7 +565,7 @@ export const api = {
   },
 
   tracking: {
-    /** Réservé à ADMIN / ASSISTANT. Échoue si un code existe déjà (500). */
+    /** Réservé à ADMIN / ASSISTANT. Échoue si un code existe déjà (400). */
     generate: (caseId: string) =>
       request<TrackingCodeResponse>(`/cases/${caseId}/tracking-code`, { method: 'POST' }),
     /** Endpoint public : aucun jeton requis. */
@@ -495,6 +606,21 @@ export const api = {
       request<MissionResponse>('/missions', { method: 'POST', body: JSON.stringify(body) }),
     start: (id: string) => request<MissionResponse>(`/missions/${id}/start`, { method: 'PATCH' }),
     complete: (id: string) => request<MissionResponse>(`/missions/${id}/complete`, { method: 'PATCH' }),
+    updatePresence: (id: string, body: MissionPresencePayload) =>
+      request<MissionResponse>(`/missions/${id}/presence`, {
+        method: 'PATCH',
+        body: JSON.stringify(body),
+      }),
+  },
+
+  attempts: {
+    list: (missionId: string) =>
+      request<DeliveryAttemptResponse[]>(`/missions/${missionId}/attempts`),
+    create: (missionId: string, body: DeliveryAttemptPayload) =>
+      request<DeliveryAttemptResponse>(`/missions/${missionId}/attempts`, {
+        method: 'POST',
+        body: JSON.stringify(body),
+      }),
   },
 
   observations: {
@@ -523,6 +649,8 @@ export const api = {
     list: (page = 0, size = 10) =>
       request<Page<TenantResponse>>(`/tenants?page=${page}&size=${size}`),
     get: (id: string) => request<TenantResponse>(`/tenants/${id}`),
+    /** Étude de l'utilisateur connecté (ADMIN / ASSISTANT). */
+    me: () => request<TenantResponse>('/tenants/me'),
     create: (body: TenantPayload) =>
       request<TenantResponse>('/tenants', { method: 'POST', body: JSON.stringify(body) }),
     update: (id: string, body: TenantPayload) =>

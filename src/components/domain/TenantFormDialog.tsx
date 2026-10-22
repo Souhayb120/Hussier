@@ -15,7 +15,19 @@ const EMPTY: TenantValues = {
   status: 'active',
   adress: '',
   phone: '',
+  huissierNameAr: '',
+  huissierNameFr: '',
+  appealCourtAr: '',
+  appealCourtFr: '',
+  firstInstanceCourtAr: '',
+  addressFr: '',
+  email: '',
+  city: '',
+  startNumber: '',
 }
+
+/** Chaîne vide → undefined (le back-end garde alors la valeur nulle). */
+const clean = (value?: string) => value?.trim() || undefined
 
 export function TenantFormDialog({
   open,
@@ -48,6 +60,15 @@ export function TenantFormDialog({
             status: tenant.status || 'active',
             adress: tenant.adress ?? '',
             phone: tenant.phone ?? '',
+            huissierNameAr: tenant.huissierNameAr ?? '',
+            huissierNameFr: tenant.huissierNameFr ?? '',
+            appealCourtAr: tenant.appealCourtAr ?? '',
+            appealCourtFr: tenant.appealCourtFr ?? '',
+            firstInstanceCourtAr: tenant.firstInstanceCourtAr ?? '',
+            addressFr: tenant.addressFr ?? '',
+            email: tenant.email ?? '',
+            city: tenant.city ?? '',
+            startNumber: tenant.startNumber != null ? String(tenant.startNumber) : '',
           }
         : EMPTY,
     )
@@ -58,9 +79,18 @@ export function TenantFormDialog({
       const payload = {
         name: values.name.trim(),
         slug: values.slug.trim().toLowerCase().replace(/\s+/g, '-'),
-        status: values.status?.trim() || undefined,
-        adress: values.adress?.trim() || undefined,
-        phone: values.phone?.trim() || undefined,
+        status: clean(values.status),
+        adress: clean(values.adress),
+        phone: clean(values.phone),
+        huissierNameAr: clean(values.huissierNameAr),
+        huissierNameFr: clean(values.huissierNameFr),
+        appealCourtAr: clean(values.appealCourtAr),
+        appealCourtFr: clean(values.appealCourtFr),
+        firstInstanceCourtAr: clean(values.firstInstanceCourtAr),
+        addressFr: clean(values.addressFr),
+        email: clean(values.email),
+        city: clean(values.city),
+        startNumber: values.startNumber?.trim() ? Number(values.startNumber) : undefined,
       }
       return tenant ? api.tenants.update(tenant.id, payload) : api.tenants.create(payload)
     },
@@ -71,6 +101,9 @@ export function TenantFormDialog({
     },
     onError: (error) => toast(t(apiErrorKey(error)), 'error'),
   })
+
+  const err = (key: keyof TenantValues) =>
+    errors[key] ? t(errors[key]?.message as string) : undefined
 
   return (
     <Dialog
@@ -96,44 +129,89 @@ export function TenantFormDialog({
         noValidate
       >
         <div className="grid gap-4 sm:grid-cols-2">
-          <Field
-            label={t('tenants.name')}
-            required
-            error={errors.name ? t(errors.name.message as string) : undefined}
-          >
+          <Field label={t('tenants.name')} required error={err('name')}>
             <Input {...register('name')} placeholder={t('tenants.namePlaceholder')} />
           </Field>
-          <Field
-            label={t('tenants.slug')}
-            required
-            hint={t('tenants.slugHint')}
-            error={errors.slug ? t(errors.slug.message as string) : undefined}
-          >
+          <Field label={t('tenants.slug')} required hint={t('tenants.slugHint')} error={err('slug')}>
             <Input {...register('slug')} placeholder="cabinet-rabat" />
           </Field>
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2">
-          <Field
-            label={t('tenants.status')}
-            error={errors.status ? t(errors.status.message as string) : undefined}
-          >
+          <Field label={t('tenants.status')} required error={err('status')}>
             <Select {...register('status')}>
               <option value="active">{t('tenants.active')}</option>
               <option value="inactive">{t('tenants.inactive')}</option>
             </Select>
           </Field>
-          <Field label={t('tenants.phone')} error={errors.phone ? t(errors.phone.message as string) : undefined}>
+          <Field label={t('tenants.phone')} required error={err('phone')}>
             <Input {...register('phone')} inputMode="tel" />
           </Field>
         </div>
 
-        <Field
-          label={t('tenants.address')}
-          error={errors.adress ? t(errors.adress.message as string) : undefined}
-        >
-          <Input {...register('adress')} />
+        <Field label={t('tenants.address')} required error={err('adress')}>
+          <Input {...register('adress')} dir="auto" />
         </Field>
+
+        {/* En-tête des procès-verbaux (رأسية المحضر) */}
+        <div className="border-t border-line pt-4">
+          <h3 className="text-sm font-semibold text-ink">{t('tenants.letterhead')}</h3>
+          <p className="text-xs text-ink-muted">{t('tenants.letterheadHint')}</p>
+        </div>
+
+        <div className="grid gap-4 sm:grid-cols-2">
+          <Field label={t('tenants.huissierNameAr')} error={err('huissierNameAr')}>
+            <Input {...register('huissierNameAr')} dir="rtl" placeholder="عبد الغني أشرع" />
+          </Field>
+          <Field label={t('tenants.huissierNameFr')} error={err('huissierNameFr')}>
+            <Input {...register('huissierNameFr')} dir="ltr" placeholder="ACHRAY ABDELGHANI" />
+          </Field>
+        </div>
+
+        <div className="grid gap-4 sm:grid-cols-2">
+          <Field label={t('tenants.appealCourtAr')} error={err('appealCourtAr')}>
+            <Input
+              {...register('appealCourtAr')}
+              dir="rtl"
+              placeholder={t('tenants.appealCourtArPlaceholder')}
+            />
+          </Field>
+          <Field label={t('tenants.appealCourtFr')} error={err('appealCourtFr')}>
+            <Input
+              {...register('appealCourtFr')}
+              dir="ltr"
+              placeholder={t('tenants.appealCourtFrPlaceholder')}
+            />
+          </Field>
+        </div>
+
+        <Field label={t('tenants.firstInstanceCourtAr')} error={err('firstInstanceCourtAr')}>
+          <Input
+            {...register('firstInstanceCourtAr')}
+            dir="rtl"
+            placeholder={t('tenants.firstInstanceCourtArPlaceholder')}
+          />
+        </Field>
+
+        <Field label={t('tenants.addressFr')} error={err('addressFr')}>
+          <Input {...register('addressFr')} dir="ltr" />
+        </Field>
+
+        <div className="grid gap-4 sm:grid-cols-3">
+          <Field label={t('tenants.city')} error={err('city')}>
+            <Input {...register('city')} dir="auto" />
+          </Field>
+          <Field label={t('tenants.email')} error={err('email')}>
+            <Input {...register('email')} type="email" dir="ltr" />
+          </Field>
+          <Field
+            label={t('tenants.startNumber')}
+            hint={t('tenants.startNumberHint')}
+            error={err('startNumber')}
+          >
+            <Input {...register('startNumber')} inputMode="numeric" placeholder="2282" />
+          </Field>
+        </div>
       </form>
     </Dialog>
   )

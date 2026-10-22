@@ -22,7 +22,9 @@ import {
   Skeleton,
   StatusBadge,
 } from '../components/ui'
+import { DeliveryAttemptsPanel } from '../components/domain/DeliveryAttemptsPanel'
 import { ObservationsPanel } from '../components/domain/ObservationsPanel'
+import { PresenceCard } from '../components/domain/PresenceCard'
 import { apiErrorKey, useFormatters } from '../lib/format'
 
 export default function MissionDetailPage() {
@@ -199,6 +201,18 @@ export default function MissionDetailPage() {
           </div>
         </dl>
       </Card>
+
+      {/* Constat : personne présente (بحضور وتحت عهدة ومسؤولية …) */}
+      <PresenceCard mission={mission} canEdit={isCollaborateur && mission.status === 'IN_PROGRESS'} />
+
+      {/* Notification : chaque visite à l'adresse */}
+      <div className="rounded-xl border border-line bg-surface p-5 shadow-card sm:p-6">
+        <DeliveryAttemptsPanel
+          missionId={mission.id}
+          canAdd={isCollaborateur}
+          missionInProgress={mission.status === 'IN_PROGRESS'}
+        />
+      </div>
 
       <div
         id="observations"

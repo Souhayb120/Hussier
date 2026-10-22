@@ -16,6 +16,7 @@ import {
   ScanSearch,
   Trash2,
   UserRound,
+  Users,
   Wallet,
 } from 'lucide-react'
 import { api } from '../api/client'
@@ -38,6 +39,7 @@ import { BillingPanel } from '../components/domain/BillingPanel'
 import { CaseFormDialog } from '../components/domain/CaseFormDialog'
 import { ClientTrackingPanel } from '../components/domain/ClientTrackingPanel'
 import { DocumentsPanel } from '../components/domain/DocumentsPanel'
+import { PartiesPanel } from '../components/domain/PartiesPanel'
 import { apiErrorKey, useFormatters } from '../lib/format'
 
 export default function CaseDetailPage() {
@@ -54,10 +56,11 @@ export default function CaseDetailPage() {
   const canSeeBilling = can('billing:manage')
   const canSeeTracking = can('tracking:manage')
 
-  // Onglet piloté par l'URL (?tab=documents|attachments|missions|billing|tracking) — partageable et stable au rechargement.
+  // Onglet piloté par l'URL (?tab=parties|documents|attachments|missions|billing|tracking) — partageable et stable au rechargement.
   const [searchParams, setSearchParams] = useSearchParams()
   const tabParam = searchParams.get('tab')
   const tab =
+    tabParam === 'parties' ||
     tabParam === 'documents' ||
     tabParam === 'attachments' ||
     (tabParam === 'missions' && canSeeMissions) ||
@@ -92,6 +95,7 @@ export default function CaseDetailPage() {
   const tabs = useMemo(() => {
     const items: TabItem[] = [
       { id: 'summary', label: t('cases.tabSummary') },
+      { id: 'parties', label: t('cases.tabParties'), icon: <Users className="h-4 w-4" /> },
     ]
     if (canSeeMissions) {
       items.push({
@@ -212,7 +216,7 @@ export default function CaseDetailPage() {
               />
               <InfoRow
                 icon={<Hash />}
-                label={t('cases.ref')}
+                label={`${t('cases.ref')} — ${t('cases.refHint')}`}
                 value={item.ref}
               />
               <InfoRow
@@ -248,6 +252,8 @@ export default function CaseDetailPage() {
           </Card>
         </div>
       )}
+
+      {tab === 'parties' && <PartiesPanel caseId={item.id} />}
 
       {tab === 'documents' && <DocumentsPanel caseId={item.id} />}
 

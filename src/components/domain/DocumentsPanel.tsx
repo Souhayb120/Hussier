@@ -40,7 +40,7 @@ import {
 import { apiErrorKey, useFormatters } from '../../lib/format'
 import { truncate } from '../../lib/utils'
 
-const DEFAULT_KIND: DocumentKind = 'PROCES_VERBAL_CONSTAT'
+const DEFAULT_KIND: DocumentKind = 'CONSTAT_LIEU'
 
 /* --------------------------- Formulaire document ------------------------- */
 
@@ -279,6 +279,11 @@ function AiDraftDialog({
             ))}
           </Select>
         </Field>
+        {/* Ce dont le type choisi a besoin (parties, visites, observations…) */}
+        <p className="rounded-lg border border-line bg-canvas/50 px-3.5 py-2.5 text-sm leading-relaxed text-ink-muted">
+          <span className="font-medium text-ink">{t('documents.kindHint')} : </span>
+          {t(`documentKindHint.${kind}`)}
+        </p>
       </div>
     </Dialog>
   )
@@ -331,7 +336,10 @@ export function DocumentsPanel({ caseId }: { caseId: string }) {
     },
     onError: (error) => {
       const status = (error as { status?: number }).status
-      toast(status === 403 ? t('errors.forbidden') : t('documents.aiFailed'), 'error')
+      // 400 : le back-end explique ce qui manque (ex : ajouter les visites, mauvais type de notification).
+      const message = (error as { message?: string }).message
+      if (status === 400 && message) toast(message, 'error')
+      else toast(status === 403 ? t('errors.forbidden') : t('documents.aiFailed'), 'error')
       setAiOpen(false)
     },
   })
@@ -457,6 +465,14 @@ export function DocumentsPanel({ caseId }: { caseId: string }) {
                         <StatusBadge value={doc.status} label={t(`documentStatus.${doc.status}`)} />
                         <span className="text-xs text-ink-muted">{fmt.dateTime(doc.createdAt)}</span>
                       </div>
+                      {doc.approvedAt && (
+                        <p className="mt-1 text-xs text-emerald-700">
+                          {t('documents.approvedBy', {
+                            name: doc.approvedByUsername ?? '—',
+                            date: fmt.dateTime(doc.approvedAt),
+                          })}
+                        </p>
+                      )}
                       <p className="mt-2 text-sm text-ink-muted">
                         {doc.content ? truncate(doc.content.replace(/\s+/g, ' '), 180) : t('common.none')}
                       </p>

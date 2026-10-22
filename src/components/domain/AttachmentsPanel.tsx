@@ -11,6 +11,7 @@ import {
   ConfirmDialog,
   EmptyState,
   Field,
+  Input,
   Pagination,
   Skeleton,
 } from '../ui'
@@ -57,6 +58,8 @@ export function AttachmentsPanel({ caseId }: { caseId: string }) {
   const [pendingDelete, setPendingDelete] = useState<AttachmentResponse | null>(null)
   // Fichiers sélectionnés pour être ajoutés au dossier existant.
   const [newFiles, setNewFiles] = useState<File[]>([])
+  // Légende de chaque fichier (même index que newFiles) — « الصورة رقم 1: … » dans le PV.
+  const [newCaptions, setNewCaptions] = useState<string[]>([])
 
   const listQ = useQuery({
     queryKey: ['attachments', caseId, { page }],
@@ -92,26 +95,49 @@ export function AttachmentsPanel({ caseId }: { caseId: string }) {
     if (!list || list.length === 0) return
     const picked = Array.from(list)
     setNewFiles((prev) => [...prev, ...picked])
+    setNewCaptions((prev) => [...prev, ...picked.map(() => '')])
   }
 
-  const removeNewFile = (index: number) =>
+  const clearNewFiles = () => {
+    setNewFiles([])
+    setNewCaptions([])
+  }
+
+  const removeNewFile = (index: number) => {
     setNewFiles((prev) => prev.filter((_, i) => i !== index))
+    setNewCaptions((prev) => prev.filter((_, i) => i !== index))
+  }
+
+  const changeCaption = (index: number, value: string) =>
+    setNewCaptions((prev) => prev.map((c, i) => (i === index ? value : c)))
 
   const uploadM = useMutation({
-    // Une requête POST /cases/{caseId}/attachments par fichier.
-    mutationFn: (selected: File[]) =>
-      Promise.allSettled(selected.map((file) => api.attachments.upload(caseId, file))),
+    // Une requête POST /cases/{caseId}/attachments par fichier, l'une après l'autre :
+    // le PV numérote les photos dans l'ordre d'envoi (الصورة رقم 1، 2…).
+    mutationFn: async (selected: File[]) => {
+      const results: PromiseSettledResult<AttachmentResponse>[] = []
+      for (let i = 0; i < selected.length; i++) {
+        try {
+          const value = await api.attachments.upload(caseId, selected[i], newCaptions[i])
+          results.push({ status: 'fulfilled', value })
+        } catch (reason) {
+          results.push({ status: 'rejected', reason })
+        }
+      }
+      return results
+    },
     onSuccess: (results) => {
       // Rafraîchissement automatique de la liste dans tous les cas
       // (certains fichiers ont pu être acceptés avant l'échec).
       queryClient.invalidateQueries({ queryKey: ['attachments', caseId] })
       if (!results.some((r) => r.status === 'rejected')) {
         toast(t('attachments.created'))
-        setNewFiles([])
+        clearNewFiles()
         return
       }
       // On ne garde en attente que les fichiers réellement refusés.
       setNewFiles((prev) => prev.filter((_, i) => results[i]?.status === 'rejected'))
+      setNewCaptions((prev) => prev.filter((_, i) => results[i]?.status === 'rejected'))
       toast(t('attachments.uploadFailed'), 'error')
     },
     onError: (error) => {
@@ -160,7 +186,7 @@ export function AttachmentsPanel({ caseId }: { caseId: string }) {
                 {newFiles.map((file, index) => (
                   <li
                     key={`${file.name}-${index}`}
-                    className="flex items-center justify-between gap-3 rounded-md border border-line bg-canvas/50 px-3 py-2"
+                    className="flex flex-wrap items-center justify-between gap-3 rounded-md border border-line bg-canvas/50 px-3 py-2"
                   >
                     <div className="flex min-w-0 items-center gap-2">
                       <Paperclip className="h-4 w-4 shrink-0 text-ink-soft" />
@@ -169,6 +195,15 @@ export function AttachmentsPanel({ caseId }: { caseId: string }) {
                         {formatFileSize(file.size)}
                       </span>
                     </div>
+                    <Input
+                      className="min-w-[12rem] flex-1"
+                      dir="auto"
+                      value={newCaptions[index] ?? ''}
+                      disabled={uploadM.isPending}
+                      onChange={(event) => changeCaption(index, event.target.value)}
+                      placeholder={t('attachments.captionPlaceholder')}
+                      aria-label={t('attachments.caption')}
+                    />
                     <button
                       type="button"
                       disabled={uploadM.isPending}
@@ -189,7 +224,7 @@ export function AttachmentsPanel({ caseId }: { caseId: string }) {
                   type="button"
                   variant="ghost"
                   disabled={uploadM.isPending}
-                  onClick={() => setNewFiles([])}
+                  onClick={clearNewFiles}
                 >
                   {t('common.cancel')}
                 </Button>
@@ -243,6 +278,11 @@ export function AttachmentsPanel({ caseId }: { caseId: string }) {
                   </span>
                   <div className="min-w-0">
                     <p className="truncate font-medium text-ink">{file.originalName}</p>
+                    {file.caption && (
+                      <p className="truncate text-sm text-ink-muted" dir="auto">
+                        {file.caption}
+                      </p>
+                    )}
                     <p className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-ink-muted">
                       <span>{file.contentType || t('common.none')}</span>
                       <span aria-hidden="true">·</span>
