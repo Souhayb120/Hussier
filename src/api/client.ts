@@ -122,6 +122,8 @@ export interface AttachmentResponse {
   caption: string | null
   uploadedAt: string
   caseId: string
+  /** Rempli quand le fichier a été ajouté par le collaborateur pendant une mission. */
+  missionId: string | null
   uploadedById: string | null
 }
 
@@ -501,7 +503,13 @@ export const api = {
   },
 
   cases: {
-    list: (page = 0, size = 10) => request<Page<CaseResponse>>(`/cases?page=${page}&size=${size}`),
+    /** Recherche côté serveur sur TOUS les dossiers de l'étude (réf., client, ICE, objet, adresse). */
+    list: (page = 0, size = 10, search?: string, status?: CaseStatus) => {
+      const params = new URLSearchParams({ page: String(page), size: String(size) })
+      if (search && search.trim()) params.set('search', search.trim())
+      if (status) params.set('status', status)
+      return request<Page<CaseResponse>>(`/cases?${params.toString()}`)
+    },
     get: (id: string) => request<CaseResponse>(`/cases/${id}`),
     create: (body: CasePayload) =>
       request<CaseResponse>('/cases', { method: 'POST', body: JSON.stringify(body) }),
@@ -522,6 +530,21 @@ export const api = {
       // Légende sous la photo dans le procès-verbal (« الصورة رقم 1 »).
       if (caption && caption.trim()) body.append('caption', caption.trim())
       return request<AttachmentResponse>(`/cases/${caseId}/attachments`, {
+        method: 'POST',
+        body,
+      })
+    },
+    /** Fichiers ajoutés pendant une mission — GET /api/missions/{missionId}/attachments. */
+    listByMission: (missionId: string, page = 0, size = 20) =>
+      request<Page<AttachmentResponse>>(
+        `/missions/${missionId}/attachments?page=${page}&size=${size}`,
+      ),
+    /** Collaborateur : ajout d'un fichier (tout type) à sa mission en cours ou terminée. */
+    uploadToMission: (missionId: string, file: File, caption?: string) => {
+      const body = new FormData()
+      body.append('file', file)
+      if (caption && caption.trim()) body.append('caption', caption.trim())
+      return request<AttachmentResponse>(`/missions/${missionId}/attachments`, {
         method: 'POST',
         body,
       })
@@ -601,6 +624,8 @@ export const api = {
     list: (page = 0, size = 10) => request<Page<MissionResponse>>(`/missions?page=${page}&size=${size}`),
     listMine: (page = 0, size = 10) =>
       request<Page<MissionResponse>>(`/missions/my?page=${page}&size=${size}`),
+    /** Toutes les missions d'un dossier — GET /api/missions/by-case/{caseId} (ADMIN). */
+    listByCase: (caseId: string) => request<MissionResponse[]>(`/missions/by-case/${caseId}`),
     get: (id: string) => request<MissionResponse>(`/missions/${id}`),
     create: (body: MissionPayload) =>
       request<MissionResponse>('/missions', { method: 'POST', body: JSON.stringify(body) }),

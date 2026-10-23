@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
@@ -51,9 +51,24 @@ export default function CasesPage() {
   const [editing, setEditing] = useState<CaseResponse | null>(null)
   const [pendingDelete, setPendingDelete] = useState<CaseResponse | null>(null)
 
+  // On attend que l'utilisateur arrête de taper (350 ms) avant d'interroger le serveur.
+  const [debouncedSearch, setDebouncedSearch] = useState('')
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      setDebouncedSearch(search.trim())
+      setPage(0)
+    }, 350)
+    return () => window.clearTimeout(timer)
+  }, [search])
+
+  const isFiltering = debouncedSearch !== '' || status !== 'ALL'
+
   const query = useQuery({
-    queryKey: ['cases', { page }],
-    queryFn: () => api.cases.list(page, 10),
+    queryKey: ['cases', { page, search: debouncedSearch, status }],
+    queryFn: () =>
+      api.cases.list(page, 10, debouncedSearch, status === 'ALL' ? undefined : status),
+    // garde l'ancienne liste affichée pendant la recherche (pas de clignotement)
+    placeholderData: (previous) => previous,
   })
 
   const deleteM = useMutation({
@@ -66,17 +81,8 @@ export default function CasesPage() {
     onError: (error) => toast(t(apiErrorKey(error)), 'error'),
   })
 
-  const rows = useMemo(() => {
-    const list = query.data?.content ?? []
-    const term = search.trim().toLowerCase()
-    return list.filter((item) => {
-      if (status !== 'ALL' && item.caseStatus !== status) return false
-      if (!term) return true
-      return [item.ref, item.clientName, item.clientIce, item.subject, item.address]
-        .filter(Boolean)
-        .some((value) => value!.toLowerCase().includes(term))
-    })
-  }, [query.data, search, status])
+  // Le filtrage est fait par le serveur : on affiche directement la page reçue.
+  const rows = query.data?.content ?? []
 
   const openCreate = () => {
     setEditing(null)
@@ -110,7 +116,10 @@ export default function CasesPage() {
           />
           <Select
             value={status}
-            onChange={(e) => setStatus(e.target.value as 'ALL' | CaseStatus)}
+            onChange={(e) => {
+              setStatus(e.target.value as 'ALL' | CaseStatus)
+              setPage(0)
+            }}
             className="sm:max-w-[12rem]"
           >
             <option value="ALL">{t('common.all')}</option>
@@ -143,7 +152,7 @@ export default function CasesPage() {
               </Button>
             }
           />
-        ) : (query.data?.content ?? []).length === 0 ? (
+        ) : rows.length === 0 && !isFiltering ? (
           <EmptyState
             icon={<FolderOpen className="h-6 w-6" />}
             title={t('cases.empty')}

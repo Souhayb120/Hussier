@@ -307,10 +307,10 @@ function CaseMissionsTab({ caseId }: { caseId: string }) {
 
   const query = useQuery({
     queryKey: ['missions', 'by-case', caseId],
-    queryFn: () => api.missions.list(0, 100),
+    queryFn: () => api.missions.listByCase(caseId),
   })
 
-  const missions = (query.data?.content ?? []).filter((m) => m.caseId === caseId)
+  const missions = query.data ?? []
 
   if (query.isLoading) {
     return (

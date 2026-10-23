@@ -408,7 +408,12 @@
     "confirmDeleteTitle": "Supprimer la pièce jointe",
     "confirmDelete": "La pièce jointe « {{name}} » sera supprimée définitivement.",
     "caption": "Légende (dans le PV)",
-    "captionPlaceholder": "ex : مراسلة 2026/07/08 بشأن ملف السيارة"
+    "captionPlaceholder": "ex : مراسلة 2026/07/08 بشأن ملف السيارة",
+    "missionTitle": "Fichiers de la mission",
+    "takePhoto": "Prendre une photo",
+    "chooseFiles": "Choisir des fichiers",
+    "missionAddHint": "Photos, PDF, audio… tout type de fichier. Ajoutez une légende puis cliquez sur Téléverser.",
+    "fromMission": "Mission"
   },
   "users": {
     "title": "Utilisateurs",

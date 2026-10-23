@@ -408,7 +408,12 @@
     "confirmDeleteTitle": "حذف المرفق",
     "confirmDelete": "سيتم حذف المرفق «{{name}}» نهائيًا.",
     "caption": "التعليق (في المحضر)",
-    "captionPlaceholder": "مثال: مراسلة 2026/07/08 بشأن ملف السيارة"
+    "captionPlaceholder": "مثال: مراسلة 2026/07/08 بشأن ملف السيارة",
+    "missionTitle": "ملفات المهمة",
+    "takePhoto": "التقاط صورة",
+    "chooseFiles": "اختيار ملفات",
+    "missionAddHint": "صور، PDF، تسجيلات صوتية… كل أنواع الملفات. أضف تعليقًا ثم اضغط على رفع.",
+    "fromMission": "من المهمة"
   },
   "users": {
     "title": "المستخدمون",

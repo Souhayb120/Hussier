@@ -1,7 +1,17 @@
 import { useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
-import { Download, Eye, Paperclip, Trash2, Upload, X } from 'lucide-react'
+import {
+  Camera,
+  ClipboardList,
+  Download,
+  Eye,
+  FolderOpen,
+  Paperclip,
+  Trash2,
+  Upload,
+  X,
+} from 'lucide-react'
 import { api, type AttachmentResponse } from '../../api/client'
 import { useAuth } from '../../auth/AuthProvider'
 import { useToast } from '../Toast'
@@ -45,14 +55,31 @@ function saveBlob(blob: Blob, filename: string): void {
 
 /* --------------------------- Liste pièces jointes ------------------------ */
 
-export function AttachmentsPanel({ caseId }: { caseId: string }) {
+/**
+ * Deux usages :
+ * - dossier : `<AttachmentsPanel caseId=… />` (droits = attachments:manage)
+ * - mission : `<AttachmentsPanel missionId=… canUpload canDelete />` (collaborateur)
+ */
+export function AttachmentsPanel({
+  caseId,
+  missionId,
+  canUpload,
+  canDelete,
+}: {
+  caseId?: string
+  missionId?: string
+  canUpload?: boolean
+  canDelete?: boolean
+}) {
   const { t } = useTranslation()
   const fmt = useFormatters()
   const { can } = useAuth()
   const { toast } = useToast()
   const queryClient = useQueryClient()
 
-  const canManage = can('attachments:manage')
+  const isMission = Boolean(missionId)
+  const allowUpload = canUpload ?? can('attachments:manage')
+  const allowDelete = canDelete ?? can('attachments:manage')
 
   const [page, setPage] = useState(0)
   const [pendingDelete, setPendingDelete] = useState<AttachmentResponse | null>(null)
@@ -62,9 +89,17 @@ export function AttachmentsPanel({ caseId }: { caseId: string }) {
   const [newCaptions, setNewCaptions] = useState<string[]>([])
 
   const listQ = useQuery({
-    queryKey: ['attachments', caseId, { page }],
-    queryFn: () => api.attachments.listByCase(caseId, page, 20),
+    queryKey: isMission
+      ? ['attachments', 'mission', missionId, { page }]
+      : ['attachments', caseId, { page }],
+    queryFn: () =>
+      isMission
+        ? api.attachments.listByMission(missionId!, page, 20)
+        : api.attachments.listByCase(caseId!, page, 20),
   })
+
+  // Rafraîchit toutes les listes (le fichier d'une mission apparaît aussi dans son dossier).
+  const refreshLists = () => queryClient.invalidateQueries({ queryKey: ['attachments'] })
 
   const viewM = useMutation({
     mutationFn: (file: AttachmentResponse) => api.attachments.download(file.id, true),
@@ -81,7 +116,7 @@ export function AttachmentsPanel({ caseId }: { caseId: string }) {
   const deleteM = useMutation({
     mutationFn: (id: string) => api.attachments.remove(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['attachments', caseId] })
+      refreshLists()
       toast(t('attachments.deleted'))
       setPendingDelete(null)
     },
@@ -118,7 +153,9 @@ export function AttachmentsPanel({ caseId }: { caseId: string }) {
       const results: PromiseSettledResult<AttachmentResponse>[] = []
       for (let i = 0; i < selected.length; i++) {
         try {
-          const value = await api.attachments.upload(caseId, selected[i], newCaptions[i])
+          const value = isMission
+            ? await api.attachments.uploadToMission(missionId!, selected[i], newCaptions[i])
+            : await api.attachments.upload(caseId!, selected[i], newCaptions[i])
           results.push({ status: 'fulfilled', value })
         } catch (reason) {
           results.push({ status: 'rejected', reason })
@@ -129,7 +166,7 @@ export function AttachmentsPanel({ caseId }: { caseId: string }) {
     onSuccess: (results) => {
       // Rafraîchissement automatique de la liste dans tous les cas
       // (certains fichiers ont pu être acceptés avant l'échec).
-      queryClient.invalidateQueries({ queryKey: ['attachments', caseId] })
+      refreshLists()
       if (!results.some((r) => r.status === 'rejected')) {
         toast(t('attachments.created'))
         clearNewFiles()
@@ -141,7 +178,7 @@ export function AttachmentsPanel({ caseId }: { caseId: string }) {
       toast(t('attachments.uploadFailed'), 'error')
     },
     onError: (error) => {
-      queryClient.invalidateQueries({ queryKey: ['attachments', caseId] })
+      refreshLists()
       toast(t(apiErrorKey(error)), 'error')
     },
   })
@@ -154,12 +191,14 @@ export function AttachmentsPanel({ caseId }: { caseId: string }) {
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h2 className="text-base font-semibold text-ink">{t('attachments.title')}</h2>
+          <h2 className="text-base font-semibold text-ink">
+            {isMission ? t('attachments.missionTitle') : t('attachments.title')}
+          </h2>
           <p className="text-sm text-ink-muted">{t('attachments.count', { count: total })}</p>
         </div>
       </div>
 
-      {canManage && (
+      {allowUpload && (
         <Card className="p-4">
           <form
             className="space-y-3"
@@ -168,18 +207,58 @@ export function AttachmentsPanel({ caseId }: { caseId: string }) {
               if (newFiles.length > 0 && !uploadM.isPending) uploadM.mutate(newFiles)
             }}
           >
-            <Field label={t('attachments.addTitle')} hint={t('attachments.addHint')}>
-              <input
-                type="file"
-                multiple
-                disabled={uploadM.isPending}
-                onChange={(event) => {
-                  addFiles(event.target.files)
-                  event.target.value = ''
-                }}
-                className="input cursor-pointer file:me-3 file:rounded-md file:border-0 file:bg-brand-50 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-brand-700 hover:file:bg-brand-100"
-              />
-            </Field>
+            {isMission ? (
+              // Mission (sur le terrain, souvent au téléphone) : deux gros boutons.
+              <div className="space-y-1.5">
+                <p className="text-sm font-medium text-ink">{t('attachments.addTitle')}</p>
+                <div className="grid gap-2 sm:grid-cols-2">
+                  <label className="flex cursor-pointer items-center justify-center gap-2 rounded-lg border-2 border-dashed border-brand-200 bg-brand-50 px-4 py-4 text-sm font-semibold text-brand-700 transition hover:bg-brand-100">
+                    <Camera className="h-5 w-5" />
+                    {t('attachments.takePhoto')}
+                    {/* capture : ouvre directement l'appareil photo sur mobile */}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      capture="environment"
+                      className="sr-only"
+                      disabled={uploadM.isPending}
+                      onChange={(event) => {
+                        addFiles(event.target.files)
+                        event.target.value = ''
+                      }}
+                    />
+                  </label>
+                  <label className="flex cursor-pointer items-center justify-center gap-2 rounded-lg border-2 border-dashed border-line bg-canvas/50 px-4 py-4 text-sm font-semibold text-ink transition hover:bg-canvas">
+                    <FolderOpen className="h-5 w-5" />
+                    {t('attachments.chooseFiles')}
+                    <input
+                      type="file"
+                      multiple
+                      className="sr-only"
+                      disabled={uploadM.isPending}
+                      onChange={(event) => {
+                        addFiles(event.target.files)
+                        event.target.value = ''
+                      }}
+                    />
+                  </label>
+                </div>
+                <p className="text-xs text-ink-muted">{t('attachments.missionAddHint')}</p>
+              </div>
+            ) : (
+              <Field label={t('attachments.addTitle')} hint={t('attachments.addHint')}>
+                <input
+                  type="file"
+                  multiple
+                  disabled={uploadM.isPending}
+                  onChange={(event) => {
+                    addFiles(event.target.files)
+                    event.target.value = ''
+                  }}
+                  className="input cursor-pointer file:me-3 file:rounded-md file:border-0 file:bg-brand-50 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-brand-700 hover:file:bg-brand-100"
+                />
+              </Field>
+            )}
 
             {newFiles.length > 0 && (
               <ul className="space-y-1.5">
@@ -263,7 +342,7 @@ export function AttachmentsPanel({ caseId }: { caseId: string }) {
           <EmptyState
             icon={<Paperclip className="h-6 w-6" />}
             title={t('attachments.empty')}
-            description={t('attachments.emptyHint')}
+            description={allowUpload ? t('attachments.emptyHint') : undefined}
           />
         ) : (
           <ul className="divide-y divide-line">
@@ -277,7 +356,16 @@ export function AttachmentsPanel({ caseId }: { caseId: string }) {
                     <Paperclip className="h-4 w-4" />
                   </span>
                   <div className="min-w-0">
-                    <p className="truncate font-medium text-ink">{file.originalName}</p>
+                    <p className="flex min-w-0 items-center gap-2">
+                      <span className="truncate font-medium text-ink">{file.originalName}</span>
+                      {/* Dans le dossier : on montre les fichiers venus du terrain */}
+                      {!isMission && file.missionId && (
+                        <span className="inline-flex shrink-0 items-center gap-1 rounded-md bg-amber-50 px-2 py-0.5 text-2xs font-medium text-amber-700">
+                          <ClipboardList className="h-3 w-3" />
+                          {t('attachments.fromMission')}
+                        </span>
+                      )}
+                    </p>
                     {file.caption && (
                       <p className="truncate text-sm text-ink-muted" dir="auto">
                         {file.caption}
@@ -314,7 +402,7 @@ export function AttachmentsPanel({ caseId }: { caseId: string }) {
                   >
                     {t('attachments.download')}
                   </Button>
-                  {canManage && (
+                  {allowDelete && (
                     <Button
                       variant="ghost"
                       size="sm"

@@ -6,6 +6,7 @@ import {
   ArrowLeft,
   CalendarClock,
   ClipboardList,
+  Paperclip,
   Play,
   Plus,
   SquareCheck,
@@ -24,6 +25,7 @@ import {
 } from '../components/ui'
 import { DeliveryAttemptsPanel } from '../components/domain/DeliveryAttemptsPanel'
 import { ObservationsPanel } from '../components/domain/ObservationsPanel'
+import { AttachmentsPanel } from '../components/domain/AttachmentsPanel'
 import { PresenceCard } from '../components/domain/PresenceCard'
 import { apiErrorKey, useFormatters } from '../lib/format'
 
@@ -41,6 +43,10 @@ export default function MissionDetailPage() {
   const [pendingStart, setPendingStart] = useState(false)
   const [pendingComplete, setPendingComplete] = useState(false)
   const obsRef = useRef<HTMLDivElement>(null)
+  const filesRef = useRef<HTMLDivElement>(null)
+
+  const focusFiles = () =>
+    filesRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
 
   const focusObservation = () => {
     obsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -110,6 +116,9 @@ export default function MissionDetailPage() {
   const mission = missionQ.data
   const canStart = isCollaborateur && mission.status === 'ASSIGNED'
   const canComplete = isCollaborateur && mission.status === 'IN_PROGRESS'
+  // Le collaborateur peut ajouter / supprimer ses fichiers pendant et après la mission.
+  const canWorkFiles =
+    isCollaborateur && (mission.status === 'IN_PROGRESS' || mission.status === 'COMPLETED')
 
   return (
     <div className="space-y-5 pb-24 lg:pb-0">
@@ -155,6 +164,13 @@ export default function MissionDetailPage() {
                 <>
                   <Button icon={<Plus className="h-4 w-4" />} onClick={focusObservation}>
                     {t('observations.add')}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    icon={<Paperclip className="h-4 w-4" />}
+                    onClick={focusFiles}
+                  >
+                    {t('attachments.title')}
                   </Button>
                   <Button
                     variant="secondary"
@@ -222,6 +238,19 @@ export default function MissionDetailPage() {
         <ObservationsPanel missionId={mission.id} canAdd={isCollaborateur} />
       </div>
 
+      {/* Fichiers du terrain : photos, PDF, audio… (visibles aussi dans le dossier) */}
+      <div
+        id="files"
+        ref={filesRef}
+        className="scroll-mt-24 rounded-xl border border-line bg-surface p-5 shadow-card sm:p-6"
+      >
+        <AttachmentsPanel
+          missionId={mission.id}
+          canUpload={canWorkFiles}
+          canDelete={canWorkFiles}
+        />
+      </div>
+
       {isCollaborateur && (canStart || canComplete) && (
         <div
           className="fixed inset-x-0 bottom-0 z-20 border-t border-line bg-surface/95 px-4 py-3 backdrop-blur lg:hidden"
@@ -245,6 +274,14 @@ export default function MissionDetailPage() {
                   onClick={focusObservation}
                 >
                   {t('observations.add')}
+                </Button>
+                <Button
+                  className="flex-1"
+                  variant="outline"
+                  icon={<Paperclip className="h-4 w-4" />}
+                  onClick={focusFiles}
+                >
+                  {t('attachments.title')}
                 </Button>
                 <Button
                   className="flex-1"
