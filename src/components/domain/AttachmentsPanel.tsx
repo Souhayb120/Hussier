@@ -26,6 +26,7 @@ import {
   Skeleton,
 } from '../ui'
 import { apiErrorKey, formatFileSize, useFormatters } from '../../lib/format'
+import { openBlob, saveBlob } from '../../lib/files'
 
 /** Types affichables directement dans un onglet du navigateur. */
 function isViewable(contentType: string): boolean {
@@ -33,25 +34,6 @@ function isViewable(contentType: string): boolean {
   return type === 'application/pdf' || type.startsWith('image/')
 }
 
-/** Ouvre un Blob dans un nouvel onglet à partir d'une URL objet (jeton requis). */
-function openBlob(blob: Blob): void {
-  const url = URL.createObjectURL(blob)
-  window.open(url, '_blank', 'noopener,noreferrer')
-  // On libère l'URL après un délai pour laisser l'onglet la charger.
-  window.setTimeout(() => URL.revokeObjectURL(url), 60_000)
-}
-
-/** Force le téléchargement d'un Blob sous son nom d'origine. */
-function saveBlob(blob: Blob, filename: string): void {
-  const url = URL.createObjectURL(blob)
-  const link = document.createElement('a')
-  link.href = url
-  link.download = filename || 'attachment'
-  document.body.appendChild(link)
-  link.click()
-  link.remove()
-  URL.revokeObjectURL(url)
-}
 
 /* --------------------------- Liste pièces jointes ------------------------ */
 

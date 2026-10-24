@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next'
 import {
   Bot,
   CheckCircle2,
+  Download,
   Eye,
   FileText,
   Pencil,
@@ -39,6 +40,7 @@ import {
 } from '../ui'
 import { apiErrorKey, useFormatters } from '../../lib/format'
 import { truncate } from '../../lib/utils'
+import { openBlob, saveBlob } from '../../lib/files'
 
 const DEFAULT_KIND: DocumentKind = 'CONSTAT_LIEU'
 
@@ -146,6 +148,53 @@ function DocumentFormDialog({
 
 /* --------------------------- Consultation document ----------------------- */
 
+/** PDF officiel d'un document approuvé : l'ouvrir dans le navigateur ou le télécharger. */
+function PdfButtons({ doc }: { doc: DocumentResponse }) {
+  const { t } = useTranslation()
+  const { toast } = useToast()
+
+  // ex : محضر-2026-2528.pdf
+  const fileName = `محضر-${(doc.caseRef ?? 'document').replace(/\//g, '-')}.pdf`
+
+  const viewM = useMutation({
+    mutationFn: () => api.documents.pdf(doc.id, true),
+    onSuccess: (blob) => openBlob(blob),
+    onError: (error) => toast(t(apiErrorKey(error)), 'error'),
+  })
+
+  const downloadM = useMutation({
+    mutationFn: () => api.documents.pdf(doc.id, false),
+    onSuccess: (blob) => saveBlob(blob, fileName),
+    onError: (error) => toast(t(apiErrorKey(error)), 'error'),
+  })
+
+  const busy = viewM.isPending || downloadM.isPending
+
+  return (
+    <>
+      <Button
+        variant="outline"
+        size="sm"
+        icon={<FileText className="h-4 w-4" />}
+        loading={viewM.isPending}
+        disabled={busy}
+        onClick={() => viewM.mutate()}
+      >
+        {t('documents.pdfView')}
+      </Button>
+      <Button
+        size="sm"
+        icon={<Download className="h-4 w-4" />}
+        loading={downloadM.isPending}
+        disabled={busy}
+        onClick={() => downloadM.mutate()}
+      >
+        {t('documents.pdfDownload')}
+      </Button>
+    </>
+  )
+}
+
 function DocumentViewDialog({
   documentId,
   onClose,
@@ -184,6 +233,7 @@ function DocumentViewDialog({
               {t('common.edit')}
             </Button>
           )}
+          {doc?.status === 'APPROVED' && <PdfButtons doc={doc} />}
         </>
       }
     >
@@ -487,6 +537,7 @@ export function DocumentsPanel({ caseId }: { caseId: string }) {
                       >
                         {t('common.view')}
                       </Button>
+                      {doc.status === 'APPROVED' && <PdfButtons doc={doc} />}
                       {canEdit && (
                         <Button
                           variant="ghost"

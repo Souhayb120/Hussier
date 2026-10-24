@@ -618,6 +618,9 @@ export const api = {
       request<DocumentResponse>(`/documents/${id}/submit`, { method: 'PATCH' }),
     approve: (id: string) =>
       request<DocumentResponse>(`/documents/${id}/approve`, { method: 'PATCH' }),
+    /** PDF officiel d'un document approuvé (en-tête de l'étude + texte + photos). */
+    pdf: (id: string, inline = false) =>
+      requestBlob(`/documents/${id}/pdf${inline ? '?inline=true' : ''}`),
   },
 
   missions: {
