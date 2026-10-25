@@ -6,11 +6,12 @@ import ar from './ar.json'
 export type Lang = 'fr' | 'ar'
 export const LANG_KEY = 'mofawid.lang'
 
+// Arabe par défaut ; le choix enregistré (FR) reste prioritaire.
 function initialLang(): Lang {
   try {
-    return localStorage.getItem(LANG_KEY) === 'ar' ? 'ar' : 'fr'
+    return localStorage.getItem(LANG_KEY) === 'fr' ? 'fr' : 'ar'
   } catch {
-    return 'fr'
+    return 'ar'
   }
 }
 

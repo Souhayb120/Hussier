@@ -1,25 +1,33 @@
 <!doctype html>
-<html lang="fr" dir="ltr">
+<html lang="ar" dir="rtl">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta
       name="description"
-      content="Mofawid — gestion des études d'huissier de justice (المفوّض القضائي)"
+      content="مفوّض Mofawid — منصة رقمية للمفوض القضائي: الملفات، المهام الميدانية، تحرير المحاضر بالذكاء الاصطناعي وملف PDF رسمي. Gestion des études d'huissier de justice au Maroc."
     />
-    <title>Mofawid — Études d'huissier de justice</title>
+    <meta name="theme-color" content="#042a21" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="مفوّض Mofawid — من الملف إلى المحضر الرسمي" />
+    <meta
+      property="og:description"
+      content="Dossiers, missions terrain, procès-verbaux rédigés par l'IA et PDF officiel — pour les huissiers de justice (المفوض القضائي)."
+    />
+    <title>مفوّض Mofawid — منصة المفوض القضائي</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Cairo:wght@400;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Cairo:wght@400;600;700&display=swap"
       rel="stylesheet"
     />
     <script>
       // Applique la langue choisie avant le premier rendu (évite le clignotement).
+      // Arabe par défaut, sauf si l'utilisateur a choisi le français.
       try {
         var lang = localStorage.getItem('mofawid.lang')
-        var dir = lang === 'ar' ? 'rtl' : 'ltr'
-        document.documentElement.lang = lang === 'ar' ? 'ar' : 'fr'
+        var dir = lang === 'fr' ? 'ltr' : 'rtl'
+        document.documentElement.lang = lang === 'fr' ? 'fr' : 'ar'
         document.documentElement.dir = dir
       } catch (e) {
         /* noop */
