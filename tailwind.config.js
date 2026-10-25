@@ -118,6 +118,8 @@ export default {
       fontFamily: {
         sans: ['"IBM Plex Sans"', 'system-ui', 'Segoe UI', 'Tahoma', 'sans-serif'],
         arabic: ['"IBM Plex Sans Arabic"', 'Cairo', 'system-ui', 'Segoe UI', 'Tahoma', 'sans-serif'],
+        // Titres de la landing page (style « acte officiel », même police que le PDF).
+        display: ['Amiri', '"IBM Plex Sans Arabic"', 'serif'],
       },
       boxShadow: {
         card: '0 1px 2px rgba(7, 56, 45, 0.05), 0 6px 16px -8px rgba(7, 56, 45, 0.12)',
@@ -149,12 +151,40 @@ export default {
         shimmer: {
           '100%': { transform: 'translateX(100%)' },
         },
+        // Landing page.
+        float: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-8px)' },
+        },
+        stamp: {
+          '0%': { opacity: '0', transform: 'scale(1.8) rotate(-18deg)' },
+          '60%': { opacity: '1', transform: 'scale(0.92) rotate(-8deg)' },
+          '100%': { opacity: '1', transform: 'scale(1) rotate(-10deg)' },
+        },
+        'write-line': {
+          from: { transform: 'scaleX(0)' },
+          to: { transform: 'scaleX(1)' },
+        },
+        // Texte arabe qui « s'écrit » de droite à gauche.
+        'type-rtl': {
+          from: { clipPath: 'inset(0 0 0 100%)' },
+          to: { clipPath: 'inset(0 0 0 0)' },
+        },
+        'sweep': {
+          '0%': { transform: 'translateX(-100%)' },
+          '100%': { transform: 'translateX(100%)' },
+        },
       },
       animation: {
         'fade-in': 'fade-in 0.2s ease-out both',
         'scale-in': 'scale-in 0.18s ease-out both',
         'slide-up': 'slide-up 0.28s cubic-bezier(0.22, 1, 0.36, 1) both',
         'slide-in-end': 'slide-in-end 0.28s cubic-bezier(0.22, 1, 0.36, 1) both',
+        float: 'float 6s ease-in-out infinite',
+        stamp: 'stamp 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.9s both',
+        'write-line': 'write-line 0.7s cubic-bezier(0.22, 1, 0.36, 1) both',
+        'type-rtl': 'type-rtl 0.6s steps(18, end) both',
+        sweep: 'sweep 4s ease-in-out infinite',
       },
     },
   },

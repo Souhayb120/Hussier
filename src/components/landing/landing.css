@@ -1,0 +1,173 @@
+/* Landing page publique — polices, arche marocaine et animations. */
+@import url('https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@400..700&display=swap');
+
+/* Thème clair (par défaut) et sombre ; les blocs verts restent identiques. */
+.mf-root {
+  --mf-bg: #f7f4ec;
+  --mf-header: rgba(247, 244, 236, 0.95);
+  --mf-surface: #ffffff;
+  --mf-paper: #fdfbf6;
+  --mf-input: #fbf9f4;
+  --mf-deep: #0f2b25;
+  --mf-text: #1e2422;
+  --mf-text-strong: #14201c;
+  --mf-heading: #173d35;
+  --mf-heading-hover: #0f2b25;
+  --mf-nav: #2f3734;
+  --mf-muted: #59615d;
+  --mf-subtle: #6a716d;
+  --mf-faint: #8e8676;
+  --mf-bronze-text: #7a5726;
+  --mf-green-text: #245748;
+  --mf-error: #9b2c2c;
+  --mf-line: #e4ded1;
+  --mf-line-2: #cfc7b6;
+  --mf-line-strong: #173d35;
+  --mf-line-green: #245748;
+  --mf-hover-line: #173d35;
+  --mf-tint-green: #e3ece6;
+  --mf-tint-bronze: #f4eada;
+  --mf-tint-bronze-2: #fbf5ea;
+  --mf-tint-bronze-3: #fbf3e4;
+  --mf-bronze-soft: #ead9bc;
+  --mf-bar: #efece5;
+  --mf-btn: #173d35;
+  --mf-btn-hover: #245748;
+  color-scheme: light;
+}
+
+.mf-root[data-theme='dark'] {
+  --mf-bg: #0e1f1b;
+  --mf-header: rgba(14, 31, 27, 0.92);
+  --mf-surface: #132823;
+  --mf-paper: #17302a;
+  --mf-input: #1a302b;
+  --mf-deep: #08130f;
+  --mf-text: #e8e4da;
+  --mf-text-strong: #f1ede3;
+  --mf-heading: #ede8da;
+  --mf-heading-hover: #ffffff;
+  --mf-nav: #d5ddd9;
+  --mf-muted: #a9b5af;
+  --mf-subtle: #94a39c;
+  --mf-faint: #a39b8b;
+  --mf-bronze-text: #e2c691;
+  --mf-green-text: #9fd0bc;
+  --mf-error: #f0a3a3;
+  --mf-line: #2a433c;
+  --mf-line-2: #3b5750;
+  --mf-line-strong: #5e8c7c;
+  --mf-line-green: #3f6f60;
+  --mf-hover-line: #c9a36a;
+  --mf-tint-green: #1f3a33;
+  --mf-tint-bronze: #3a2e1c;
+  --mf-tint-bronze-2: #2e2619;
+  --mf-tint-bronze-3: #2b2419;
+  --mf-bronze-soft: #5a4628;
+  --mf-bar: #26403a;
+  --mf-btn: #2c6352;
+  --mf-btn-hover: #367560;
+  color-scheme: dark;
+}
+
+:where(.mf-root, .mf-root *) {
+  transition-property: background-color, border-color, color;
+  transition-duration: 0.25s;
+}
+
+.mf-kufi {
+  font-family: 'Reem Kufi', 'IBM Plex Sans Arabic', 'IBM Plex Sans', sans-serif;
+}
+
+/* Les espaces latins de Reem Kufi sont étroits. */
+[dir='ltr'] .mf-kufi {
+  word-spacing: 0.12em;
+}
+
+.mf-amiri {
+  font-family: Amiri, 'IBM Plex Sans Arabic', serif;
+}
+
+.mf-arch {
+  clip-path: url(#mf-arch-clip);
+}
+
+.mf-highlight {
+  background: linear-gradient(transparent 62%, var(--mf-bronze-soft) 62%);
+  padding: 0 4px;
+}
+
+.mf-pre {
+  white-space: pre-line;
+}
+
+@keyframes mf-up {
+  from { opacity: 0; transform: translateY(22px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes mf-rise {
+  from { opacity: 0; transform: translateY(60px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes mf-seal {
+  from { opacity: 0; transform: rotate(-40deg) scale(0.6); }
+  to { opacity: 1; transform: rotate(-12deg) scale(1); }
+}
+
+@keyframes mf-draw {
+  from { stroke-dashoffset: 1; }
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes mf-grow {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+.mf-u { animation: mf-up 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+.mf-rise { animation: mf-rise 1.2s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+.mf-seal { animation: mf-seal 0.9s cubic-bezier(0.3, 1.4, 0.5, 1) 1.3s both; }
+.mf-draw { stroke-dasharray: 1; animation: mf-draw 2.2s cubic-bezier(0.6, 0, 0.2, 1) 0.3s both; }
+
+[dir='ltr'] .mf-seal { animation-name: mf-seal-ltr; }
+@keyframes mf-seal-ltr {
+  from { opacity: 0; transform: rotate(40deg) scale(0.6); }
+  to { opacity: 1; transform: rotate(12deg) scale(1); }
+}
+
+.mf-d1 { animation-delay: 0.05s; }
+.mf-d2 { animation-delay: 0.18s; }
+.mf-d3 { animation-delay: 0.32s; }
+.mf-d4 { animation-delay: 0.46s; }
+.mf-d5 { animation-delay: 0.6s; }
+
+/* Apparition au défilement (navigateurs compatibles uniquement). */
+@supports (animation-timeline: view()) {
+  .mf-rv {
+    animation: mf-up linear both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 28%;
+  }
+  .mf-line {
+    animation: mf-grow linear both;
+    animation-timeline: view();
+    animation-range: entry 10% cover 45%;
+  }
+}
+
+.mf-line { transform-origin: left center; }
+[dir='rtl'] .mf-line { transform-origin: right center; }
+
+@media (prefers-reduced-motion: reduce) {
+  .mf-u,
+  .mf-rise,
+  .mf-seal,
+  .mf-draw,
+  .mf-rv,
+  .mf-line {
+    animation: none !important;
+  }
+  .mf-draw { stroke-dasharray: none; }
+}

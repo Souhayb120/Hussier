@@ -3,6 +3,7 @@ import { AppShell, PlatformShell } from './components/layout'
 import { RequireAuth, RequireRole } from './auth/guards'
 import { useAuth } from './auth/AuthProvider'
 import { homeFor } from './lib/navigation'
+import LandingPage from './pages/LandingPage'
 import LoginPage from './pages/LoginPage'
 import TrackingPage from './pages/TrackingPage'
 import DashboardPage from './pages/DashboardPage'
@@ -15,10 +16,11 @@ import UsersPage from './pages/UsersPage'
 import TenantsPage from './pages/TenantsPage'
 import NotFoundPage from './pages/NotFoundPage'
 
-/** Redirige vers la page d'accueil du rôle connecté. */
-function HomeRedirect() {
+/** « / » : landing page pour les visiteurs, accueil du rôle pour les connectés. */
+function LandingOrHome() {
   const { user } = useAuth()
-  return <Navigate to={homeFor(user?.role)} replace />
+  if (user) return <Navigate to={homeFor(user.role)} replace />
+  return <LandingPage />
 }
 
 function CaseRedirect() {
@@ -51,6 +53,7 @@ function PlatformProtected() {
 export default function App() {
   return (
     <Routes>
+      <Route path="/" element={<LandingOrHome />} />
       <Route path="/login" element={<LoginPage />} />
 
       {/* Suivi client — page publique (aucune authentification requise). */}
@@ -64,8 +67,6 @@ export default function App() {
       <Route path="/tenants" element={<Navigate to="/platform/offices" replace />} />
 
       <Route element={<Protected />}>
-        <Route index element={<HomeRedirect />} />
-
         <Route
           path="dashboard"
           element={
@@ -142,7 +143,7 @@ export default function App() {
         <Route path="platform/*" element={<NotFoundPage />} />
       </Route>
 
-      <Route path="*" element={<HomeRedirect />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   )
 }

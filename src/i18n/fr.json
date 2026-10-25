@@ -597,5 +597,46 @@
     "save": "Enregistrer",
     "saved": "Personne présente enregistrée.",
     "none": "Aucune personne présente renseignée."
+  },
+  "landing": {
+    "nav": {
+      "features": "Fonctionnalités",
+      "how": "Comment ça marche",
+      "pricing": "Tarifs",
+      "faq": "FAQ",
+      "login": "Se connecter",
+      "demo": "Demander une démo",
+      "menu": "Menu"
+    },
+    "hero": {
+      "badge": "La plateforme numérique de l'huissier de justice au Maroc",
+      "titleStart": "Du dossier au",
+      "titleHighlight": "procès-verbal officiel",
+      "titleEnd": "sur une seule plateforme.",
+      "subtitle": "Mofawid organise votre étude : dossiers et parties, missions terrain avec photos, rédaction des procès-verbaux par l'IA, validation, puis un PDF prêt à signer et à cacheter.",
+      "ctaTry": "Essayer la démo",
+      "ctaDemo": "Demander une présentation",
+      "trust1": "En arabe et en français",
+      "trust2": "Données de chaque étude isolées",
+      "trust3": "Sur mobile, sur le terrain"
+    },
+    "mock": {
+      "stepCase": "Dossier",
+      "stepDraft": "Rédaction IA",
+      "stepPdf": "PV en PDF",
+      "caseLabel": "Dossier n°",
+      "client": "Client",
+      "target": "Partie visée",
+      "type": "Procédure",
+      "typeValue": "Constat",
+      "mission": "Mission terrain",
+      "missionDone": "Réalisée · 4 photos",
+      "status": "À valider",
+      "aiTitle": "L'IA rédige le procès-verbal…",
+      "aiHint": "À partir des notes et des photos du terrain",
+      "approved": "Approuvé",
+      "photoChip": "Photo ajoutée",
+      "pdfReady": "PDF prêt à télécharger"
+    }
   }
 }
