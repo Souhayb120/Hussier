@@ -10,6 +10,7 @@ import {
   FeaturesSection,
   HeroSection,
   LandingFooter,
+  MarqueeStrip,
   RolesSection,
   TrustSection,
   VideoSection,
@@ -76,6 +77,7 @@ export default function LandingPage() {
       />
       <main>
         <HeroSection copy={copy} />
+        <MarqueeStrip copy={copy} lang={lang} />
         <RolesSection copy={copy} />
         <FeaturesSection copy={copy} />
         <WorkflowSection copy={copy} />

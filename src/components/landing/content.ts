@@ -28,45 +28,50 @@ interface DocType extends Item {
 }
 
 export interface LandingCopy {
-  utility: string
   nav: { features: string; workflow: string; documents: string; ai: string; faq: string }
   login: string
   contactCta: string
   menu: string
+  langLabel: string
   themeToDark: string
   themeToLight: string
   hero: {
-    eyebrow: string
+    badgeNew: string
+    badge: string
+    titleLine1: string
     titleBefore: string
     titleHighlight: string
     titleAfter: string
     lead: string
     ctaVideo: string
     ctaHow: string
-    facts: { value: string; label: string }[]
+    checks: string[]
     mock: {
       date: string
       title: string
       newCase: string
-      kpis: { label: string; value: string; pending?: boolean }[]
-      rows: { label: string; status: string; pending?: boolean }[]
+      kpis: { label: string; value: string; progress: number; pending?: boolean }[]
+      rowDone: { label: string; status: string }
+      rowSwap: { label: string; pending: string; approved: string }
       ariaLabel: string
     }
-    seal: string
-    sealSub: string
+    chipNote: string
+    chipPdf: string
   }
-  roles: { title: string; items: (Item & { badge: string })[] }
-  features: { eyebrow: string; title: string; lead: string; quote: string; items: Item[] }
-  workflow: { eyebrow: string; title: string; lead: string; steps: Step[] }
-  video: {
+  marquee: { label: string; items: string[] }
+  roles: { eyebrow: string; title: string; items: (Item & { badge: string })[] }
+  features: {
     eyebrow: string
     title: string
     lead: string
-    label: string
-    placeholder: string
-    caption: string
-    play: string
+    aiTag: string
+    aiTitle: string
+    aiText: string
+    aiDocTitle: string
+    items: Item[]
   }
+  workflow: { eyebrow: string; title: string; lead: string; steps: Step[] }
+  video: { eyebrow: string; title: string; lead: string; label: string; placeholder: string; play: string }
   documents: { eyebrow: string; title: string; lead: string; items: DocType[]; ctaTitle: string; cta: string }
   ai: {
     eyebrow: string
@@ -75,7 +80,8 @@ export interface LandingCopy {
     points: { strong: string; text: string }[]
     disclaimer: string
     doc: { caseRef: string; badge: string; title: string; source: string; signature: string; ariaLabel: string }
-    review: { title: string; checks: string[]; pending: string; approve: string; changes: string }
+    approve: string
+    changes: string
   }
   trust: { title: string; items: Item[] }
   faq: { title: string; items: { q: string; a: string }[] }
@@ -101,7 +107,6 @@ export interface LandingCopy {
 }
 
 const ar: LandingCopy = {
-  utility: 'منصة رقمية لتدبير مكاتب المفوضين القضائيين بالمغرب',
   nav: {
     features: 'الوظائف',
     workflow: 'مسار العمل',
@@ -112,41 +117,43 @@ const ar: LandingCopy = {
   login: 'تسجيل الدخول',
   contactCta: 'تواصلوا معنا',
   menu: 'القائمة',
+  langLabel: 'اللغة',
   themeToDark: 'تفعيل الوضع الليلي',
   themeToLight: 'تفعيل الوضع النهاري',
   hero: {
-    eyebrow: 'تدبير مكتب المفوض القضائي، بمنهجية واضحة',
-    titleBefore: 'من فتح الملف\nإلى ',
-    titleHighlight: 'اعتماد المحضر',
-    titleAfter: '،\nفي مسار واحد.',
+    badgeNew: 'جديد',
+    badge: 'تحرير المحاضر بمساعدة الذكاء الاصطناعي',
+    titleLine1: 'مكتبكم القضائي،',
+    titleBefore: 'من الملف إلى ',
+    titleHighlight: 'المحضر المعتمد',
+    titleAfter: '.',
     lead: '«مفوّض» يجمع الملفات والمهام والزيارات والمحاضر في فضاء عمل واحد، ليعرف كل فرد في المكتب ما عليه، ويعرف المفوض القضائي أين وصل كل ملف.',
     ctaVideo: 'شاهدوا الفيديو التوضيحي',
     ctaHow: 'كيف يشتغل؟',
-    facts: [
-      { value: '7', label: 'أنواع من المحاضر جاهزة' },
-      { value: '3', label: 'أدوار بصلاحيات محددة' },
-      { value: '2', label: 'لغتان: العربية والفرنسية' },
-    ],
+    checks: ['7 أنواع من المحاضر', 'العربية والفرنسية', 'اعتماد بشري لكل وثيقة'],
     mock: {
       date: 'الثلاثاء 14 أكتوبر',
       title: 'لوحة التحكم',
       newCase: '+ ملف جديد',
       kpis: [
-        { label: 'ملفات جارية', value: '48' },
-        { label: 'مهام مسندة', value: '12' },
-        { label: 'للاعتماد', value: '3', pending: true },
+        { label: 'ملفات جارية', value: '48', progress: 72 },
+        { label: 'مهام مسندة', value: '12', progress: 45 },
+        { label: 'للاعتماد', value: '3', progress: 25, pending: true },
       ],
-      rows: [
-        { label: 'محضر معاينة مكان · D-0142', status: 'قيد الإنجاز' },
-        { label: 'محضر تبليغ · D-0139', status: 'في انتظار الاعتماد', pending: true },
-      ],
+      rowDone: { label: 'محضر معاينة مكان · D-0142', status: 'قيد الإنجاز' },
+      rowSwap: { label: 'محضر تبليغ · D-0139', pending: 'في انتظار الاعتماد', approved: '✓ معتمد' },
       ariaLabel: 'معاينة لوحة تحكم مفوّض',
     },
-    seal: 'معتمد',
-    sealSub: 'PDF جاهز',
+    chipNote: 'ملاحظة ميدانية · 09:42',
+    chipPdf: 'PDF جاهز للتوقيع',
+  },
+  marquee: {
+    label: 'أنواع المحاضر',
+    items: ['محضر تبليغ', 'محضر إخباري', 'محضر رفض التوصل', 'معاينة مكان', 'معاينة رسائل واتساب', 'معاينة بريد إلكتروني', 'معاينة اجتماع'],
   },
   roles: {
-    title: 'لكل فرد في المكتب\nمكانه ودوره.',
+    eyebrow: 'فريق المكتب',
+    title: 'لكل فرد في المكتب مكانه ودوره.',
     items: [
       { title: 'المفوض القضائي', badge: 'مدير', text: 'نظرة شاملة على المكتب، إسناد المهام للمتعاونين، مراجعة المحاضر واعتمادها، وتدبير فريق العمل.' },
       { title: 'المساعد الإداري', badge: 'مساعد', text: 'فتح الملفات وتحيينها، إعداد مسودات المحاضر، المرفقات، الفوترة، ورمز تتبع الملف للموكل.' },
@@ -155,14 +162,16 @@ const ar: LandingCopy = {
   },
   features: {
     eyebrow: 'الوظائف',
-    title: 'كل ما يحتاجه المكتب،\nولا شيء زائد.',
+    title: 'كل ما يحتاجه المكتب، ولا شيء زائد.',
     lead: 'سبع وحدات، كل واحدة منها تقابل مرحلة حقيقية من عمل المكتب اليومي.',
-    quote: '«النظام في العمل نصف الإنجاز.»',
+    aiTag: 'الذكاء الاصطناعي',
+    aiTitle: 'تحرير المحاضر بمساعدة الذكاء الاصطناعي',
+    aiText: 'مسودة أولى منظمة انطلاقاً من معطيات الملف والملاحظات، قابلة للتعديل بالكامل قبل الاعتماد.',
+    aiDocTitle: 'محضر معاينة مكان',
     items: [
       { title: 'تدبير الملفات القضائية', text: 'إنشاء الملفات وتنظيمها وتتبعها، مع معطيات الموكل والأطراف ووضعية كل ملف.' },
       { title: 'تدبير المهام', text: 'إسناد المهام إلى المتعاونين، وتحديد الآجال، وتتبع تقدّمها لحظة بلحظة.' },
-      { title: 'تتبع الزيارات والملاحظات', text: 'تسجيل ملاحظات الميدان والزيارات مع الصور والمرفقات، مؤرخة ومرتبطة بالملف.' },
-      { title: 'تحرير المحاضر بمساعدة الذكاء الاصطناعي', text: 'مسودة أولى منظمة انطلاقاً من معطيات الملف والملاحظات، قابلة للتعديل بالكامل.' },
+      { title: 'تتبع الزيارات والملاحظات', text: 'ملاحظات الميدان والزيارات مع الصور والمرفقات، مؤرخة ومرتبطة بالملف.' },
       { title: 'المراجعة والاعتماد', text: 'عند الاعتماد تُقفل الوثيقة، ويُغلق الملف، ويصبح ملف PDF جاهزاً.' },
       { title: 'المستخدمون والصلاحيات', text: 'المفوض القضائي، المساعد، والمتعاون: لكلٍّ صلاحياته، ولا يرى إلا ما يعنيه.' },
       { title: 'لوحة تحكم المكتب', text: 'الملفات الجارية، الوثائق في انتظار الاعتماد، المهام المسندة، والأعمال المنجزة.' },
@@ -186,7 +195,6 @@ const ar: LandingCopy = {
     lead: 'جولة سريعة: من فتح الملف وإسناد المهمة، إلى تحرير المحضر واعتماده.',
     label: 'فيديو العرض التوضيحي',
     placeholder: 'سيُضاف الفيديو قريباً',
-    caption: 'مفوّض · جولة في المنصة',
     play: 'تشغيل الفيديو التوضيحي',
   },
   documents: {
@@ -208,7 +216,7 @@ const ar: LandingCopy = {
   ai: {
     eyebrow: 'المساعد الذكي',
     title: 'الذكاء الاصطناعي يُحرّر المسودة،\nوالقرار لكم.',
-    lead: 'يجمع «مفوّض» معطيات الملف وملاحظات الميدان ليقترح صيغة أولى منظمة للمحضر. يبقى النص قابلاً للتعديل بالكامل، ولا يعتمده إلا شخص مخوَّل.',
+    lead: 'يجمع «مفوّض» معطيات الملف وملاحظات الميدان ليقترح صيغة أولى منظمة للمحضر. يبقى النص قابلاً للتعديل بالكامل، ولا يعتمده إلا المفوض القضائي.',
     points: [
       { strong: 'مبنية على معطياتكم فقط:', text: 'الملف، الأطراف، والملاحظات المسجلة.' },
       { strong: 'كل فقرة قابلة للتعديل', text: 'قبل المراجعة.' },
@@ -217,19 +225,14 @@ const ar: LandingCopy = {
     disclaimer: 'المساعد الذكي أداة للتحرير، ولا يعوّض التقدير المهني ولا مسؤولية المفوض القضائي.',
     doc: {
       caseRef: 'الملف D-0139',
-      badge: 'مسودة · المساعد الذكي',
+      badge: 'مسودة · الذكاء الاصطناعي',
       title: 'محضر معاينة مكان',
       source: 'مأخوذ من ملاحظة 14/10 · للتحقق',
       signature: 'توقيع المفوض القضائي',
       ariaLabel: 'مسودة محضر في انتظار الاعتماد',
     },
-    review: {
-      title: 'المراجعة',
-      checks: ['هوية الأطراف', 'التاريخ والمكان'],
-      pending: 'المعاينات',
-      approve: 'اعتماد',
-      changes: 'طلب تعديل',
-    },
+    approve: 'اعتماد',
+    changes: 'طلب تعديل',
   },
   trust: {
     title: 'كل إجراء مسند، مؤرخ، وقابل للتحقق.',
@@ -243,7 +246,7 @@ const ar: LandingCopy = {
   faq: {
     title: 'أسئلة شائعة',
     items: [
-      { q: 'هل يحرّر الذكاء الاصطناعي المحاضر بدلاً من المفوض القضائي؟', a: 'لا. يقترح مسودة أولى فقط، ويجب مراجعتها وتعديلها عند الحاجة واعتمادها من طرف شخص مخوَّل قبل إقفالها.' },
+      { q: 'هل يحرّر الذكاء الاصطناعي المحاضر بدلاً من المفوض القضائي؟', a: 'لا. يقترح مسودة أولى فقط، ويجب مراجعتها وتعديلها عند الحاجة واعتمادها من طرف المفوض القضائي قبل إقفالها.' },
       { q: 'من يستطيع اعتماد وثيقة؟', a: 'الاعتماد من صلاحية المفوض القضائي وحده: يُعدّ المساعد المسودة، ويراجعها المفوض ويعتمدها.' },
       { q: 'هل المنصة متوفرة بالعربية؟', a: 'نعم، الواجهة متوفرة بالعربية والفرنسية، مع عرض من اليمين إلى اليسار.' },
       { q: 'هل يجب تثبيت برنامج؟', a: 'لا. «مفوّض» تطبيق ويب يُفتح من المتصفح، في المكتب أو في الميدان.' },
@@ -278,52 +281,53 @@ const ar: LandingCopy = {
 }
 
 const fr: LandingCopy = {
-  utility: 'Plateforme numérique de gestion des cabinets de commissaires judiciaires au Maroc',
   nav: {
     features: 'Fonctionnalités',
     workflow: 'Processus',
     documents: 'Procès-verbaux',
-    ai: 'Assistant IA',
+    ai: 'IA',
     faq: 'FAQ',
   },
   login: 'Se connecter',
   contactCta: 'Nous contacter',
   menu: 'Menu',
+  langLabel: 'Langue',
   themeToDark: 'Activer le mode sombre',
   themeToLight: 'Activer le mode clair',
   hero: {
-    eyebrow: 'La gestion du cabinet du commissaire judiciaire, avec méthode',
-    titleBefore: "De l'ouverture du dossier\nà ",
-    titleHighlight: "l'approbation du PV",
-    titleAfter: ',\nun seul parcours.',
+    badgeNew: 'Nouveau',
+    badge: 'Rédaction des PV assistée par IA',
+    titleLine1: 'Votre cabinet judiciaire,',
+    titleBefore: 'du dossier au ',
+    titleHighlight: 'PV approuvé',
+    titleAfter: '.',
     lead: "Mofawid réunit dossiers, missions, visites et procès-verbaux dans un seul espace de travail : chacun au cabinet sait ce qu'il a à faire, et le commissaire judiciaire sait où en est chaque dossier.",
     ctaVideo: 'Voir la vidéo de démonstration',
     ctaHow: 'Comment ça marche ?',
-    facts: [
-      { value: '7', label: 'types de procès-verbaux prêts' },
-      { value: '3', label: 'rôles aux droits définis' },
-      { value: '2', label: 'langues : français et arabe' },
-    ],
+    checks: ['7 types de procès-verbaux', 'Français et arabe', 'Approbation humaine de chaque acte'],
     mock: {
       date: 'Mardi 14 octobre',
       title: 'Tableau de bord',
       newCase: '+ Nouveau dossier',
       kpis: [
-        { label: 'Dossiers en cours', value: '48' },
-        { label: 'Missions', value: '12' },
-        { label: 'À approuver', value: '3', pending: true },
+        { label: 'Dossiers en cours', value: '48', progress: 72 },
+        { label: 'Missions', value: '12', progress: 45 },
+        { label: 'À approuver', value: '3', progress: 25, pending: true },
       ],
-      rows: [
-        { label: "Constat d'un lieu · D-0142", status: 'En cours' },
-        { label: 'PV de notification · D-0139', status: 'À approuver', pending: true },
-      ],
+      rowDone: { label: "Constat d'un lieu · D-0142", status: 'En cours' },
+      rowSwap: { label: 'PV de notification · D-0139', pending: 'À approuver', approved: '✓ Approuvé' },
       ariaLabel: 'Aperçu du tableau de bord Mofawid',
     },
-    seal: 'APPROUVÉ',
-    sealSub: 'PDF prêt',
+    chipNote: 'Observation terrain · 09:42',
+    chipPdf: 'PDF prêt à signer',
+  },
+  marquee: {
+    label: 'Types de procès-verbaux',
+    items: ['PV de notification', 'PV informatif', 'PV de refus de réception', "Constat d'un lieu", 'Constat WhatsApp', "Constat d'e-mails", "Constat d'une réunion"],
   },
   roles: {
-    title: 'Chacun à sa place,\nchacun son rôle.',
+    eyebrow: "L'équipe du cabinet",
+    title: 'Chacun à sa place, chacun son rôle.',
     items: [
       { title: 'Commissaire judiciaire', badge: 'Administrateur', text: "Vue d'ensemble du cabinet, affectation des missions, relecture et approbation des PV, gestion de l'équipe." },
       { title: 'Assistant du cabinet', badge: 'Assistant', text: 'Ouverture et mise à jour des dossiers, préparation des projets de PV, pièces jointes, facturation et code de suivi client.' },
@@ -332,14 +336,16 @@ const fr: LandingCopy = {
   },
   features: {
     eyebrow: 'Fonctionnalités',
-    title: 'Tout ce dont le cabinet a besoin,\nrien de superflu.',
+    title: 'Tout ce dont le cabinet a besoin, rien de superflu.',
     lead: 'Sept modules, chacun correspondant à une étape réelle du travail quotidien du cabinet.',
-    quote: "« L'ordre est la moitié de l'ouvrage. »",
+    aiTag: 'IA',
+    aiTitle: 'Rédaction des PV assistée par IA',
+    aiText: "Un premier projet structuré à partir des données du dossier et des observations, entièrement modifiable avant l'approbation.",
+    aiDocTitle: "Constat d'un lieu",
     items: [
       { title: 'Gestion des dossiers judiciaires', text: 'Créez, organisez et suivez vos dossiers, avec les informations du client, des parties et le statut de chacun.' },
       { title: 'Gestion des missions', text: 'Affectez les missions aux collaborateurs, fixez les délais et suivez leur avancement en temps réel.' },
-      { title: 'Suivi des visites et observations', text: 'Consignez les visites et les observations de terrain, avec photos et pièces jointes, datées et rattachées au dossier.' },
-      { title: 'Rédaction des PV assistée par IA', text: 'Un premier projet structuré à partir des données du dossier et des observations, entièrement modifiable.' },
+      { title: 'Suivi des visites et observations', text: 'Visites et observations de terrain, avec photos et pièces jointes, datées et rattachées au dossier.' },
       { title: 'Relecture et approbation', text: "À l'approbation, le document est verrouillé, le dossier clôturé et le PDF prêt." },
       { title: 'Utilisateurs et droits', text: 'Commissaire judiciaire, assistant et collaborateur : chacun ses droits, chacun ne voit que ce qui le concerne.' },
       { title: 'Tableau de bord du cabinet', text: "Dossiers en cours, documents en attente d'approbation, missions affectées et travail terminé." },
@@ -363,7 +369,6 @@ const fr: LandingCopy = {
     lead: "Une visite rapide : de l'ouverture du dossier et l'affectation de la mission, jusqu'à la rédaction et l'approbation du PV.",
     label: 'Vidéo de démonstration',
     placeholder: 'La vidéo sera bientôt disponible',
-    caption: 'Mofawid · Visite de la plateforme',
     play: 'Lire la vidéo de démonstration',
   },
   documents: {
@@ -385,7 +390,7 @@ const fr: LandingCopy = {
   ai: {
     eyebrow: 'Assistant IA',
     title: "L'IA rédige le projet,\nla décision vous appartient.",
-    lead: "Mofawid rassemble les données du dossier et les observations de terrain pour proposer une première version structurée du PV. Le texte reste entièrement modifiable, et seule une personne habilitée peut l'approuver.",
+    lead: "Mofawid rassemble les données du dossier et les observations de terrain pour proposer une première version structurée du PV. Le texte reste entièrement modifiable, et seul le commissaire judiciaire peut l'approuver.",
     points: [
       { strong: 'Fondé uniquement sur vos données :', text: 'le dossier, les parties et les observations saisies.' },
       { strong: 'Chaque paragraphe reste modifiable', text: 'avant la relecture.' },
@@ -394,19 +399,14 @@ const fr: LandingCopy = {
     disclaimer: "L'assistant IA est un outil de rédaction. Il ne remplace ni l'appréciation professionnelle ni la responsabilité du commissaire judiciaire.",
     doc: {
       caseRef: 'Dossier D-0139',
-      badge: 'Projet · Assistant IA',
+      badge: 'Projet · IA',
       title: "Constat d'un lieu",
       source: "Repris de l'observation du 14/10 · à vérifier",
-      signature: 'Signature du commissaire judiciaire',
+      signature: 'Signature du commissaire',
       ariaLabel: "Projet de PV en attente d'approbation",
     },
-    review: {
-      title: 'Relecture',
-      checks: ['Identité des parties', 'Date et lieu'],
-      pending: 'Constatations',
-      approve: 'Approuver',
-      changes: 'Demander une modification',
-    },
+    approve: 'Approuver',
+    changes: 'Modifier',
   },
   trust: {
     title: 'Chaque action est attribuée, datée et vérifiable.',
@@ -420,7 +420,7 @@ const fr: LandingCopy = {
   faq: {
     title: 'Questions fréquentes',
     items: [
-      { q: "L'IA rédige-t-elle les PV à la place du commissaire judiciaire ?", a: "Non. Elle propose seulement un premier projet, qui doit être relu, corrigé si besoin et approuvé par une personne habilitée avant d'être verrouillé." },
+      { q: "L'IA rédige-t-elle les PV à la place du commissaire judiciaire ?", a: "Non. Elle propose seulement un premier projet, qui doit être relu, corrigé si besoin et approuvé par le commissaire judiciaire avant d'être verrouillé." },
       { q: 'Qui peut approuver un document ?', a: "L'approbation est réservée au commissaire judiciaire : l'assistant prépare le projet, le commissaire le relit et l'approuve." },
       { q: 'La plateforme est-elle disponible en arabe ?', a: "Oui. L'interface est disponible en français et en arabe, avec un affichage de droite à gauche pour l'arabe." },
       { q: 'Faut-il installer un logiciel ?', a: "Non. Mofawid est une application web qui s'ouvre dans le navigateur, au cabinet comme sur le terrain." },
