@@ -21,7 +21,8 @@ import { GeometricPattern } from '../components/GeometricPattern'
 import { cn } from '../lib/utils'
 
 const DEMO_ACCOUNTS: Array<{ username: string; password: string; role: string }> = [
-  { username: 'superadmin', password: 'Admin@123', role: 'SUPER_ADMIN' },
+  // Compte plateforme masqué : réservé au développeur (création des cabinets).
+  // { username: 'superadmin', password: 'Admin@123', role: 'SUPER_ADMIN' },
   { username: 'admin.demo', password: 'Admin@123', role: 'ADMIN' },
   { username: 'assistant.demo', password: 'Assist@123', role: 'ASSISTANT' },
   { username: 'collab.ahmed', password: 'Ahmed@123', role: 'COLLABORATEUR' },
