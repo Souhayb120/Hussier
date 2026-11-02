@@ -18,6 +18,7 @@ import {
 import {
   api,
   DOCUMENT_KINDS,
+  type DeliveryResult,
   type DocumentKind,
   type DocumentResponse,
 } from '../../api/client'
@@ -43,6 +44,13 @@ import { truncate } from '../../lib/utils'
 import { openBlob, saveBlob } from '../../lib/files'
 
 const DEFAULT_KIND: DocumentKind = 'CONSTAT_LIEU'
+
+/** Le type de notification qui va avec le résultat de la dernière visite. */
+function kindForResult(result: DeliveryResult): DocumentKind {
+  if (result === 'DELIVERED_IN_PERSON' || result === 'DELIVERED_TO_OTHER') return 'NOTIFICATION'
+  if (result === 'REFUSED') return 'NOTIFICATION_REFUS'
+  return 'NOTIFICATION_INFORMATIF' // personne, adresse introuvable, a déménagé…
+}
 
 /* --------------------------- Formulaire document ------------------------- */
 
@@ -199,10 +207,14 @@ function DocumentViewDialog({
   documentId,
   onClose,
   onEdit,
+  onSubmit,
+  onApprove,
 }: {
   documentId: string | null
   onClose: () => void
   onEdit: (doc: DocumentResponse) => void
+  onSubmit: (doc: DocumentResponse) => void
+  onApprove: (doc: DocumentResponse) => void
 }) {
   const { t } = useTranslation()
   const fmt = useFormatters()
@@ -216,6 +228,10 @@ function DocumentViewDialog({
 
   const doc = detailQ.data ?? null
   const editable = doc && doc.status !== 'APPROVED' && can('documents:prepare')
+  // on lit le PV et on le soumet / l'approuve au même endroit
+  const submittable =
+    doc && (doc.status === 'DRAFT' || doc.status === 'DRAFT_AI') && can('documents:prepare')
+  const approvable = doc && doc.status === 'AWAITING_APPROVAL' && can('documents:approve')
 
   return (
     <Dialog
@@ -231,6 +247,16 @@ function DocumentViewDialog({
           {editable && (
             <Button variant="secondary" icon={<Pencil className="h-4 w-4" />} onClick={() => onEdit(doc)}>
               {t('common.edit')}
+            </Button>
+          )}
+          {submittable && (
+            <Button icon={<Send className="h-4 w-4" />} onClick={() => onSubmit(doc)}>
+              {t('documents.submit')}
+            </Button>
+          )}
+          {approvable && (
+            <Button icon={<CheckCircle2 className="h-4 w-4" />} onClick={() => onApprove(doc)}>
+              {t('documents.approve')}
             </Button>
           )}
           {doc?.status === 'APPROVED' && <PdfButtons doc={doc} />}
@@ -276,21 +302,37 @@ function DocumentViewDialog({
 
 function AiDraftDialog({
   open,
+  caseId,
   onClose,
   onConfirm,
   working,
 }: {
   open: boolean
+  caseId: string
   onClose: () => void
   onConfirm: (kind: DocumentKind) => void
   working: boolean
 }) {
   const { t } = useTranslation()
+  const { can } = useAuth()
   const [kind, setKind] = useState<DocumentKind>(DEFAULT_KIND)
 
+  // le résultat de la dernière visite (toutes missions du dossier) → le bon type de notification
+  const lastVisitQ = useQuery({
+    queryKey: ['last-visit', caseId],
+    queryFn: async () => {
+      const missions = await api.missions.listByCase(caseId)
+      const lists = await Promise.all(missions.map((m) => api.attempts.list(m.id)))
+      const visits = lists.flat().sort((a, b) => a.attemptedAt.localeCompare(b.attemptedAt))
+      return visits.length > 0 ? visits[visits.length - 1].result : null
+    },
+    enabled: open && can('missions:viewCase'),
+  })
+  const suggested = lastVisitQ.data ? kindForResult(lastVisitQ.data) : null
+
   useEffect(() => {
-    if (open) setKind(DEFAULT_KIND)
-  }, [open])
+    if (open) setKind(suggested ?? DEFAULT_KIND)
+  }, [open, suggested])
 
   return (
     <Dialog
@@ -329,6 +371,11 @@ function AiDraftDialog({
             ))}
           </Select>
         </Field>
+        {suggested && kind === suggested && (
+          <p className="text-xs text-emerald-700">
+            {t('documents.kindSuggested', { result: t(`deliveryResult.${lastVisitQ.data}`) })}
+          </p>
+        )}
         {/* Ce dont le type choisi a besoin (parties, visites, observations…) */}
         <p className="rounded-lg border border-line bg-canvas/50 px-3.5 py-2.5 text-sm leading-relaxed text-ink-muted">
           <span className="font-medium text-ink">{t('documents.kindHint')} : </span>
@@ -367,6 +414,7 @@ export function DocumentsPanel({ caseId }: { caseId: string }) {
 
   const invalidate = () => {
     queryClient.invalidateQueries({ queryKey: ['documents', caseId] })
+    queryClient.invalidateQueries({ queryKey: ['document'] })
     queryClient.invalidateQueries({ queryKey: ['case', caseId] })
   }
 
@@ -528,7 +576,30 @@ export function DocumentsPanel({ caseId }: { caseId: string }) {
                       </p>
                     </div>
 
+                    {/* une seule action principale par statut ; modifier / supprimer en icônes */}
                     <div className="flex flex-wrap items-center gap-1.5">
+                      {canEdit && (
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          icon={<Pencil className="h-4 w-4" />}
+                          title={t('common.edit')}
+                          aria-label={t('common.edit')}
+                          onClick={() => openEdit(doc)}
+                        />
+                      )}
+                      {canRemove && (
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="text-red-600 hover:bg-red-50"
+                          icon={<Trash2 className="h-4 w-4" />}
+                          title={t('common.delete')}
+                          aria-label={t('common.delete')}
+                          disabled={actionsDisabled}
+                          onClick={() => setPendingDelete(doc)}
+                        />
+                      )}
                       <Button
                         variant="outline"
                         size="sm"
@@ -537,20 +608,8 @@ export function DocumentsPanel({ caseId }: { caseId: string }) {
                       >
                         {t('common.view')}
                       </Button>
-                      {doc.status === 'APPROVED' && <PdfButtons doc={doc} />}
-                      {canEdit && (
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          icon={<Pencil className="h-4 w-4" />}
-                          onClick={() => openEdit(doc)}
-                        >
-                          {t('common.edit')}
-                        </Button>
-                      )}
                       {canSubmit && (
                         <Button
-                          variant="secondary"
                           size="sm"
                           icon={<Send className="h-4 w-4" />}
                           disabled={actionsDisabled}
@@ -569,18 +628,7 @@ export function DocumentsPanel({ caseId }: { caseId: string }) {
                           {t('documents.approve')}
                         </Button>
                       )}
-                      {canRemove && (
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="text-red-600 hover:bg-red-50"
-                          icon={<Trash2 className="h-4 w-4" />}
-                          disabled={actionsDisabled}
-                          onClick={() => setPendingDelete(doc)}
-                        >
-                          {t('common.delete')}
-                        </Button>
-                      )}
+                      {doc.status === 'APPROVED' && <PdfButtons doc={doc} />}
                     </div>
                   </div>
                 </li>
@@ -612,10 +660,13 @@ export function DocumentsPanel({ caseId }: { caseId: string }) {
         documentId={viewingId}
         onClose={() => setViewingId(null)}
         onEdit={openEdit}
+        onSubmit={setPendingSubmit}
+        onApprove={setPendingApprove}
       />
 
       <AiDraftDialog
         open={aiOpen}
+        caseId={caseId}
         onClose={() => setAiOpen(false)}
         onConfirm={(kind) => aiM.mutate(kind)}
         working={aiM.isPending}

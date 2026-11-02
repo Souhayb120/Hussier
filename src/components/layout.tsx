@@ -10,11 +10,14 @@ import {
   LayoutDashboard,
   LogOut,
   Menu,
+  Moon,
   Scale,
+  Sun,
   Users,
   X,
 } from 'lucide-react'
 import { cn, initials } from '../lib/utils'
+import { useTheme } from '../lib/theme'
 import { useAuth } from '../auth/AuthProvider'
 import type { Capability } from '../features/auth/permissions'
 import type { Lang } from '../i18n'
@@ -226,6 +229,29 @@ export function LanguageSwitcher() {
   )
 }
 
+/* ------------------------------ Theme toggle ----------------------------- */
+
+/** Bouton lune / soleil : passe l'application en mode sombre ou clair. */
+export function ThemeToggle() {
+  const { t } = useTranslation()
+  const { theme, toggle } = useTheme()
+  const dark = theme === 'dark'
+  const label = dark ? t('theme.toLight') : t('theme.toDark')
+
+  return (
+    <button
+      type="button"
+      onClick={toggle}
+      aria-pressed={dark}
+      aria-label={label}
+      title={label}
+      className="rounded-lg border border-line bg-surface p-2 text-ink-muted transition-colors hover:text-ink"
+    >
+      {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+    </button>
+  )
+}
+
 /* ------------------------------- User menu ------------------------------- */
 
 function UserMenu() {
@@ -340,6 +366,7 @@ function Shell({ variant, children }: { variant: ShellVariant; children: ReactNo
             </button>
             <div className="hidden flex-1 items-center lg:flex" />
             <div className="flex items-center gap-2 sm:gap-3">
+              <ThemeToggle />
               <LanguageSwitcher />
               <UserMenu />
             </div>

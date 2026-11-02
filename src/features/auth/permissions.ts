@@ -16,6 +16,7 @@ export type Capability =
   | 'cases:delete'
   | 'missions:view' // voir toutes les missions de l'étude
   | 'missions:create' // créer une mission et l'assigner
+  | 'missions:viewCase' // voir les missions d'un dossier (onglet Missions du dossier)
   | 'missions:work' // collaborateur : démarrer / observer / terminer ses missions
   | 'documents:view' // page « Documents » : tous les documents de l'étude
   | 'documents:prepare' // créer, éditer, générer un brouillon IA, soumettre
@@ -37,6 +38,7 @@ const ROLE_CAPABILITIES: Record<Role, readonly Capability[]> = {
     'cases:delete',
     'missions:view',
     'missions:create',
+    'missions:viewCase',
     'documents:view',
     'documents:prepare',
     'documents:approve',
@@ -51,6 +53,7 @@ const ROLE_CAPABILITIES: Record<Role, readonly Capability[]> = {
     'cases:view',
     'cases:create',
     'cases:edit',
+    'missions:viewCase',
     'documents:view',
     'documents:prepare',
     'attachments:manage',

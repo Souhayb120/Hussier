@@ -13,6 +13,7 @@ import {
   Paperclip,
   Pencil,
   Phone,
+  Plus,
   ScanSearch,
   Trash2,
   UserRound,
@@ -37,8 +38,10 @@ import {
 import { AttachmentsPanel } from '../components/domain/AttachmentsPanel'
 import { BillingPanel } from '../components/domain/BillingPanel'
 import { CaseFormDialog } from '../components/domain/CaseFormDialog'
+import { CaseProgress } from '../components/domain/CaseProgress'
 import { ClientTrackingPanel } from '../components/domain/ClientTrackingPanel'
 import { DocumentsPanel } from '../components/domain/DocumentsPanel'
+import { MissionFormDialog } from '../components/domain/MissionFormDialog'
 import { PartiesPanel } from '../components/domain/PartiesPanel'
 import { apiErrorKey, useFormatters } from '../lib/format'
 
@@ -52,7 +55,7 @@ export default function CaseDetailPage() {
   const navigate = useNavigate()
 
   const canDelete = can('cases:delete')
-  const canSeeMissions = can('missions:view')
+  const canSeeMissions = can('missions:viewCase')
   const canSeeBilling = can('billing:manage')
   const canSeeTracking = can('tracking:manage')
 
@@ -75,6 +78,7 @@ export default function CaseDetailPage() {
 
   const [editOpen, setEditOpen] = useState(false)
   const [confirmDelete, setConfirmDelete] = useState(false)
+  const [missionOpen, setMissionOpen] = useState(false)
 
   const caseQ = useQuery({
     queryKey: ['case', id],
@@ -89,7 +93,12 @@ export default function CaseDetailPage() {
       toast(t('cases.deleted'))
       navigate('/dossiers')
     },
-    onError: (error) => toast(t(apiErrorKey(error)), 'error'),
+    onError: (error) => {
+      // 400 : le dossier a un PV approuvé (document officiel), il ne peut pas être supprimé
+      const status = (error as { status?: number }).status
+      toast(status === 400 ? t('cases.deleteApproved') : t(apiErrorKey(error)), 'error')
+      setConfirmDelete(false)
+    },
   })
 
   const tabs = useMemo(() => {
@@ -201,6 +210,13 @@ export default function CaseDetailPage() {
         </div>
       </Card>
 
+      <CaseProgress
+        caseId={item.id}
+        caseStatus={item.caseStatus}
+        onGoTab={changeTab}
+        onNewMission={() => setMissionOpen(true)}
+      />
+
       <Tabs items={tabs} value={tab} onChange={changeTab} />
 
       {tab === 'summary' && (
@@ -259,13 +275,27 @@ export default function CaseDetailPage() {
 
       {tab === 'attachments' && <AttachmentsPanel caseId={item.id} />}
 
-      {tab === 'missions' && canSeeMissions && <CaseMissionsTab caseId={item.id} />}
+      {tab === 'missions' && canSeeMissions && (
+        <CaseMissionsTab
+          caseId={item.id}
+          closed={item.caseStatus === 'CLOSED'}
+          onNewMission={() => setMissionOpen(true)}
+        />
+      )}
 
       {tab === 'billing' && canSeeBilling && <BillingPanel caseId={item.id} />}
 
       {tab === 'tracking' && canSeeTracking && <ClientTrackingPanel caseId={item.id} />}
 
       <CaseFormDialog open={editOpen} onClose={() => setEditOpen(false)} caseItem={item} />
+
+      {can('missions:create') && (
+        <MissionFormDialog
+          open={missionOpen}
+          onClose={() => setMissionOpen(false)}
+          caseId={item.id}
+        />
+      )}
 
       <ConfirmDialog
         open={confirmDelete}
@@ -301,9 +331,27 @@ function InfoRow({
   )
 }
 
-function CaseMissionsTab({ caseId }: { caseId: string }) {
+function CaseMissionsTab({
+  caseId,
+  closed,
+  onNewMission,
+}: {
+  caseId: string
+  closed: boolean
+  onNewMission: () => void
+}) {
   const { t } = useTranslation()
   const fmt = useFormatters()
+  const { can } = useAuth()
+  // l'assistant voit la liste, mais seul l'admin ouvre / crée une mission
+  const canOpen = can('missions:view')
+  const canCreate = can('missions:create') && !closed
+
+  const newButton = canCreate ? (
+    <Button icon={<Plus className="h-4 w-4" />} onClick={onNewMission}>
+      {t('missions.new')}
+    </Button>
+  ) : undefined
 
   const query = useQuery({
     queryKey: ['missions', 'by-case', caseId],
@@ -325,32 +373,52 @@ function CaseMissionsTab({ caseId }: { caseId: string }) {
   if (missions.length === 0) {
     return (
       <Card>
-        <EmptyState icon={<Building2 className="h-6 w-6" />} title={t('cases.noMissions')} />
+        <EmptyState
+          icon={<Building2 className="h-6 w-6" />}
+          title={t('cases.noMissions')}
+          action={newButton}
+        />
       </Card>
     )
   }
 
+  const rowClass = 'flex flex-wrap items-center justify-between gap-3 px-5 py-4'
+
   return (
-    <Card className="overflow-hidden">
-      <ul className="divide-y divide-line">
-        {missions.map((mission) => (
-          <li key={mission.id}>
-            <Link
-              to={`/missions/${mission.id}`}
-              className="flex flex-wrap items-center justify-between gap-3 px-5 py-4 transition hover:bg-canvas/60"
-            >
-              <div className="min-w-0">
-                <p className="truncate font-medium text-ink">{mission.title}</p>
-                <p className="truncate text-xs text-ink-muted">
-                  {t('missions.assignedTo')}: {mission.assignedToUsername}
-                  {mission.scheduledAt ? ` · ${fmt.dateTime(mission.scheduledAt)}` : ''}
-                </p>
-              </div>
-              <StatusBadge value={mission.status} label={t(`missionStatus.${mission.status}`)} />
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </Card>
+    <div className="space-y-4">
+      {newButton && <div className="flex justify-end">{newButton}</div>}
+      <Card className="overflow-hidden">
+        <ul className="divide-y divide-line">
+          {missions.map((mission) => {
+            const content = (
+              <>
+                <div className="min-w-0">
+                  <p className="truncate font-medium text-ink">{mission.title}</p>
+                  <p className="truncate text-xs text-ink-muted">
+                    {t('missions.assignedTo')}: {mission.assignedToUsername}
+                    {mission.scheduledAt ? ` · ${fmt.dateTime(mission.scheduledAt)}` : ''}
+                  </p>
+                </div>
+                <StatusBadge value={mission.status} label={t(`missionStatus.${mission.status}`)} />
+              </>
+            )
+            return (
+              <li key={mission.id}>
+                {canOpen ? (
+                  <Link
+                    to={`/missions/${mission.id}`}
+                    className={`${rowClass} transition hover:bg-canvas/60`}
+                  >
+                    {content}
+                  </Link>
+                ) : (
+                  <div className={rowClass}>{content}</div>
+                )}
+              </li>
+            )
+          })}
+        </ul>
+      </Card>
+    </div>
   )
 }

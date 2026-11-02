@@ -88,7 +88,7 @@
     "COLLABORATEUR": "Collaborateur"
   },
   "caseStatus": {
-    "QUALIFIED": "Qualifié",
+    "QUALIFIED": "Nouveau",
     "ASSIGNED": "Assigné",
     "IN_PROGRESS": "En cours",
     "AWAITING_APPROVAL": "En attente de validation",
@@ -277,7 +277,8 @@
     "documentsCount": "{{count}} document(s)",
     "missionsCount": "{{count}} mission(s)",
     "tabParties": "Parties",
-    "refHint": "Numéro du registre de l'étude (مرجعنا)"
+    "refHint": "Numéro du registre de l'étude (مرجعنا)",
+    "deleteApproved": "Ce dossier a un PV approuvé (document officiel) : il ne peut pas être supprimé."
   },
   "missions": {
     "title": "Missions",
@@ -399,7 +400,8 @@
     "untitled": "Sans titre",
     "statusCount": "{{count}} document(s)",
     "approvedBy": "Approuvé par {{name}} le {{date}}",
-    "kindHint": "Ce qu'il faut avant de générer"
+    "kindHint": "Ce qu'il faut avant de générer",
+    "kindSuggested": "Type proposé d’après la dernière visite : {{result}}"
   },
   "attachments": {
     "title": "Pièces jointes",
@@ -668,5 +670,40 @@
     "empty": "Aucun document pour le moment.",
     "emptyHint": "Les documents créés ou générés par l'IA dans les dossiers apparaîtront ici.",
     "noResults": "Aucun document ne correspond à ces filtres."
+  },
+  "progress": {
+    "title": "Avancement du dossier",
+    "nextTitle": "Prochaine étape",
+    "doneTitle": "Dossier terminé",
+    "steps": {
+      "created": "Dossier créé",
+      "mission": "Mission",
+      "field": "Terrain",
+      "draft": "PV rédigé",
+      "approved": "PV approuvé"
+    },
+    "next": {
+      "addParties": "Ajoutez les parties du dossier (le requérant et la personne à notifier).",
+      "createMission": "Créez la mission et assignez-la à un collaborateur.",
+      "askMission": "Le commissaire doit créer la mission de terrain pour ce dossier.",
+      "waitField": "En attente du terrain : mission confiée à {{name}}.",
+      "toGenerate": "Le terrain est terminé : générez le PV avec l’IA.",
+      "toSubmit": "Relisez le brouillon du PV puis soumettez-le pour validation.",
+      "toApprove": "Le PV attend votre validation.",
+      "waitApproval": "Le PV a été soumis : en attente de validation par le commissaire.",
+      "approved": "Le PV est approuvé. Le PDF officiel est prêt."
+    },
+    "action": {
+      "addParties": "Ajouter les parties",
+      "createMission": "Créer la mission",
+      "generate": "Générer le PV",
+      "review": "Relire et soumettre",
+      "approve": "Relire et approuver",
+      "openPdf": "Voir le PDF"
+    }
+  },
+  "theme": {
+    "toDark": "Passer en mode sombre",
+    "toLight": "Passer en mode clair"
   }
 }

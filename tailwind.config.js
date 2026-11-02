@@ -1,114 +1,53 @@
+// rgb(var(--brand-600) / <alpha-value>) : garde les opacités du type bg-canvas/60
+const color = (name) => `rgb(var(--${name}) / <alpha-value>)`
+const scale = (name, shades) => Object.fromEntries(shades.map((s) => [s, color(`${name}-${s}`)]))
+const FULL = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950]
+const SHORT = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900]
+
 /** @type {import('tailwindcss').Config} */
 export default {
+  // mode sombre : classe "dark" sur <html> (voir src/lib/theme.ts)
+  darkMode: 'class',
   content: ['./index.html', './src/**/*.{ts,tsx}'],
   theme: {
     extend: {
+      // Les couleurs viennent des variables CSS de src/styles/index.css :
+      // elles changent quand <html> a la classe "dark" (mode sombre).
       colors: {
         // Vert institutionnel profond (justice / Maroc) — token vert principal.
-        brand: {
-          50: '#eef4f1',
-          100: '#d8e7df',
-          200: '#b3cfc2',
-          300: '#8ab1a0',
-          400: '#5d907c',
-          500: '#3a715b',
-          600: '#1d5c47',
-          700: '#0b4d3c',
-          800: '#0a4133',
-          900: '#07382d',
-          950: '#042a21',
-        },
+        brand: scale('brand', FULL),
         // Accent « brass » — or discret (sceaux, papier officiel).
-        gold: {
-          50: '#faf6ec',
-          100: '#f3ead2',
-          200: '#e7d8ab',
-          300: '#d5bd7a',
-          400: '#bd9d55',
-          500: '#a8843a',
-          600: '#8f6f2d',
-          700: '#755a25',
-          800: '#5c481f',
-          900: '#48391a',
-        },
+        gold: scale('gold', SHORT),
         // Neutres chauds (encre légèrement verte).
         ink: {
-          DEFAULT: '#1f2a27',
-          muted: '#4a5753',
-          soft: '#7c8a84',
+          DEFAULT: color('ink'),
+          muted: color('ink-muted'),
+          soft: color('ink-soft'),
         },
-        // « Papier » : fond ivoire chaud. canvas = ancien fond, même sémantique.
-        canvas: '#f7f5ef',
-        surface: '#ffffff',
-        line: '#e5e0d4',
+        // « Papier » : fond ivoire chaud (vert très foncé en sombre).
+        canvas: color('canvas'),
+        surface: color('surface'),
+        line: color('line'),
         // Brique (destructif) — rouge maçonné, réservé aux actions graves.
-        red: {
-          50: '#faf0f0',
-          100: '#f3dbdb',
-          200: '#e2b2b2',
-          300: '#cc8585',
-          400: '#b55b5b',
-          500: '#a63f3f',
-          600: '#9b2c2c',
-          700: '#822424',
-          800: '#6b1d1d',
-          900: '#501616',
-        },
+        red: scale('red', SHORT),
         // Neutres chauds (remplace le slate froid).
-        slate: {
-          50: '#f6f4ef',
-          100: '#ece8df',
-          200: '#ddd7ca',
-          300: '#c5bdac',
-          400: '#a89e8b',
-          500: '#8d836f',
-          600: '#71695a',
-          700: '#5b5449',
-          800: '#46403a',
-          900: '#33302a',
-          950: '#201e19',
-        },
+        slate: scale('slate', FULL),
         // Info « bleu-vert » atténué (remplace le sky SaaS).
-        sky: {
-          50: '#eef4f2',
-          100: '#d9e7e3',
-          200: '#b6d0c9',
-          300: '#8fb4ab',
-          400: '#68968c',
-          500: '#4e7d73',
-          600: '#3d665d',
-          700: '#31544c',
-          800: '#29453e',
-          900: '#20372f',
-          950: '#122220',
-        },
+        sky: scale('sky', FULL),
         // Vert « actif » / « réglé » (profond, pour les succès).
-        emerald: {
-          50: '#edf5f1',
-          100: '#d6e8df',
-          200: '#aecfbd',
-          300: '#83b198',
-          400: '#55907a',
-          500: '#36735e',
-          600: '#1c5c49',
-          700: '#0e4a3b',
-          800: '#0a3c30',
-          900: '#07382d',
-          950: '#042420',
-        },
+        emerald: scale('emerald', FULL),
         // Mauve neutre discret (rares accents, supprimés progressivement).
-        violet: {
-          50: '#f4f1ef',
-          100: '#e7e0dc',
-          200: '#cfc1b8',
-          300: '#b29f92',
-          400: '#96806f',
-          500: '#7f6960',
-          600: '#6b584f',
-          700: '#5a4a41',
-          800: '#4a3e37',
-          900: '#3a312b',
-        },
+        violet: scale('violet', SHORT),
+      },
+      // Le texte a ses propres variables : en sombre, text-brand-700 devient clair
+      // alors que bg-brand-700 (boutons, barre latérale) reste foncé.
+      textColor: {
+        brand: scale('brand-text', FULL),
+        gold: scale('gold-text', SHORT),
+        red: scale('red-text', SHORT),
+        sky: scale('sky-text', FULL),
+        emerald: scale('emerald-text', FULL),
+        violet: scale('violet-text', SHORT),
       },
       fontSize: {
         '2xs': ['0.6875rem', { lineHeight: '0.9375rem' }],

@@ -29,6 +29,11 @@
         var dir = lang === 'fr' ? 'ltr' : 'rtl'
         document.documentElement.lang = lang === 'fr' ? 'fr' : 'ar'
         document.documentElement.dir = dir
+        // Même chose pour le thème (clé lue aussi par src/lib/theme.ts).
+        var theme = localStorage.getItem('mofawid.theme')
+        if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.classList.add('dark')
+        }
       } catch (e) {
         /* noop */
       }

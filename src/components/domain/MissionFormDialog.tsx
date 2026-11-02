@@ -17,7 +17,16 @@ const EMPTY: MissionValues = {
   scheduledAt: '',
 }
 
-export function MissionFormDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
+/** `caseId` donné (depuis la page du dossier) : le dossier est déjà choisi, la liste est masquée. */
+export function MissionFormDialog({
+  open,
+  onClose,
+  caseId,
+}: {
+  open: boolean
+  onClose: () => void
+  caseId?: string
+}) {
   const { t } = useTranslation()
   const queryClient = useQueryClient()
   const { toast } = useToast()
@@ -32,7 +41,7 @@ export function MissionFormDialog({ open, onClose }: { open: boolean; onClose: (
   const casesQ = useQuery({
     queryKey: ['cases', { page: 0, size: 100 }],
     queryFn: () => api.cases.list(0, 100),
-    enabled: open,
+    enabled: open && !caseId,
   })
   const usersQ = useQuery({
     queryKey: ['users', { page: 0, size: 100 }],
@@ -41,10 +50,12 @@ export function MissionFormDialog({ open, onClose }: { open: boolean; onClose: (
   })
 
   useEffect(() => {
-    if (open) reset(EMPTY)
-  }, [open, reset])
+    if (open) reset({ ...EMPTY, caseId: caseId ?? '' })
+  }, [open, caseId, reset])
 
   const collaborators = (usersQ.data?.content ?? []).filter((u) => u.role === 'COLLABORATEUR')
+  // un dossier clôturé n'a plus besoin de mission
+  const openCases = (casesQ.data?.content ?? []).filter((c) => c.caseStatus !== 'CLOSED')
 
   const mutation = useMutation({
     mutationFn: (values: MissionValues) =>
@@ -58,6 +69,7 @@ export function MissionFormDialog({ open, onClose }: { open: boolean; onClose: (
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['missions'] })
       queryClient.invalidateQueries({ queryKey: ['cases'] })
+      if (caseId) queryClient.invalidateQueries({ queryKey: ['case', caseId] })
       toast(t('missions.created'))
       onClose()
     },
@@ -89,22 +101,24 @@ export function MissionFormDialog({ open, onClose }: { open: boolean; onClose: (
         onSubmit={handleSubmit((v) => mutation.mutate(v))}
         noValidate
       >
-        <Field
-          label={t('missions.case')}
-          required
-          error={errors.caseId ? t(errors.caseId.message as string) : undefined}
-        >
-          <Select {...register('caseId')} defaultValue="">
-            <option value="" disabled>
-              {t('missions.selectCase')}
-            </option>
-            {(casesQ.data?.content ?? []).map((item) => (
-              <option key={item.id} value={item.id}>
-                {item.ref} — {item.clientName}
+        {!caseId && (
+          <Field
+            label={t('missions.case')}
+            required
+            error={errors.caseId ? t(errors.caseId.message as string) : undefined}
+          >
+            <Select {...register('caseId')} defaultValue="">
+              <option value="" disabled>
+                {t('missions.selectCase')}
               </option>
-            ))}
-          </Select>
-        </Field>
+              {openCases.map((item) => (
+                <option key={item.id} value={item.id}>
+                  {item.ref} — {item.clientName}
+                </option>
+              ))}
+            </Select>
+          </Field>
+        )}
 
         <Field
           label={t('missions.assignedTo')}

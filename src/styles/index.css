@@ -3,6 +3,79 @@
 @tailwind utilities;
 
 @layer base {
+  /* Couleurs du thème : clair par défaut, sombre avec la classe "dark" sur <html>.
+     Les valeurs sont "R G B" pour que Tailwind garde les opacités (bg-canvas/60). */
+  :root {
+    /* neutres */
+    --canvas: 247 245 239;
+    --surface: 255 255 255;
+    --line: 229 224 212;
+    --ink: 31 42 39;
+    --ink-muted: 74 87 83;
+    --ink-soft: 124 138 132;
+    /* slate */
+    --slate-50: 246 244 239; --slate-100: 236 232 223; --slate-200: 221 215 202; --slate-300: 197 189 172; --slate-400: 168 158 139; --slate-500: 141 131 111; --slate-600: 113 105 90; --slate-700: 91 84 73; --slate-800: 70 64 58; --slate-900: 51 48 42; --slate-950: 32 30 25;
+    /* brand */
+    --brand-50: 238 244 241; --brand-100: 216 231 223; --brand-200: 179 207 194; --brand-300: 138 177 160; --brand-400: 93 144 124; --brand-500: 58 113 91; --brand-600: 29 92 71; --brand-700: 11 77 60; --brand-800: 10 65 51; --brand-900: 7 56 45; --brand-950: 4 42 33;
+    --brand-text-50: var(--brand-50); --brand-text-100: var(--brand-100); --brand-text-200: var(--brand-200); --brand-text-300: var(--brand-300); --brand-text-400: var(--brand-400); --brand-text-500: var(--brand-500); --brand-text-600: var(--brand-600); --brand-text-700: var(--brand-700); --brand-text-800: var(--brand-800); --brand-text-900: var(--brand-900); --brand-text-950: var(--brand-950);
+    /* gold */
+    --gold-50: 250 246 236; --gold-100: 243 234 210; --gold-200: 231 216 171; --gold-300: 213 189 122; --gold-400: 189 157 85; --gold-500: 168 132 58; --gold-600: 143 111 45; --gold-700: 117 90 37; --gold-800: 92 72 31; --gold-900: 72 57 26;
+    --gold-text-50: var(--gold-50); --gold-text-100: var(--gold-100); --gold-text-200: var(--gold-200); --gold-text-300: var(--gold-300); --gold-text-400: var(--gold-400); --gold-text-500: var(--gold-500); --gold-text-600: var(--gold-600); --gold-text-700: var(--gold-700); --gold-text-800: var(--gold-800); --gold-text-900: var(--gold-900);
+    /* red */
+    --red-50: 250 240 240; --red-100: 243 219 219; --red-200: 226 178 178; --red-300: 204 133 133; --red-400: 181 91 91; --red-500: 166 63 63; --red-600: 155 44 44; --red-700: 130 36 36; --red-800: 107 29 29; --red-900: 80 22 22;
+    --red-text-50: var(--red-50); --red-text-100: var(--red-100); --red-text-200: var(--red-200); --red-text-300: var(--red-300); --red-text-400: var(--red-400); --red-text-500: var(--red-500); --red-text-600: var(--red-600); --red-text-700: var(--red-700); --red-text-800: var(--red-800); --red-text-900: var(--red-900);
+    /* emerald */
+    --emerald-50: 237 245 241; --emerald-100: 214 232 223; --emerald-200: 174 207 189; --emerald-300: 131 177 152; --emerald-400: 85 144 122; --emerald-500: 54 115 94; --emerald-600: 28 92 73; --emerald-700: 14 74 59; --emerald-800: 10 60 48; --emerald-900: 7 56 45; --emerald-950: 4 36 32;
+    --emerald-text-50: var(--emerald-50); --emerald-text-100: var(--emerald-100); --emerald-text-200: var(--emerald-200); --emerald-text-300: var(--emerald-300); --emerald-text-400: var(--emerald-400); --emerald-text-500: var(--emerald-500); --emerald-text-600: var(--emerald-600); --emerald-text-700: var(--emerald-700); --emerald-text-800: var(--emerald-800); --emerald-text-900: var(--emerald-900); --emerald-text-950: var(--emerald-950);
+    /* sky */
+    --sky-50: 238 244 242; --sky-100: 217 231 227; --sky-200: 182 208 201; --sky-300: 143 180 171; --sky-400: 104 150 140; --sky-500: 78 125 115; --sky-600: 61 102 93; --sky-700: 49 84 76; --sky-800: 41 69 62; --sky-900: 32 55 47; --sky-950: 18 34 32;
+    --sky-text-50: var(--sky-50); --sky-text-100: var(--sky-100); --sky-text-200: var(--sky-200); --sky-text-300: var(--sky-300); --sky-text-400: var(--sky-400); --sky-text-500: var(--sky-500); --sky-text-600: var(--sky-600); --sky-text-700: var(--sky-700); --sky-text-800: var(--sky-800); --sky-text-900: var(--sky-900); --sky-text-950: var(--sky-950);
+    /* violet */
+    --violet-50: 244 241 239; --violet-100: 231 224 220; --violet-200: 207 193 184; --violet-300: 178 159 146; --violet-400: 150 128 111; --violet-500: 127 105 96; --violet-600: 107 88 79; --violet-700: 90 74 65; --violet-800: 74 62 55; --violet-900: 58 49 43;
+    --violet-text-50: var(--violet-50); --violet-text-100: var(--violet-100); --violet-text-200: var(--violet-200); --violet-text-300: var(--violet-300); --violet-text-400: var(--violet-400); --violet-text-500: var(--violet-500); --violet-text-600: var(--violet-600); --violet-text-700: var(--violet-700); --violet-text-800: var(--violet-800); --violet-text-900: var(--violet-900);
+    color-scheme: light;
+  }
+
+  .dark {
+    /* neutres (mêmes que la landing en sombre) */
+    --canvas: 14 31 27;
+    --surface: 19 40 35;
+    --line: 42 67 60;
+    --ink: 232 228 218;
+    --ink-muted: 169 181 175;
+    --ink-soft: 138 152 147;
+    /* slate */
+    --slate-50: 24 36 31; --slate-100: 32 48 42; --slate-200: 43 60 54; --slate-300: 60 79 72; --slate-400: 106 122 115; --slate-500: 141 151 143; --slate-600: 167 176 170; --slate-700: 195 203 198; --slate-800: 218 224 220; --slate-900: 10 19 16; --slate-950: 5 10 8;
+    /* brand */
+    --brand-50: 22 48 42; --brand-100: 28 60 51; --brand-200: 37 73 63; --brand-300: 52 96 79; --brand-600: 44 99 82; --brand-700: 54 117 96; --brand-800: 36 87 74;
+    --brand-text-50: 238 244 241; --brand-text-100: 216 231 223; --brand-text-200: 179 207 194; --brand-text-300: 138 177 160; --brand-text-400: 93 144 124; --brand-text-500: 127 185 163; --brand-text-600: 140 199 176; --brand-text-700: 159 208 188; --brand-text-800: 182 220 203; --brand-text-900: 207 232 221; --brand-text-950: 227 242 235;
+    /* gold */
+    --gold-50: 42 35 24; --gold-100: 56 45 28; --gold-200: 84 67 42; --gold-300: 122 98 53;
+    --gold-text-50: 250 246 236; --gold-text-100: 243 234 210; --gold-text-200: 231 216 171; --gold-text-300: 213 189 122; --gold-text-400: 189 157 85; --gold-text-500: 214 184 120; --gold-text-600: 226 198 145; --gold-text-700: 233 211 166; --gold-text-800: 240 224 189; --gold-text-900: 245 234 210;
+    /* red */
+    --red-50: 46 27 27; --red-100: 61 34 34; --red-200: 92 46 46; --red-300: 122 60 60;
+    --red-text-50: 250 240 240; --red-text-100: 243 219 219; --red-text-200: 226 178 178; --red-text-300: 204 133 133; --red-text-400: 181 91 91; --red-text-500: 229 143 143; --red-text-600: 240 163 163; --red-text-700: 243 181 181; --red-text-800: 246 199 199; --red-text-900: 249 217 217;
+    /* emerald */
+    --emerald-50: 21 48 42; --emerald-100: 27 61 51; --emerald-200: 39 80 63; --emerald-300: 55 106 85;
+    --emerald-text-50: 237 245 241; --emerald-text-100: 214 232 223; --emerald-text-200: 174 207 189; --emerald-text-300: 131 177 152; --emerald-text-400: 85 144 122; --emerald-text-500: 127 191 159; --emerald-text-600: 140 207 174; --emerald-text-700: 160 216 188; --emerald-text-800: 184 226 204; --emerald-text-900: 207 236 220; --emerald-text-950: 227 244 234;
+    /* sky */
+    --sky-50: 21 43 40; --sky-100: 28 56 51; --sky-200: 40 75 68; --sky-300: 59 98 89;
+    --sky-text-50: 238 244 242; --sky-text-100: 217 231 227; --sky-text-200: 182 208 201; --sky-text-300: 143 180 171; --sky-text-400: 104 150 140; --sky-text-500: 143 195 184; --sky-text-600: 156 207 196; --sky-text-700: 173 218 207; --sky-text-800: 193 227 218; --sky-text-900: 213 236 230; --sky-text-950: 230 244 240;
+    /* violet */
+    --violet-50: 37 32 29; --violet-100: 49 42 38; --violet-200: 70 59 52; --violet-300: 90 74 65;
+    --violet-text-50: 244 241 239; --violet-text-100: 231 224 220; --violet-text-200: 207 193 184; --violet-text-300: 178 159 146; --violet-text-400: 150 128 111; --violet-text-500: 196 176 165; --violet-text-600: 205 187 177; --violet-text-700: 214 199 190; --violet-text-800: 223 211 203; --violet-text-900: 232 222 216;
+    color-scheme: dark;
+  }
+
+  /* en sombre, le vert 600 est trop foncé pour un contour : on prend le 400 */
+  .dark :focus-visible {
+    @apply ring-brand-400;
+  }
+
+  .dark .input:focus {
+    @apply border-brand-400;
+  }
+
   html {
     -webkit-text-size-adjust: 100%;
     text-rendering: optimizeLegibility;

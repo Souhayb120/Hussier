@@ -16,7 +16,7 @@ import { AlertTriangle, ScanSearch, Scale, ShieldCheck } from 'lucide-react'
 import { api } from '../api/client'
 import { Button, Card, Input } from '../components/ui'
 import { TrackingResult } from '../components/domain/TrackingResult'
-import { LanguageSwitcher } from '../components/layout'
+import { LanguageSwitcher, ThemeToggle } from '../components/layout'
 
 export default function TrackingPage() {
   const { t } = useTranslation()
@@ -63,6 +63,7 @@ export default function TrackingPage() {
             </span>
           </Link>
           <div className="flex items-center gap-3">
+            <ThemeToggle />
             <LanguageSwitcher />
             <Link
               to="/login"

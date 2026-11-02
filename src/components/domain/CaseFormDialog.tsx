@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
 import { Paperclip, X } from 'lucide-react'
 import { api, type CaseResponse } from '../../api/client'
 import { caseSchema, type CaseValues } from '../../lib/validators'
@@ -45,6 +46,7 @@ export function CaseFormDialog({
   const { t } = useTranslation()
   const queryClient = useQueryClient()
   const { toast } = useToast()
+  const navigate = useNavigate()
   const editing = Boolean(caseItem)
 
   // Pièces jointes sélectionnées avant l'envoi — uniquement à la création.
@@ -125,6 +127,8 @@ export function CaseFormDialog({
       }
       toast(editing ? t('cases.updated') : t('cases.created'))
       onClose()
+      // Nouveau dossier : on l'ouvre tout de suite pour continuer (parties, mission…).
+      if (!caseItem) navigate(`/dossiers/${data.id}`)
     },
     onError: (error) => {
       // Le dossier est créé mais les pièces jointes ont échoué : on ne
@@ -134,6 +138,8 @@ export function CaseFormDialog({
         queryClient.invalidateQueries({ queryKey: ['attachments', error.caseId] })
         toast(t('attachments.uploadFailedAfterCreate'), 'error')
         onClose()
+        // le dossier existe : on l'ouvre pour pouvoir renvoyer les fichiers
+        navigate(`/dossiers/${error.caseId}?tab=attachments`)
         return
       }
       toast(t(apiErrorKey(error)), 'error')
