@@ -54,7 +54,8 @@
     "menu": "Menu",
     "workspace": "Espace de travail",
     "administration": "Administration",
-    "skipToContent": "Aller au contenu"
+    "skipToContent": "Aller au contenu",
+    "documents": "Documents"
   },
   "platform": {
     "header": "Administration de la plateforme"
@@ -344,7 +345,18 @@
     "count": "{{count}} observation(s)",
     "sectionTitle": "Titre de la section",
     "sectionTitlePlaceholder": "ex : معاينة المصعد الكهربائي",
-    "sectionTitleHint": "Les observations sont regroupées par section dans le PV (أولا، ثانيا…)."
+    "sectionTitleHint": "Les observations sont regroupées par section dans le PV (أولا، ثانيا…).",
+    "voice": {
+      "start": "Dicter",
+      "hint": "Parlez en arabe, darija ou français : le texte s'ajoute ci-dessous. Relisez-le avant d'enregistrer.",
+      "recording": "Enregistrement…",
+      "stop": "Terminer",
+      "working": "Transcription…",
+      "done": "Texte ajouté. Relisez-le avant d’enregistrer.",
+      "nothingHeard": "Aucune parole n'a été entendue. Réessayez plus près du micro.",
+      "micDenied": "Impossible d'utiliser le micro. Autorisez le micro pour ce site dans le navigateur.",
+      "unsupported": "La dictée vocale n’est pas disponible sur ce navigateur (le site doit être ouvert en HTTPS)."
+    }
   },
   "documents": {
     "title": "Documents",
@@ -638,5 +650,23 @@
       "photoChip": "Photo ajoutée",
       "pdfReady": "PDF prêt à télécharger"
     }
+  },
+  "documentsPage": {
+    "title": "Documents",
+    "subtitle": "Tous les documents générés par l'étude : recherchez, filtrez et téléchargez les PV.",
+    "searchPlaceholder": "Rechercher : réf. dossier, client, objet…",
+    "allKinds": "Tous les types",
+    "allStatuses": "Tous les statuts",
+    "from": "Créé à partir du",
+    "to": "Créé jusqu'au",
+    "badRange": "La date de début doit être avant la date de fin.",
+    "reset": "Effacer les filtres",
+    "perPage": "Par page",
+    "caseRef": "Réf. dossier",
+    "approvedAt": "Approuvé le",
+    "openCase": "Ouvrir le dossier",
+    "empty": "Aucun document pour le moment.",
+    "emptyHint": "Les documents créés ou générés par l'IA dans les dossiers apparaîtront ici.",
+    "noResults": "Aucun document ne correspond à ces filtres."
   }
 }

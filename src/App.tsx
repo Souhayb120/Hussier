@@ -9,6 +9,7 @@ import TrackingPage from './pages/TrackingPage'
 import DashboardPage from './pages/DashboardPage'
 import CasesPage from './pages/CasesPage'
 import CaseDetailPage from './pages/CaseDetailPage'
+import DocumentsPage from './pages/DocumentsPage'
 import MissionsPage from './pages/MissionsPage'
 import MesMissionsPage from './pages/MesMissionsPage'
 import MissionDetailPage from './pages/MissionDetailPage'
@@ -89,6 +90,15 @@ export default function App() {
           element={
             <RequireRole roles={['ADMIN', 'ASSISTANT']}>
               <CaseDetailPage />
+            </RequireRole>
+          }
+        />
+
+        <Route
+          path="documents"
+          element={
+            <RequireRole roles={['ADMIN', 'ASSISTANT']}>
+              <DocumentsPage />
             </RequireRole>
           }
         />

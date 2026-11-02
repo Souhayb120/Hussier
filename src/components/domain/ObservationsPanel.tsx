@@ -25,6 +25,7 @@ import {
 } from '../ui'
 import { apiErrorKey, useFormatters } from '../../lib/format'
 import { cn } from '../../lib/utils'
+import { VoiceDictation } from './VoiceDictation'
 
 const KINDS: ObservationKind[] = ['DIRECT', 'DECLARATION', 'UNVERIFIED']
 
@@ -158,6 +159,13 @@ export function ObservationsPanel({
     },
   })
 
+  // Le texte dicté s'ajoute à la suite de ce qui est déjà écrit (rien n'est effacé).
+  const addDictatedText = (text: string) => {
+    const current = description?.trim() ?? ''
+    const next = current ? `${current}\n${text}` : text
+    setValue('description', next, { shouldDirty: true, shouldValidate: true })
+  }
+
   const items = listQ.data?.content ?? []
   const count = listQ.data?.totalElements ?? 0
 
@@ -236,10 +244,14 @@ export function ObservationsPanel({
               required
               error={errors.description ? t(errors.description.message as string) : undefined}
             >
+              <div className="mb-2">
+                <VoiceDictation missionId={missionId} onText={addDictatedText} />
+              </div>
               <Textarea
                 id="observation-description"
                 {...register('description')}
                 rows={3}
+                dir="auto"
                 autoFocus={false}
                 placeholder={t('observations.descriptionPlaceholder')}
               />

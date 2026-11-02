@@ -5,6 +5,7 @@ import {
   Building2,
   ChevronDown,
   ClipboardList,
+  FileText,
   FolderOpen,
   LayoutDashboard,
   LogOut,
@@ -73,6 +74,7 @@ function useNavGroups(variant: ShellVariant) {
     const all: NavItem[] = [
       { to: '/', icon: LayoutDashboard, label: t('nav.dashboard'), cap: 'dashboard:view' },
       { to: '/dossiers', icon: FolderOpen, label: t('nav.cases'), cap: 'cases:view' },
+      { to: '/documents', icon: FileText, label: t('nav.documents'), cap: 'documents:view' },
       {
         to: user.role === 'COLLABORATEUR' ? '/mes-missions' : '/missions',
         icon: ClipboardList,
@@ -83,7 +85,7 @@ function useNavGroups(variant: ShellVariant) {
     ]
     const allowed = all.filter((item) => can(item.cap))
     const workspace = allowed.filter((i) =>
-      ['/', '/dossiers', '/missions', '/mes-missions'].includes(i.to),
+      ['/', '/dossiers', '/documents', '/missions', '/mes-missions'].includes(i.to),
     )
     const admin = allowed.filter((i) => ['/utilisateurs'].includes(i.to))
     return [

@@ -178,12 +178,29 @@ export interface DocumentResponse {
   id: string
   caseId: string
   caseRef: string
+  caseClientName: string | null
   kind: DocumentKind
   status: DocumentStatus
   content: string | null
   createdAt: string
   approvedAt: string | null
   approvedByUsername: string | null
+}
+
+/** Colonnes triables de la page « Documents » (liste blanche côté back-end). */
+export type DocumentSortField = 'createdAt' | 'approvedAt' | 'kind' | 'status' | 'caseRef' | 'clientName'
+
+/** Paramètres de GET /api/documents. Les dates sont au format AAAA-MM-JJ. */
+export interface DocumentSearchParams {
+  page: number
+  size: number
+  search?: string
+  kind?: DocumentKind
+  status?: DocumentStatus
+  from?: string
+  to?: string
+  sortBy: DocumentSortField
+  direction: 'asc' | 'desc'
 }
 
 /** Partie citée dans le procès-verbal — /api/cases/{caseId}/parties. */
@@ -597,6 +614,21 @@ export const api = {
   },
 
   documents: {
+    /** Tous les documents de l'étude (page « Documents ») : recherche, filtres et tri côté serveur. */
+    search: (params: DocumentSearchParams) => {
+      const query = new URLSearchParams({
+        page: String(params.page),
+        size: String(params.size),
+        sortBy: params.sortBy,
+        direction: params.direction,
+      })
+      if (params.search && params.search.trim()) query.set('search', params.search.trim())
+      if (params.kind) query.set('kind', params.kind)
+      if (params.status) query.set('status', params.status)
+      if (params.from) query.set('from', params.from)
+      if (params.to) query.set('to', params.to)
+      return request<Page<DocumentResponse>>(`/documents?${query.toString()}`)
+    },
     listByCase: (caseId: string, page = 0, size = 10) =>
       request<Page<DocumentResponse>>(`/cases/${caseId}/documents?page=${page}&size=${size}`),
     get: (id: string) => request<DocumentResponse>(`/documents/${id}`),
@@ -661,6 +693,15 @@ export const api = {
         method: 'POST',
         body: JSON.stringify(body),
       }),
+    /** Dictée vocale : l'audio est transformé en texte (rien n'est enregistré côté serveur). */
+    transcribe: (missionId: string, audio: Blob, fileName: string) => {
+      const body = new FormData()
+      body.append('audio', audio, fileName)
+      return request<{ text: string }>(`/missions/${missionId}/observations/transcribe`, {
+        method: 'POST',
+        body,
+      })
+    },
   },
 
   users: {
