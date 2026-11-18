@@ -58,16 +58,10 @@ export interface LandingCopy {
     chipNote: string
     chipPdf: string
   }
-  marquee: { label: string; items: string[] }
-  roles: { eyebrow: string; title: string; items: (Item & { badge: string })[] }
   features: {
     eyebrow: string
     title: string
     lead: string
-    aiTag: string
-    aiTitle: string
-    aiText: string
-    aiDocTitle: string
     items: Item[]
   }
   workflow: { eyebrow: string; title: string; lead: string; steps: Step[] }
@@ -147,27 +141,10 @@ const ar: LandingCopy = {
     chipNote: 'ملاحظة ميدانية · 09:42',
     chipPdf: 'PDF جاهز للتوقيع',
   },
-  marquee: {
-    label: 'أنواع المحاضر',
-    items: ['محضر تبليغ', 'محضر إخباري', 'محضر رفض التوصل', 'معاينة مكان', 'معاينة رسائل واتساب', 'معاينة بريد إلكتروني', 'معاينة اجتماع'],
-  },
-  roles: {
-    eyebrow: 'فريق المكتب',
-    title: 'لكل فرد في المكتب مكانه ودوره.',
-    items: [
-      { title: 'المفوض القضائي', badge: 'مدير', text: 'نظرة شاملة على المكتب، إسناد المهام للمتعاونين، مراجعة المحاضر واعتمادها، وتدبير فريق العمل.' },
-      { title: 'المساعد الإداري', badge: 'مساعد', text: 'فتح الملفات وتحيينها، إعداد مسودات المحاضر، المرفقات، الفوترة، ورمز تتبع الملف للموكل.' },
-      { title: 'المتعاون', badge: 'متعاون', text: '«مهامي» في مكان واحد: الزيارات، الملاحظات الميدانية، والصور والمرفقات.' },
-    ],
-  },
   features: {
     eyebrow: 'الوظائف',
     title: 'كل ما يحتاجه المكتب، ولا شيء زائد.',
-    lead: 'سبع وحدات، كل واحدة منها تقابل مرحلة حقيقية من عمل المكتب اليومي.',
-    aiTag: 'الذكاء الاصطناعي',
-    aiTitle: 'تحرير المحاضر بمساعدة الذكاء الاصطناعي',
-    aiText: 'مسودة أولى منظمة انطلاقاً من معطيات الملف والملاحظات، قابلة للتعديل بالكامل قبل الاعتماد.',
-    aiDocTitle: 'محضر معاينة مكان',
+    lead: 'كل وحدة تقابل مرحلة حقيقية من عمل المكتب اليومي.',
     items: [
       { title: 'تدبير الملفات القضائية', text: 'إنشاء الملفات وتنظيمها وتتبعها، مع معطيات الموكل والأطراف ووضعية كل ملف.' },
       { title: 'تدبير المهام', text: 'إسناد المهام إلى المتعاونين، وتحديد الآجال، وتتبع تقدّمها لحظة بلحظة.' },
@@ -210,8 +187,8 @@ const ar: LandingCopy = {
       { family: 'constat', tag: 'معاينة', title: 'معاينة بريد إلكتروني', text: 'تفريغ الرسائل الإلكترونية مع الصور المرقمة والمرفقات.' },
       { family: 'constat', tag: 'معاينة', title: 'معاينة اجتماع', text: 'الحاضرون، تصريحات كل طرف، وساعة البداية والنهاية.' },
     ],
-    ctaTitle: 'شاهدوا كيف يُحرَّر محضر في دقائق.',
-    cta: 'شاهدوا الفيديو',
+    ctaTitle: 'نوع آخر من المحاضر؟ تحدثوا إلينا.',
+    cta: 'تواصلوا معنا',
   },
   ai: {
     eyebrow: 'المساعد الذكي',
@@ -321,27 +298,10 @@ const fr: LandingCopy = {
     chipNote: 'Observation terrain · 09:42',
     chipPdf: 'PDF prêt à signer',
   },
-  marquee: {
-    label: 'Types de procès-verbaux',
-    items: ['PV de notification', 'PV informatif', 'PV de refus de réception', "Constat d'un lieu", 'Constat WhatsApp', "Constat d'e-mails", "Constat d'une réunion"],
-  },
-  roles: {
-    eyebrow: "L'équipe du cabinet",
-    title: 'Chacun à sa place, chacun son rôle.',
-    items: [
-      { title: 'Commissaire judiciaire', badge: 'Administrateur', text: "Vue d'ensemble du cabinet, affectation des missions, relecture et approbation des PV, gestion de l'équipe." },
-      { title: 'Assistant du cabinet', badge: 'Assistant', text: 'Ouverture et mise à jour des dossiers, préparation des projets de PV, pièces jointes, facturation et code de suivi client.' },
-      { title: 'Collaborateur', badge: 'Collaborateur', text: '« Mes missions » au même endroit : visites, observations de terrain, photos et pièces jointes.' },
-    ],
-  },
   features: {
     eyebrow: 'Fonctionnalités',
     title: 'Tout ce dont le cabinet a besoin, rien de superflu.',
-    lead: 'Sept modules, chacun correspondant à une étape réelle du travail quotidien du cabinet.',
-    aiTag: 'IA',
-    aiTitle: 'Rédaction des PV assistée par IA',
-    aiText: "Un premier projet structuré à partir des données du dossier et des observations, entièrement modifiable avant l'approbation.",
-    aiDocTitle: "Constat d'un lieu",
+    lead: 'Chaque module correspond à une étape réelle du travail quotidien du cabinet.',
     items: [
       { title: 'Gestion des dossiers judiciaires', text: 'Créez, organisez et suivez vos dossiers, avec les informations du client, des parties et le statut de chacun.' },
       { title: 'Gestion des missions', text: 'Affectez les missions aux collaborateurs, fixez les délais et suivez leur avancement en temps réel.' },
@@ -384,8 +344,8 @@ const fr: LandingCopy = {
       { family: 'constat', tag: 'Constat', title: "Constat d'e-mails", text: 'Transcription des e-mails avec les captures numérotées et les pièces jointes.' },
       { family: 'constat', tag: 'Constat', title: "Constat d'une réunion", text: 'Présents, déclarations de chacun, heure de début et de fin.' },
     ],
-    ctaTitle: 'Voyez comment un PV se rédige en quelques minutes.',
-    cta: 'Voir la vidéo',
+    ctaTitle: "Un autre type d'acte ? Parlons-en.",
+    cta: 'Nous contacter',
   },
   ai: {
     eyebrow: 'Assistant IA',

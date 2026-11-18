@@ -74,7 +74,6 @@ export default function UsersPage() {
   return (
     <div>
       <PageHeader
-        icon={<Users className="h-5 w-5" />}
         title={t('users.title')}
         subtitle={t('users.subtitle')}
         actions={

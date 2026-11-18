@@ -41,6 +41,7 @@
     "arabic": "العربية",
     "user": "Utilisateur",
     "logout": "Se déconnecter",
+    "logoutConfirm": "Voulez-vous vraiment vous déconnecter ?",
     "copyright": "Mofawid — Tous droits réservés"
   },
   "nav": {

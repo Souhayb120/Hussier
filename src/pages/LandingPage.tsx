@@ -10,8 +10,6 @@ import {
   FeaturesSection,
   HeroSection,
   LandingFooter,
-  MarqueeStrip,
-  RolesSection,
   TrustSection,
   VideoSection,
   WorkflowSection,
@@ -26,12 +24,12 @@ import '../components/landing/landing.css'
  */
 const THEME_KEY = 'mofawid.landingTheme'
 
-/** Thème choisi par le visiteur, sinon celui du système. */
+/** Thème choisi par le visiteur, sinon le mode clair. */
 function initialTheme(): LandingTheme {
   try {
     const saved = localStorage.getItem(THEME_KEY)
     if (saved === 'light' || saved === 'dark') return saved
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+    return 'light' // clair par défaut, sombre seulement si l'utilisateur le choisit
   } catch {
     return 'light'
   }
@@ -77,11 +75,9 @@ export default function LandingPage() {
       />
       <main>
         <HeroSection copy={copy} />
-        <MarqueeStrip copy={copy} lang={lang} />
-        <RolesSection copy={copy} />
-        <FeaturesSection copy={copy} />
         <WorkflowSection copy={copy} />
         <VideoSection copy={copy} />
+        <FeaturesSection copy={copy} />
         <DocumentsSection copy={copy} />
         <AiSection copy={copy} />
         <TrustSection copy={copy} />

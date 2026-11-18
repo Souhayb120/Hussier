@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { ClipboardList, Eye, Play, Plus, SquareCheck } from 'lucide-react'
 import { api, type MissionResponse, type MissionStatus } from '../api/client'
 import { useAuth } from '../auth/AuthProvider'
@@ -86,7 +86,6 @@ export default function MissionsPage() {
   return (
     <div>
       <PageHeader
-        icon={<ClipboardList className="h-5 w-5" />}
         title={isAdmin ? t('missions.title') : t('missions.myTitle')}
         subtitle={isAdmin ? t('missions.subtitle') : t('missions.mySubtitle')}
         actions={
@@ -157,7 +156,31 @@ export default function MissionsPage() {
         ) : rows.length === 0 ? (
           <EmptyState icon={<ClipboardList className="h-6 w-6" />} title={t('missions.noResults')} />
         ) : (
-          <div className="overflow-x-auto">
+          <>
+          {/* Téléphone : une carte par mission, toute la carte ouvre la mission */}
+          <ul className="divide-y divide-line lg:hidden">
+            {rows.map((mission) => (
+              <li key={mission.id}>
+                <Link
+                  to={`/missions/${mission.id}`}
+                  className="flex flex-col gap-1.5 px-4 py-3.5 transition active:bg-canvas"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="truncate font-medium text-ink">{mission.title}</p>
+                      <p className="truncate text-xs text-ink-muted">{mission.caseRef}</p>
+                    </div>
+                    <StatusBadge value={mission.status} label={t(`missionStatus.${mission.status}`)} />
+                  </div>
+                  <p className="text-xs text-ink-muted">
+                    {isAdmin && <>{mission.assignedToUsername} · </>}
+                    {fmt.dateTime(mission.scheduledAt ?? mission.createdAt)}
+                  </p>
+                </Link>
+              </li>
+            ))}
+          </ul>
+          <div className="hidden overflow-x-auto lg:block">
             <table className="w-full min-w-[46rem] text-sm">
               <thead>
                 <tr className="border-b border-line bg-canvas/60 text-xs uppercase tracking-wide text-ink-soft">
@@ -240,6 +263,7 @@ export default function MissionsPage() {
               </tbody>
             </table>
           </div>
+          </>
         )}
 
         {!query.isLoading && !query.isError && (

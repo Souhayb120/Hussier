@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Eye, FolderOpen, Pencil, Plus, Trash2 } from 'lucide-react'
 import {
   api,
@@ -96,7 +96,6 @@ export default function CasesPage() {
   return (
     <div>
       <PageHeader
-        icon={<FolderOpen className="h-5 w-5" />}
         title={t('cases.title')}
         subtitle={t('cases.subtitle')}
         actions={
@@ -166,7 +165,32 @@ export default function CasesPage() {
         ) : rows.length === 0 ? (
           <EmptyState icon={<FolderOpen className="h-6 w-6" />} title={t('cases.noResults')} />
         ) : (
-          <div className="overflow-x-auto">
+          <>
+          {/* Téléphone : une carte par dossier, toute la carte ouvre le dossier */}
+          <ul className="divide-y divide-line lg:hidden">
+            {rows.map((item) => (
+              <li key={item.id}>
+                <Link
+                  to={`/dossiers/${item.id}`}
+                  className="flex flex-col gap-2 px-4 py-3.5 transition active:bg-canvas"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="truncate font-medium text-ink">{item.clientName}</p>
+                      <p className="truncate text-xs text-ink-muted">{item.ref}</p>
+                    </div>
+                    <StatusBadge
+                      value={item.caseStatus}
+                      label={t(`caseStatus.${item.caseStatus}`)}
+                    />
+                  </div>
+                  {item.subject && <p className="line-clamp-2 text-sm text-ink-muted">{item.subject}</p>}
+                  <DeadlineIndicator deadline={item.deadline} closed={item.caseStatus === 'CLOSED'} />
+                </Link>
+              </li>
+            ))}
+          </ul>
+          <div className="hidden overflow-x-auto lg:block">
             <table className="w-full min-w-[46rem] text-sm">
               <thead>
                 <tr className="border-b border-line bg-canvas/60 text-start text-xs uppercase tracking-wide text-ink-soft">
@@ -249,6 +273,7 @@ export default function CasesPage() {
               </tbody>
             </table>
           </div>
+          </>
         )}
 
         {!query.isLoading && !query.isError && (

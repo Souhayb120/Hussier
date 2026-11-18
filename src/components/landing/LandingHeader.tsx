@@ -40,8 +40,8 @@ export function LandingHeader({ copy, lang, onLangChange, theme, onThemeToggle }
   const dark = theme === 'dark'
   const otherLang: LandingLang = lang === 'ar' ? 'fr' : 'ar'
   const links = [
-    { href: '#features', label: copy.nav.features },
     { href: '#workflow', label: copy.nav.workflow },
+    { href: '#features', label: copy.nav.features },
     { href: '#documents', label: copy.nav.documents },
     { href: '#ai', label: copy.nav.ai },
     { href: '#faq', label: copy.nav.faq },
