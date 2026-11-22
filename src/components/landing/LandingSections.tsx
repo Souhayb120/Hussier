@@ -68,13 +68,14 @@ export function HeroSection({ copy }: { copy: LandingCopy }) {
           </h1>
           <p className="mf-u mf-d3 m-0 max-w-[540px] text-[17px] text-[color:var(--mf-muted)] sm:text-[19px]">{h.lead}</p>
           <div className="mf-u mf-d4 flex flex-wrap gap-3">
-            <a
-              href={DEMO_VIDEO_URL ? '#video' : '#contact'}
+            {/* the login page has one-click demo accounts */}
+            <Link
+              to="/login"
               className="mf-btn inline-flex min-h-[52px] items-center gap-2.5 rounded-full bg-[var(--mf-btn)] px-7 font-semibold text-white hover:bg-[var(--mf-btn-hover)] sm:text-[17px]"
             >
-              {DEMO_VIDEO_URL ? h.ctaVideo : copy.contactCta}
+              {h.ctaTry}
               <Arrow className="text-[#E2C691]" />
-            </a>
+            </Link>
             <a
               href="#workflow"
               className="inline-flex min-h-[52px] items-center rounded-full border border-[color:var(--mf-line-2)] px-6 font-semibold text-[color:var(--mf-heading)] transition-colors hover:border-[color:var(--mf-hover-line)] sm:text-[17px]"
@@ -574,7 +575,7 @@ export function LandingFooter({ copy, lang }: { copy: LandingCopy; lang: Landing
           <div className="text-sm font-semibold text-[color:var(--mf-heading)]">{f.platform}</div>
           <a href="#features" className={linkCls}>{copy.nav.features}</a>
           <a href="#workflow" className={linkCls}>{copy.nav.workflow}</a>
-          <a href="#documents" className={linkCls}>{copy.nav.documents}</a>
+          <a href="#faq" className={linkCls}>{copy.nav.faq}</a>
         </nav>
         <nav aria-label={f.contact} className="flex flex-col gap-2 text-[15px]">
           <div className="text-sm font-semibold text-[color:var(--mf-heading)]">{f.contact}</div>

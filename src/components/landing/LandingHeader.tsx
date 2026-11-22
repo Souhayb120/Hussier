@@ -42,8 +42,6 @@ export function LandingHeader({ copy, lang, onLangChange, theme, onThemeToggle }
   const links = [
     { href: '#workflow', label: copy.nav.workflow },
     { href: '#features', label: copy.nav.features },
-    { href: '#documents', label: copy.nav.documents },
-    { href: '#ai', label: copy.nav.ai },
     { href: '#faq', label: copy.nav.faq },
   ]
 

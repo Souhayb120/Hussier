@@ -43,6 +43,7 @@ export interface LandingCopy {
     titleHighlight: string
     titleAfter: string
     lead: string
+    ctaTry: string
     ctaVideo: string
     ctaHow: string
     checks: string[]
@@ -122,6 +123,7 @@ const ar: LandingCopy = {
     titleHighlight: 'المحضر المعتمد',
     titleAfter: '.',
     lead: '«مفوّض» يجمع الملفات والمهام والزيارات والمحاضر في فضاء عمل واحد، ليعرف كل فرد في المكتب ما عليه، ويعرف المفوض القضائي أين وصل كل ملف.',
+    ctaTry: 'جرّبوا العرض التجريبي',
     ctaVideo: 'شاهدوا الفيديو التوضيحي',
     ctaHow: 'كيف يشتغل؟',
     checks: ['7 أنواع من المحاضر', 'العربية والفرنسية', 'اعتماد بشري لكل وثيقة'],
@@ -279,6 +281,7 @@ const fr: LandingCopy = {
     titleHighlight: 'PV approuvé',
     titleAfter: '.',
     lead: "Mofawid réunit dossiers, missions, visites et procès-verbaux dans un seul espace de travail : chacun au cabinet sait ce qu'il a à faire, et le commissaire judiciaire sait où en est chaque dossier.",
+    ctaTry: 'Essayer la démo',
     ctaVideo: 'Voir la vidéo de démonstration',
     ctaHow: 'Comment ça marche ?',
     checks: ['7 types de procès-verbaux', 'Français et arabe', 'Approbation humaine de chaque acte'],

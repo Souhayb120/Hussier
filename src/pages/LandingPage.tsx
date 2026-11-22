@@ -3,18 +3,15 @@ import { useTranslation } from 'react-i18next'
 import { LANG_KEY, applyDocumentLang } from '../i18n'
 import { LandingHeader } from '../components/landing/LandingHeader'
 import {
-  AiSection,
   ContactSection,
-  DocumentsSection,
   FaqSection,
   FeaturesSection,
   HeroSection,
   LandingFooter,
-  TrustSection,
   VideoSection,
   WorkflowSection,
 } from '../components/landing/LandingSections'
-import { LANDING_COPY, type LandingLang, type LandingTheme } from '../components/landing/content'
+import { DEMO_VIDEO_URL, LANDING_COPY, type LandingLang, type LandingTheme } from '../components/landing/content'
 import '../components/landing/landing.css'
 
 /**
@@ -74,13 +71,11 @@ export default function LandingPage() {
         onThemeToggle={toggleTheme}
       />
       <main>
+        {/* short path: what it is → how it works → what you get → questions → contact */}
         <HeroSection copy={copy} />
         <WorkflowSection copy={copy} />
-        <VideoSection copy={copy} />
+        {DEMO_VIDEO_URL && <VideoSection copy={copy} />}
         <FeaturesSection copy={copy} />
-        <DocumentsSection copy={copy} />
-        <AiSection copy={copy} />
-        <TrustSection copy={copy} />
         <FaqSection copy={copy} />
         <ContactSection copy={copy} lang={lang} />
       </main>
