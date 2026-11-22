@@ -9,7 +9,6 @@ import {
   Folder,
   Lock,
   MapPin,
-  Play,
   Plus,
   Server,
   ShieldCheck,
@@ -28,22 +27,6 @@ import {
 
 /* ------------------------------- Shared bits ------------------------------ */
 
-const BRONZE = '#A67C45'
-
-/** Étiquette de section en pastille. */
-function Eyebrow({ children, light, center }: { children: ReactNode; light?: boolean; center?: boolean }) {
-  return (
-    <div
-      className={cn(
-        'rounded-full px-3.5 py-1 text-sm font-semibold',
-        center ? 'self-center' : 'self-start',
-        light ? 'bg-[#E2C691]/15 text-[#E2C691]' : 'bg-[var(--mf-tint-bronze)] text-[color:var(--mf-bronze-text)]',
-      )}
-    >
-      {children}
-    </div>
-  )
-}
 
 function H2({ children, light, className, id }: { children: ReactNode; light?: boolean; className?: string; id?: string }) {
   return (
@@ -64,12 +47,6 @@ const Arrow = ({ className }: { className?: string }) => (
   <ArrowRight aria-hidden="true" className={cn('mf-arrow h-[18px] w-[18px] rtl:-scale-x-100', className)} />
 )
 
-/** Petite étoile à quatre branches, séparateur du bandeau défilant. */
-const Sparkle = () => (
-  <svg width="12" height="12" viewBox="0 0 24 24" aria-hidden="true" className="shrink-0">
-    <path d="M12 2l2.6 6.4L21 11l-6.4 2.6L12 20l-2.6-6.4L3 11l6.4-2.6z" fill={BRONZE} />
-  </svg>
-)
 
 const cardBase = 'mf-card mf-rv border border-[color:var(--mf-line)] bg-[var(--mf-surface)]'
 
@@ -82,26 +59,23 @@ export function HeroSection({ copy }: { copy: LandingCopy }) {
     <section id="top" className="relative">
       <div className="mx-auto grid max-w-[1200px] items-center gap-14 px-4 pb-16 pt-12 sm:px-6 sm:pt-16 lg:grid-cols-2 lg:gap-16 lg:pb-[72px] lg:pt-20">
         <div className="flex flex-col gap-6">
-          <div className="mf-u mf-d1 inline-flex items-center gap-2.5 self-start rounded-full border border-[color:var(--mf-line)] bg-[var(--mf-surface)] py-1.5 pe-3.5 ps-1.5 text-sm font-semibold text-[color:var(--mf-heading)]">
-            <span className="rounded-full bg-[#173D35] px-2.5 py-0.5 text-xs text-white">{h.badgeNew}</span>
-            {h.badge}
-          </div>
           <h1 className="mf-u mf-d2 mf-display m-0 text-[38px] font-semibold leading-[1.18] text-[color:var(--mf-heading)] sm:text-[52px] lg:text-[62px]">
             {h.titleLine1}
             <br />
             {h.titleBefore}
-            <span className="text-[#A67C45]">{h.titleHighlight}</span>
+            {h.titleHighlight}
             {h.titleAfter}
           </h1>
           <p className="mf-u mf-d3 m-0 max-w-[540px] text-[17px] text-[color:var(--mf-muted)] sm:text-[19px]">{h.lead}</p>
           <div className="mf-u mf-d4 flex flex-wrap gap-3">
-            <a
-              href="#video"
+            {/* the login page has one-click demo accounts */}
+            <Link
+              to="/login"
               className="mf-btn inline-flex min-h-[52px] items-center gap-2.5 rounded-full bg-[var(--mf-btn)] px-7 font-semibold text-white hover:bg-[var(--mf-btn-hover)] sm:text-[17px]"
             >
-              {h.ctaVideo}
+              {h.ctaTry}
               <Arrow className="text-[#E2C691]" />
-            </a>
+            </Link>
             <a
               href="#workflow"
               className="inline-flex min-h-[52px] items-center rounded-full border border-[color:var(--mf-line-2)] px-6 font-semibold text-[color:var(--mf-heading)] transition-colors hover:border-[color:var(--mf-hover-line)] sm:text-[17px]"
@@ -121,11 +95,6 @@ export function HeroSection({ copy }: { copy: LandingCopy }) {
 
         {/* Visuel produit devant une arche */}
         <div className="mf-pop mf-d3 relative mx-auto min-h-[440px] w-full max-w-[560px] sm:min-h-[500px]">
-          <div aria-hidden="true" className="absolute inset-y-0 inset-x-[8%] rounded-b-[32px] rounded-t-full bg-[var(--mf-tint-green)]" />
-          <div
-            aria-hidden="true"
-            className="absolute -inset-y-3.5 inset-x-[calc(8%-14px)] rounded-b-[40px] rounded-t-full border border-[#A67C45]/50"
-          />
 
           <div
             role="img"
@@ -191,85 +160,7 @@ export function HeroSection({ copy }: { copy: LandingCopy }) {
               </div>
             </div>
           </div>
-
-          <div
-            aria-hidden="true"
-            className="mf-float absolute start-0 top-6 flex items-center gap-2.5 whitespace-nowrap rounded-full border border-[color:var(--mf-line)] bg-[var(--mf-surface)] py-2 pe-4 ps-2 text-[13px] font-medium shadow-[0_20px_40px_-22px_rgba(15,43,37,0.5)] sm:-start-5 sm:top-[70px] sm:text-sm"
-          >
-            <span className="flex h-[30px] w-[30px] items-center justify-center rounded-full bg-[var(--mf-tint-green)] text-[color:var(--mf-heading)]">
-              <MapPin className="h-[15px] w-[15px]" />
-            </span>
-            {h.chipNote}
-          </div>
-          <div
-            aria-hidden="true"
-            className="mf-float-2 absolute end-0 top-[104px] flex items-center gap-2.5 whitespace-nowrap rounded-full bg-[#173D35] py-2 pe-4 ps-2 text-[13px] font-medium text-white shadow-[0_20px_40px_-18px_rgba(15,43,37,0.7)] sm:-end-4 sm:top-[150px] sm:text-sm"
-          >
-            <span className="flex h-[30px] w-[30px] items-center justify-center rounded-full bg-[#E2C691] text-[#14201C]">
-              <Check className="h-[15px] w-[15px]" strokeWidth={2.6} />
-            </span>
-            {h.chipPdf}
-          </div>
         </div>
-      </div>
-    </section>
-  )
-}
-
-/* ------------------------------ Bandeau défilant -------------------------- */
-
-export function MarqueeStrip({ copy, lang }: { copy: LandingCopy; lang: LandingLang }) {
-  const row = (hidden?: boolean) => (
-    <span aria-hidden={hidden || undefined} dir={lang === 'ar' ? 'rtl' : 'ltr'} className="inline-flex items-center gap-7 pe-7">
-      {copy.marquee.items.map((it) => (
-        <span key={it} className="inline-flex items-center gap-7">
-          <span>{it}</span>
-          <Sparkle />
-        </span>
-      ))}
-    </span>
-  )
-  return (
-    <div aria-label={copy.marquee.label} className="mf-marquee-wrap overflow-hidden border-y border-[color:var(--mf-line)] bg-[var(--mf-surface)]">
-      {/* La piste est en LTR pour que la boucle (translateX -50 %) soit identique dans les deux langues. */}
-      <div dir="ltr" className="mf-marquee mf-display flex w-max py-[18px] text-[16px] font-medium text-[color:var(--mf-heading)] sm:text-[17px]">
-        {row()}
-        {row(true)}
-      </div>
-    </div>
-  )
-}
-
-/* --------------------------------- Rôles --------------------------------- */
-
-export function RolesSection({ copy }: { copy: LandingCopy }) {
-  const badges: { icon: LucideIcon; bg: string }[] = [
-    { icon: ShieldCheck, bg: 'bg-[#173D35]' },
-    { icon: Folder, bg: 'bg-[#245748]' },
-    { icon: MapPin, bg: 'bg-[#A67C45]' },
-  ]
-  return (
-    <section aria-labelledby="mf-roles" className="mx-auto max-w-[1200px] px-4 pb-10 pt-20 sm:px-6 lg:pt-[104px]">
-      <div className="mf-rv mb-10 flex max-w-[660px] flex-col gap-3">
-        <Eyebrow>{copy.roles.eyebrow}</Eyebrow>
-        <H2 id="mf-roles">{copy.roles.title}</H2>
-      </div>
-      <div className="grid gap-[18px] md:grid-cols-3">
-        {copy.roles.items.map((r, i) => {
-          const B = badges[i]
-          return (
-            <div key={r.title} className={cn(cardBase, 'flex flex-col gap-2.5 rounded-3xl p-7')}>
-              <span className={cn('flex h-[60px] w-[52px] items-center justify-center rounded-b-[10px] rounded-t-full text-white', B.bg)}>
-                <B.icon className="h-[22px] w-[22px]" strokeWidth={1.8} />
-              </span>
-              <div className="mt-1.5 flex flex-wrap items-center gap-x-2.5 gap-y-1">
-                <span className="mf-display text-[20px] font-semibold text-[color:var(--mf-heading)] sm:text-[21px]">{r.title}</span>
-                <span className="rounded-full bg-[var(--mf-tint-bronze)] px-2.5 text-xs font-semibold text-[color:var(--mf-bronze-text)]">{r.badge}</span>
-              </div>
-              <p className="m-0 text-base text-[color:var(--mf-muted)]">{r.text}</p>
-            </div>
-          )
-        })}
       </div>
     </section>
   )
@@ -306,25 +197,11 @@ export function FeaturesSection({ copy }: { copy: LandingCopy }) {
     <section id="features" className="mx-auto max-w-[1200px] scroll-mt-24 px-4 pb-20 pt-16 sm:px-6 lg:pb-[104px] lg:pt-[72px]">
       <div className="mf-rv mb-10 flex flex-wrap items-end justify-between gap-5">
         <div className="flex max-w-[640px] flex-col gap-3">
-          <Eyebrow>{f.eyebrow}</Eyebrow>
           <H2>{f.title}</H2>
         </div>
         <p className="m-0 max-w-[400px] text-[color:var(--mf-muted)]">{f.lead}</p>
       </div>
       <div className="grid gap-[18px] md:grid-cols-2 lg:grid-cols-3">
-        {/* Carte principale : rédaction assistée par IA */}
-        <div className="mf-card mf-rv relative flex flex-wrap items-center gap-7 overflow-hidden rounded-[28px] border border-[#173D35] bg-[#173D35] p-7 text-[#EDF2EF] sm:p-8 md:col-span-2">
-          <div aria-hidden="true" className="absolute -bottom-[120px] -start-[60px] h-80 w-[260px] rounded-t-full border border-[#C9A36A] opacity-30" />
-          <div className="relative flex min-w-0 flex-[1_1_260px] flex-col gap-2.5">
-            <span className="self-start rounded-full bg-[#E2C691] px-3 py-0.5 text-xs font-semibold text-[#14201C]">{f.aiTag}</span>
-            <h3 className="mf-display m-0 text-[24px] font-semibold leading-snug text-white sm:text-[26px]">{f.aiTitle}</h3>
-            <p className="m-0 text-base text-[#BFD0C8]">{f.aiText}</p>
-          </div>
-          <div aria-hidden="true" className="relative flex min-w-0 flex-[1_1_220px] flex-col gap-2.5 rounded-2xl bg-[var(--mf-surface)] p-[18px]">
-            <div className="mf-display border-b border-[color:var(--mf-line-soft)] pb-1.5 text-center text-sm font-semibold text-[color:var(--mf-heading)]">{f.aiDocTitle}</div>
-            <TypingLines widths={['92%', '80%', '88%', '64%']} accentIndex={2} />
-          </div>
-        </div>
 
         {f.items.map((item, i) => {
           const I = featureIcons[i]
@@ -356,17 +233,14 @@ export function WorkflowSection({ copy }: { copy: LandingCopy }) {
   return (
     <section id="workflow" className="scroll-mt-24 px-4 sm:px-6">
       <div className="relative mx-auto max-w-[1240px] overflow-hidden rounded-[32px] bg-[#173D35] text-[#EDF2EF] sm:rounded-[40px]">
-        <div aria-hidden="true" className="absolute -end-20 -top-10 h-[440px] w-[340px] rounded-t-full border border-[#C9A36A] opacity-[0.22]" />
-        <div aria-hidden="true" className="absolute -end-10 top-0 h-[400px] w-[260px] rounded-t-full border border-[#C9A36A] opacity-[0.14]" />
         <div className="relative mx-auto max-w-[1200px] px-6 py-16 sm:px-12 lg:py-[88px]">
           <div className="mf-rv mb-12 flex max-w-[660px] flex-col gap-3 lg:mb-16">
-            <Eyebrow light>{w.eyebrow}</Eyebrow>
             <H2 light>{w.title}</H2>
             <p className="m-0 text-[#BFD0C8]">{w.lead}</p>
           </div>
           <div className="relative">
-            <div aria-hidden="true" className="absolute inset-x-5 top-[19px] hidden h-0.5 rounded bg-white/10 lg:block" />
-            <div aria-hidden="true" className="mf-line absolute inset-x-5 top-[19px] hidden h-0.5 rounded bg-[#C9A36A] lg:block" />
+            <div aria-hidden="true" className="absolute start-5 end-[calc(20%-42px)] top-[19px] hidden h-0.5 rounded bg-white/10 lg:block" />
+            <div aria-hidden="true" className="mf-line absolute start-5 end-[calc(20%-42px)] top-[19px] hidden h-0.5 rounded bg-[#C9A36A] lg:block" />
             <ol className="relative m-0 grid list-none gap-9 p-0 sm:grid-cols-2 lg:grid-cols-5 lg:gap-7">
               {w.steps.map((s, i) => {
                 const ai = i === last - 1
@@ -406,30 +280,16 @@ export function WorkflowSection({ copy }: { copy: LandingCopy }) {
 
 export function VideoSection({ copy }: { copy: LandingCopy }) {
   const v = copy.video
+  // pas de vidéo pour l'instant : on ne montre pas une section vide
+  if (!DEMO_VIDEO_URL) return null
   return (
     <section id="video" className="mx-auto max-w-[1200px] scroll-mt-24 px-4 pt-20 sm:px-6 lg:pt-[104px]">
       <div className="mf-rv mb-10 flex flex-col items-center gap-3 text-center">
-        <Eyebrow center>{v.eyebrow}</Eyebrow>
         <H2>{v.title}</H2>
         <p className="m-0 max-w-[540px] text-[color:var(--mf-muted)]">{v.lead}</p>
       </div>
       <div className="mf-rv mx-auto max-w-[980px] rounded-[32px] border border-[color:var(--mf-line)] bg-[var(--mf-surface)] p-2.5 shadow-[0_40px_80px_-50px_rgba(15,43,37,0.45)] sm:p-3">
-        {DEMO_VIDEO_URL ? (
           <video src={DEMO_VIDEO_URL} controls preload="metadata" aria-label={v.label} className="aspect-video w-full rounded-[22px] bg-[#173D35]" />
-        ) : (
-          <div
-            role="img"
-            aria-label={v.label}
-            className="relative flex aspect-video flex-col items-center justify-center gap-3 overflow-hidden rounded-[22px] bg-[#173D35] p-6 text-center text-[#F7F4EC] sm:gap-[18px]"
-          >
-            <div aria-hidden="true" className="absolute -bottom-[30%] left-1/2 h-[120%] w-[46%] -translate-x-1/2 rounded-t-full border border-[#C9A36A] opacity-20" />
-            <span className="mf-pulse relative flex h-16 w-16 items-center justify-center rounded-full bg-[#F7F4EC] text-[#173D35] sm:h-[92px] sm:w-[92px]">
-              <Play aria-hidden="true" className="h-7 w-7 fill-current rtl:-scale-x-100 sm:h-8 sm:w-8" />
-            </span>
-            <div className="mf-display relative text-[18px] font-semibold sm:text-[20px]">{v.label}</div>
-            <div className="relative rounded-full border border-dashed border-[#C9A36A]/70 px-4 py-1 text-[13px] text-[#BFD0C8] sm:text-sm">{v.placeholder}</div>
-          </div>
-        )}
       </div>
     </section>
   )
@@ -443,7 +303,6 @@ export function DocumentsSection({ copy }: { copy: LandingCopy }) {
     <section id="documents" className="mx-auto max-w-[1200px] scroll-mt-24 px-4 py-20 sm:px-6 lg:py-[104px]">
       <div className="mf-rv mb-10 flex flex-wrap items-end justify-between gap-6">
         <div className="flex max-w-[660px] flex-col gap-3">
-          <Eyebrow>{d.eyebrow}</Eyebrow>
           <H2>{d.title}</H2>
         </div>
         <p className="m-0 max-w-[420px] text-[color:var(--mf-muted)]">{d.lead}</p>
@@ -470,7 +329,7 @@ export function DocumentsSection({ copy }: { copy: LandingCopy }) {
           )
         })}
         <a
-          href="#video"
+          href="#contact"
           className="mf-card mf-rv flex flex-col items-center justify-center gap-3.5 rounded-b-[22px] rounded-t-full border border-[#173D35] bg-[#173D35] px-6 pb-6 pt-16 text-center text-[#F7F4EC]"
         >
           <span className="mf-display text-[20px] font-semibold leading-snug">{d.ctaTitle}</span>
@@ -492,7 +351,6 @@ export function AiSection({ copy }: { copy: LandingCopy }) {
     <section id="ai" className="scroll-mt-24 border-y border-[color:var(--mf-line)] bg-[var(--mf-surface)]">
       <div className="mx-auto grid max-w-[1200px] items-center gap-14 px-4 py-20 sm:px-6 lg:grid-cols-2 lg:gap-[72px] lg:py-[104px]">
         <div className="mf-rv flex flex-col gap-5">
-          <Eyebrow>{a.eyebrow}</Eyebrow>
           <H2>{a.title}</H2>
           <p className="m-0 text-[color:var(--mf-muted)]">{a.lead}</p>
           <ul className="m-0 flex list-none flex-col gap-3 p-0">
@@ -630,10 +488,8 @@ export function ContactSection({ copy, lang }: { copy: LandingCopy; lang: Landin
   return (
     <section id="contact" className="scroll-mt-24 px-4 pb-20 sm:px-6 lg:pb-[104px]">
       <div className="relative mx-auto max-w-[1240px] overflow-hidden rounded-[32px] bg-[#173D35] sm:rounded-[40px]">
-        <div aria-hidden="true" className="absolute -bottom-[60px] end-[6%] hidden h-[420px] w-[300px] rounded-t-full border border-[#C9A36A] opacity-25 lg:block" />
         <div className="relative grid items-center gap-10 p-6 sm:p-10 lg:grid-cols-2 lg:gap-14 lg:p-[72px]">
           <div className="mf-rv flex flex-col gap-4 text-[#EDF2EF]">
-            <Eyebrow light>{c.eyebrow}</Eyebrow>
             <H2 light>{c.title}</H2>
             <p className="m-0 text-[#BFD0C8]">{c.lead}</p>
             {(CONTACT_EMAIL || CONTACT_PHONE) && (
@@ -719,11 +575,11 @@ export function LandingFooter({ copy, lang }: { copy: LandingCopy; lang: Landing
           <div className="text-sm font-semibold text-[color:var(--mf-heading)]">{f.platform}</div>
           <a href="#features" className={linkCls}>{copy.nav.features}</a>
           <a href="#workflow" className={linkCls}>{copy.nav.workflow}</a>
-          <a href="#documents" className={linkCls}>{copy.nav.documents}</a>
+          <a href="#faq" className={linkCls}>{copy.nav.faq}</a>
         </nav>
         <nav aria-label={f.contact} className="flex flex-col gap-2 text-[15px]">
           <div className="text-sm font-semibold text-[color:var(--mf-heading)]">{f.contact}</div>
-          <a href="#video" className={linkCls}>{copy.video.eyebrow}</a>
+          {DEMO_VIDEO_URL && <a href="#video" className={linkCls}>{copy.video.eyebrow}</a>}
           <a href="#contact" className={linkCls}>{copy.contactCta}</a>
           <Link to="/login" className={linkCls}>{copy.login}</Link>
         </nav>
@@ -731,10 +587,6 @@ export function LandingFooter({ copy, lang }: { copy: LandingCopy; lang: Landing
       <div className="mx-auto flex max-w-[1200px] flex-wrap justify-between gap-3 border-t border-[color:var(--mf-line)] px-4 pb-8 pt-5 text-[13px] text-[color:var(--mf-subtle)] sm:px-6">
         <span>
           © {new Date().getFullYear()} {lang === 'ar' ? 'مفوّض' : 'Mofawid'}. {f.rights}
-        </span>
-        <span className="flex gap-5">
-          <a href="#legal" className={linkCls}>{f.legal}</a>
-          <a href="#privacy" className={linkCls}>{f.privacy}</a>
         </span>
       </div>
     </footer>

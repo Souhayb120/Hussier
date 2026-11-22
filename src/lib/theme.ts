@@ -5,12 +5,12 @@ export type Theme = 'light' | 'dark'
 
 export const THEME_KEY = 'mofawid.theme'
 
-/** Thème choisi par l'utilisateur, sinon celui du système. */
+/** Thème choisi par l'utilisateur, sinon le mode clair. */
 export function getTheme(): Theme {
   try {
     const saved = localStorage.getItem(THEME_KEY)
     if (saved === 'light' || saved === 'dark') return saved
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+    return 'light' // clair par défaut, sombre seulement si l'utilisateur le choisit
   } catch {
     return 'light'
   }

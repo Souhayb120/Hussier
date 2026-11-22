@@ -3,11 +3,11 @@
 
 /* Thème clair (par défaut) et sombre ; les blocs verts restent identiques. */
 .mf-root {
-  --mf-bg: #f7f4ec;
-  --mf-header: rgba(247, 244, 236, 0.92);
+  --mf-bg: #f6f7f5;
+  --mf-header: rgba(246, 247, 245, 0.92);
   --mf-surface: #ffffff;
-  --mf-paper: #fdfbf6;
-  --mf-input: #fbf9f4;
+  --mf-paper: #fbfcfb;
+  --mf-input: #f9faf9;
   --mf-text: #1e2422;
   --mf-text-strong: #14201c;
   --mf-heading: #173d35;
@@ -15,13 +15,13 @@
   --mf-nav: #2f3734;
   --mf-muted: #59615d;
   --mf-subtle: #6a716d;
-  --mf-faint: #8e8676;
+  --mf-faint: #8a938f;
   --mf-bronze-text: #7a5726;
   --mf-green-text: #245748;
   --mf-error: #9b2c2c;
-  --mf-line: #e4ded1;
-  --mf-line-soft: #efeae0;
-  --mf-line-2: #cfc7b6;
+  --mf-line: #e1e5e2;
+  --mf-line-soft: #edf0ee;
+  --mf-line-2: #cdd3cf;
   --mf-line-strong: #173d35;
   --mf-hover-line: #173d35;
   --mf-tint-green: #e3ece6;
@@ -29,18 +29,18 @@
   --mf-tint-bronze-2: #fbf5ea;
   --mf-tint-bronze-3: #fbf3e4;
   --mf-bronze-soft: #ead9bc;
-  --mf-bar: #efece5;
+  --mf-bar: #eceeed;
   --mf-btn: #173d35;
   --mf-btn-hover: #245748;
   color-scheme: light;
 }
 
 .mf-root[data-theme='dark'] {
-  --mf-bg: #0e1f1b;
-  --mf-header: rgba(14, 31, 27, 0.9);
-  --mf-surface: #132823;
-  --mf-paper: #17302a;
-  --mf-input: #1a302b;
+  --mf-bg: #111514;
+  --mf-header: rgba(17, 21, 20, 0.9);
+  --mf-surface: #191e1c;
+  --mf-paper: #1d2321;
+  --mf-input: #1d2321;
   --mf-text: #e8e4da;
   --mf-text-strong: #f1ede3;
   --mf-heading: #ede8da;
@@ -52,9 +52,9 @@
   --mf-bronze-text: #e2c691;
   --mf-green-text: #9fd0bc;
   --mf-error: #f0a3a3;
-  --mf-line: #2a433c;
-  --mf-line-soft: #24392f;
-  --mf-line-2: #3b5750;
+  --mf-line: #2c3330;
+  --mf-line-soft: #252b29;
+  --mf-line-2: #3b4440;
   --mf-line-strong: #5e8c7c;
   --mf-hover-line: #c9a36a;
   --mf-tint-green: #1f3a33;
@@ -62,7 +62,7 @@
   --mf-tint-bronze-2: #2e2619;
   --mf-tint-bronze-3: #2b2419;
   --mf-bronze-soft: #5a4628;
-  --mf-bar: #26403a;
+  --mf-bar: #2a3230;
   --mf-btn: #2c6352;
   --mf-btn-hover: #367560;
   color-scheme: dark;

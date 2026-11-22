@@ -99,7 +99,6 @@ export default function MesMissionsPage() {
       <PageHeader
         title={t('missions.myTitle')}
         subtitle={t('missions.mySubtitle')}
-        icon={<ClipboardList className="h-5 w-5" />}
       />
 
       {!listQ.isLoading && !listQ.isError && rows.length > 0 && (
@@ -115,7 +114,7 @@ export default function MesMissionsPage() {
               aria-pressed={segment === item.key}
               onClick={() => setSegment(item.key)}
               className={cn(
-                'flex flex-1 items-center justify-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium transition-colors',
+                'flex flex-1 items-center justify-center gap-1.5 whitespace-nowrap rounded-md px-2 py-2 text-sm font-medium transition-colors',
                 segment === item.key
                   ? 'bg-brand-600 text-white'
                   : 'text-ink-muted hover:bg-canvas hover:text-ink',

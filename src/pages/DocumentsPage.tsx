@@ -130,7 +130,6 @@ export default function DocumentsPage() {
   return (
     <div>
       <PageHeader
-        icon={<FileText className="h-5 w-5" />}
         title={t('documentsPage.title')}
         subtitle={t('documentsPage.subtitle')}
       />
@@ -215,7 +214,7 @@ export default function DocumentsPage() {
                 setSize(Number(e.target.value))
                 setPage(0)
               }}
-              className="w-20"
+              className="w-24"
             >
               {PAGE_SIZES.map((value) => (
                 <option key={value} value={value}>
@@ -251,7 +250,53 @@ export default function DocumentsPage() {
             description={isFiltering ? undefined : t('documentsPage.emptyHint')}
           />
         ) : (
-          <div className="overflow-x-auto">
+          <>
+          {/* Téléphone : une carte par document, avec les boutons PDF en dessous */}
+          <ul className="divide-y divide-line lg:hidden">
+            {rows.map((doc) => {
+              const busy = pdfM.isPending && pdfM.variables?.doc.id === doc.id
+              return (
+                <li key={doc.id} className="flex flex-col gap-2.5 px-4 py-3.5">
+                  <button
+                    type="button"
+                    onClick={() => navigate(`/dossiers/${doc.caseId}?tab=documents`)}
+                    className="flex items-start justify-between gap-3 text-start"
+                  >
+                    <span className="min-w-0">
+                      <span className="block truncate font-medium text-ink">{t(`documentKind.${doc.kind}`)}</span>
+                      <span className="block truncate text-xs text-ink-muted">
+                        <span dir="ltr">{doc.caseRef}</span> · {doc.caseClientName ?? '—'} · {fmt.date(doc.createdAt)}
+                      </span>
+                    </span>
+                    <StatusBadge value={doc.status} label={t(`documentStatus.${doc.status}`)} />
+                  </button>
+                  {doc.status === 'APPROVED' && (
+                    <div className="flex gap-2">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        icon={<Eye className="h-4 w-4" />}
+                        disabled={busy}
+                        onClick={() => pdfM.mutate({ doc, inline: true })}
+                      >
+                        {t('documents.pdfView')}
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        icon={<Download className="h-4 w-4" />}
+                        disabled={busy}
+                        onClick={() => pdfM.mutate({ doc, inline: false })}
+                      >
+                        {t('documents.pdfDownload')}
+                      </Button>
+                    </div>
+                  )}
+                </li>
+              )
+            })}
+          </ul>
+          <div className="hidden overflow-x-auto lg:block">
             <table className="w-full min-w-[56rem] text-sm">
               <thead>
                 <tr className="border-b border-line bg-canvas/60 text-xs uppercase tracking-wide text-ink-soft">
@@ -359,6 +404,7 @@ export default function DocumentsPage() {
               </tbody>
             </table>
           </div>
+          </>
         )}
 
         {!query.isLoading && !query.isError && (

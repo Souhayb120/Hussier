@@ -62,7 +62,6 @@ export default function TenantsPage() {
   return (
     <div>
       <PageHeader
-        icon={<Building2 className="h-5 w-5" />}
         title={t('tenants.title')}
         subtitle={t('tenants.subtitle')}
         actions={

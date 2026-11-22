@@ -65,7 +65,9 @@ export function CaseProgress({
   const approved = docs.some((d) => d.status === 'APPROVED') || caseStatus === 'CLOSED'
 
   // étapes terminées, dans l'ordre
-  const done = [true, hasMission, fieldDone, awaiting || approved, approved]
+  const reached = [true, hasMission, fieldDone, awaiting || approved, approved]
+  // une étape est faite si elle ou une étape suivante l'est (ex. PV approuvé = terrain fait)
+  const done = reached.map((_, i) => reached.slice(i).some(Boolean))
   const current = done.indexOf(false) // -1 = tout est fini
 
   // la prochaine chose à faire, du plus avancé au moins avancé
@@ -112,7 +114,7 @@ export function CaseProgress({
               </span>
               <span
                 className={cn(
-                  'w-full truncate text-2xs sm:text-xs',
+                  'w-full text-2xs leading-tight sm:text-xs', // retour à la ligne plutôt que « … » sur téléphone
                   isCurrent ? 'font-semibold text-ink' : 'text-ink-muted',
                 )}
               >

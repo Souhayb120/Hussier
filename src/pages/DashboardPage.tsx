@@ -22,7 +22,6 @@ import {
   Skeleton,
   StatusBadge,
 } from '../components/ui'
-import { GeometricPattern } from '../components/GeometricPattern'
 import { useFormatters } from '../lib/format'
 import { cn } from '../lib/utils'
 
@@ -108,25 +107,18 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-5">
-      {/* Bandeau d'accueil */}
-      <section className="relative overflow-hidden rounded-xl bg-brand-900 px-6 py-7 text-white sm:px-8 sm:py-8">
-        <GeometricPattern className="pointer-events-none absolute inset-0 h-full w-full text-white opacity-[0.04]" />
-        <div className="relative">
-          <p className="text-2xs font-semibold uppercase tracking-wider text-white/60">
-            {t('dashboard.title')}
-          </p>
-          <h1 className="mt-1.5 text-2xl font-bold tracking-tight sm:text-3xl">
-            {t('dashboard.greeting', { name: user?.username ?? '' })}
-          </h1>
-          <p className="mt-0.5 text-sm text-gold-300 tabnum">
-            {fmt.dateLong(new Date().toISOString())}
-          </p>
-          <p className="mt-2 max-w-xl text-sm text-white/75">{t('dashboard.subtitle')}</p>
-        </div>
-      </section>
+      {/* Accueil : un simple titre, comme les autres pages */}
+      <header className="pb-1">
+        <h1 className="text-22 font-semibold tracking-tight text-ink sm:text-28">
+          {t('dashboard.greeting', { name: user?.username ?? '' })}
+        </h1>
+        <p className="mt-1 text-sm text-ink-muted">
+          <span className="tabnum">{fmt.dateLong(new Date().toISOString())}</span> · {t('dashboard.subtitle')}
+        </p>
+      </header>
 
       {/* Bande de synthèse cliquable */}
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         <SummaryCard
           icon={<FolderOpen className="h-5 w-5" />}
           label={t('dashboard.summaryCases')}
@@ -193,7 +185,7 @@ export default function DashboardPage() {
                   <li key={c.id}>
                     <Link
                       to={`/dossiers/${c.id}`}
-                      className="flex items-center justify-between gap-3 px-5 py-3.5 transition hover:bg-canvas"
+                      className="flex flex-col gap-2 px-5 py-3.5 transition hover:bg-canvas sm:flex-row sm:items-center sm:justify-between sm:gap-3"
                     >
                       <div className="min-w-0">
                         <p className="truncate font-medium text-ink">{c.clientName}</p>
@@ -201,7 +193,7 @@ export default function DashboardPage() {
                           <span className="tabnum">{c.ref}</span> · {c.subject}
                         </p>
                       </div>
-                      <div className="flex shrink-0 flex-wrap items-center justify-end gap-2">
+                      <div className="flex shrink-0 flex-wrap items-center gap-2 sm:justify-end">
                         <StatusBadge
                           value={c.caseStatus}
                           label={t(`caseStatus.${c.caseStatus}`)}
@@ -326,7 +318,7 @@ function SummaryCard({
       </div>
       <span
         className={cn(
-          'flex h-10 w-10 shrink-0 items-center justify-center rounded-lg transition-colors',
+          'hidden h-10 w-10 shrink-0 items-center justify-center rounded-lg transition-colors sm:flex',
           !active && 'bg-brand-50 text-brand-600 group-hover:bg-brand-600 group-hover:text-white',
           accent === 'gold' && value > 0 &&
             'bg-gold-50 text-gold-700 group-hover:bg-gold-600 group-hover:text-white',

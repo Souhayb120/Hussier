@@ -61,7 +61,7 @@ export default {
         display: ['Amiri', '"IBM Plex Sans Arabic"', 'serif'],
       },
       boxShadow: {
-        card: '0 1px 2px rgba(7, 56, 45, 0.05), 0 6px 16px -8px rgba(7, 56, 45, 0.12)',
+        card: '0 1px 2px rgba(7, 56, 45, 0.04), 0 4px 12px -6px rgba(7, 56, 45, 0.08)',
         pop: '0 16px 48px -12px rgba(4, 42, 33, 0.28)',
         focus: '0 0 0 3px rgba(11, 77, 60, 0.18)',
       },

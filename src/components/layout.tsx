@@ -17,6 +17,7 @@ import {
   X,
 } from 'lucide-react'
 import { cn, initials } from '../lib/utils'
+import { ConfirmDialog } from './ui'
 import { useTheme } from '../lib/theme'
 import { useAuth } from '../auth/AuthProvider'
 import type { Capability } from '../features/auth/permissions'
@@ -30,16 +31,16 @@ type ShellVariant = 'cabinet' | 'platform'
 function Logo({ compact }: { compact?: boolean }) {
   const { t } = useTranslation()
   return (
-    <div className="flex items-center gap-2.5">
+    <div className="flex min-w-0 items-center gap-2.5">
       <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-brand-700 text-white shadow-sm ring-1 ring-white/15">
         <Scale className="h-5 w-5" />
       </span>
       {!compact && (
-        <span className="leading-tight">
-          <span className="block text-base font-bold tracking-tight text-white">
+        <span className="min-w-0 leading-tight">
+          <span className="block text-base font-bold tracking-tight text-ink">
             {t('app.name')}
           </span>
-          <span className="block text-2xs text-white/50">{t('app.tagline')}</span>
+          <span className="block truncate text-2xs text-ink-soft" title={t('app.tagline')}>{t('app.tagline')}</span>
         </span>
       )}
     </div>
@@ -110,7 +111,7 @@ function SidebarNav({
     <nav className="flex flex-1 flex-col gap-6 overflow-y-auto px-3 py-4 scroll-thin">
       {groups.map((group) => (
         <div key={group.title} className="flex flex-col gap-1">
-          <p className="px-3 pb-1 text-2xs font-semibold uppercase tracking-wider text-white/40">
+          <p className="px-3 pb-1 text-2xs font-semibold uppercase tracking-wider text-ink-soft">
             {group.title}
           </p>
           {group.items.map((item) => (
@@ -123,8 +124,8 @@ function SidebarNav({
                 cn(
                   'relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors',
                   isActive
-                    ? 'bg-white/10 text-white'
-                    : 'text-white/70 hover:bg-white/5 hover:text-white',
+                    ? 'bg-brand-50 text-brand-700'
+                    : 'text-ink-muted hover:bg-canvas hover:text-ink',
                 )
               }
             >
@@ -163,30 +164,30 @@ function Sidebar({
   return (
     <div
       className={cn(
-        'flex h-full flex-col bg-brand-900',
-        mobile ? 'w-72 max-w-[82vw] border-e border-white/10' : 'border-e border-white/10',
+        'flex h-full flex-col bg-surface',
+        mobile ? 'w-72 max-w-[82vw] border-e border-line' : 'border-e border-line',
       )}
     >
-      <div className="flex items-center justify-between px-4 py-4">
+      <div className="flex h-16 items-center justify-between gap-2 px-4">
         <Logo />
         {mobile && (
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg p-2 text-white/60 hover:bg-white/10 hover:text-white"
+            className="rounded-lg p-2 text-ink-soft hover:bg-canvas hover:text-ink"
             aria-label={t('common.close')}
           >
             <X className="h-5 w-5" />
           </button>
         )}
       </div>
-      <div className="h-px w-full bg-white/10" />
+      <div className="h-px w-full bg-line" />
       <SidebarNav variant={variant} onNavigate={onClose} />
-      <div className="border-t border-white/10 px-4 py-3">
+      <div className="border-t border-line px-4 py-3">
         {variant === 'platform' && (
-          <p className="pb-1 text-2xs text-white/40">{t('platform.header')}</p>
+          <p className="pb-1 text-2xs text-ink-soft">{t('platform.header')}</p>
         )}
-        <p className="text-center text-2xs text-white/40" dir="rtl" lang="ar">
+        <p className="text-center text-2xs text-ink-soft" dir="rtl" lang="ar">
           {t('app.short')}
         </p>
       </div>
@@ -258,6 +259,7 @@ function UserMenu() {
   const { t } = useTranslation()
   const { user, logout } = useAuth()
   const [open, setOpen] = useState(false)
+  const [confirmLogout, setConfirmLogout] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
   const navigate = useNavigate()
 
@@ -302,9 +304,9 @@ function UserMenu() {
           <button
             type="button"
             onClick={() => {
+              // on demande d'abord une confirmation (oui / non)
               setOpen(false)
-              logout()
-              navigate('/login', { replace: true })
+              setConfirmLogout(true)
             }}
             className="flex w-full items-center gap-2.5 px-4 py-3 text-sm font-medium text-red-600 transition hover:bg-red-50"
           >
@@ -313,6 +315,20 @@ function UserMenu() {
           </button>
         </div>
       )}
+
+      <ConfirmDialog
+        open={confirmLogout}
+        onClose={() => setConfirmLogout(false)}
+        onConfirm={() => {
+          setConfirmLogout(false)
+          logout()
+          navigate('/login', { replace: true })
+        }}
+        title={t('common.logout')}
+        message={t('common.logoutConfirm')}
+        confirmLabel={t('common.yes')}
+        cancelLabel={t('common.no')}
+      />
     </div>
   )
 }
@@ -373,7 +389,7 @@ function Shell({ variant, children }: { variant: ShellVariant; children: ReactNo
           </div>
         </header>
 
-        <main id="main-content" className="mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-8">
+        <main id="main-content" className="mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-10">
           {children}
         </main>
       </div>
@@ -396,30 +412,18 @@ export function PageHeader({
   title,
   subtitle,
   actions,
-  icon,
 }: {
   title: string
   subtitle?: string
   actions?: ReactNode
-  icon?: ReactNode
 }) {
   return (
-    <div className="mb-6">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div className="flex items-start gap-3">
-          {icon && (
-            <span className="hidden h-11 w-11 items-center justify-center rounded-xl bg-brand-50 text-brand-600 sm:flex">
-              {icon}
-            </span>
-          )}
-          <div>
-            <h1 className="text-22 font-bold tracking-tight text-ink sm:text-28">{title}</h1>
-            {subtitle && <p className="mt-1 text-sm text-ink-muted">{subtitle}</p>}
-          </div>
-        </div>
-        {actions && <div className="flex flex-wrap items-center gap-2">{actions}</div>}
+    <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+      <div className="min-w-0">
+        <h1 className="text-22 font-semibold tracking-tight text-ink sm:text-28">{title}</h1>
+        {subtitle && <p className="mt-1 text-sm text-ink-muted">{subtitle}</p>}
       </div>
-      <div className="mt-5 h-px w-full bg-gold-400/35" aria-hidden="true" />
+      {actions && <div className="flex flex-wrap items-center gap-2">{actions}</div>}
     </div>
   )
 }

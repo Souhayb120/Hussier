@@ -3,20 +3,15 @@ import { useTranslation } from 'react-i18next'
 import { LANG_KEY, applyDocumentLang } from '../i18n'
 import { LandingHeader } from '../components/landing/LandingHeader'
 import {
-  AiSection,
   ContactSection,
-  DocumentsSection,
   FaqSection,
   FeaturesSection,
   HeroSection,
   LandingFooter,
-  MarqueeStrip,
-  RolesSection,
-  TrustSection,
   VideoSection,
   WorkflowSection,
 } from '../components/landing/LandingSections'
-import { LANDING_COPY, type LandingLang, type LandingTheme } from '../components/landing/content'
+import { DEMO_VIDEO_URL, LANDING_COPY, type LandingLang, type LandingTheme } from '../components/landing/content'
 import '../components/landing/landing.css'
 
 /**
@@ -26,12 +21,12 @@ import '../components/landing/landing.css'
  */
 const THEME_KEY = 'mofawid.landingTheme'
 
-/** Thème choisi par le visiteur, sinon celui du système. */
+/** Thème choisi par le visiteur, sinon le mode clair. */
 function initialTheme(): LandingTheme {
   try {
     const saved = localStorage.getItem(THEME_KEY)
     if (saved === 'light' || saved === 'dark') return saved
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+    return 'light' // clair par défaut, sombre seulement si l'utilisateur le choisit
   } catch {
     return 'light'
   }
@@ -76,15 +71,11 @@ export default function LandingPage() {
         onThemeToggle={toggleTheme}
       />
       <main>
+        {/* short path: what it is → how it works → what you get → questions → contact */}
         <HeroSection copy={copy} />
-        <MarqueeStrip copy={copy} lang={lang} />
-        <RolesSection copy={copy} />
-        <FeaturesSection copy={copy} />
         <WorkflowSection copy={copy} />
-        <VideoSection copy={copy} />
-        <DocumentsSection copy={copy} />
-        <AiSection copy={copy} />
-        <TrustSection copy={copy} />
+        {DEMO_VIDEO_URL && <VideoSection copy={copy} />}
+        <FeaturesSection copy={copy} />
         <FaqSection copy={copy} />
         <ContactSection copy={copy} lang={lang} />
       </main>

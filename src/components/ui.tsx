@@ -197,7 +197,7 @@ const STATUS_TONES: Record<string, Tone> = {
   CANCELLED: 'neutral',
   // Documents
   DRAFT: 'neutral',
-  DRAFT_AI: 'brand',
+  DRAFT_AI: 'info',
   APPROVED: 'success',
   // Observations
   DIRECT: 'brand',
@@ -221,7 +221,7 @@ export function Badge({
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-1 rounded-md px-2.5 py-0.5 text-xs font-medium ring-1 ring-inset',
+        'inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium ring-1 ring-inset',
         TONE_CLASSES[tone],
         className,
       )}
@@ -232,7 +232,13 @@ export function Badge({
 }
 
 export function StatusBadge({ value, label }: { value: string; label: string }) {
-  return <Badge tone={STATUS_TONES[value] ?? 'neutral'}>{label}</Badge>
+  // pastille + point de couleur : le statut se voit d'un coup d'oeil
+  return (
+    <Badge tone={STATUS_TONES[value] ?? 'neutral'}>
+      <span className="h-1.5 w-1.5 rounded-full bg-current" aria-hidden="true" />
+      {label}
+    </Badge>
+  )
 }
 
 /**
@@ -259,7 +265,7 @@ export function DeadlineIndicator({
     : Math.round((d.getTime() - today.getTime()) / 86_400_000)
 
   const late = !closed && days < 0
-  const due = days === 0
+  const due = !closed && days === 0
   const near = !closed && !late && days > 0 && days <= 7
 
   return (
@@ -282,7 +288,6 @@ export function DeadlineIndicator({
       {!late && !due && near && (
         <Badge tone="warning">{t('deadline.soon', { count: days })}</Badge>
       )}
-      {closed && <Badge tone="neutral">{t('deadline.closed')}</Badge>}
     </span>
   )
 }
