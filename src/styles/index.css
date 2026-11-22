@@ -38,16 +38,18 @@
 
   .dark {
     /* neutres (mêmes que la landing en sombre) */
-    --canvas: 17 21 20;
-    --surface: 25 30 28;
-    --line: 44 51 48;
-    --ink: 232 228 218;
-    --ink-muted: 169 181 175;
-    --ink-soft: 138 152 147;
+    /* « nuit de pin » : fond vert-noir profond, cartes nettement au-dessus */
+    --canvas: 11 19 17;
+    --surface: 19 30 27;
+    --line: 37 53 48;
+    --ink: 236 233 224;
+    --ink-muted: 172 186 180;
+    --ink-soft: 134 151 145;
     /* slate */
     --slate-50: 30 35 33; --slate-100: 38 44 42; --slate-200: 50 57 54; --slate-300: 68 77 73; --slate-400: 106 115 111; --slate-500: 141 149 145; --slate-600: 167 174 170; --slate-700: 195 201 198; --slate-800: 218 222 220; --slate-900: 10 12 11; --slate-950: 5 6 6;
     /* brand */
-    --brand-50: 22 48 42; --brand-100: 28 60 51; --brand-200: 37 73 63; --brand-300: 52 96 79; --brand-600: 44 99 82; --brand-700: 54 117 96; --brand-800: 36 87 74;
+    /* émeraude plus vive ; texte blanc sur 600 ≈ 4.9:1, sur 700 ≈ 6:1 (AA) */
+    --brand-50: 17 50 41; --brand-100: 22 64 52; --brand-200: 31 80 66; --brand-300: 47 104 85; --brand-600: 30 128 98; --brand-700: 25 112 86; --brand-800: 20 96 74;
     --brand-text-50: 238 244 241; --brand-text-100: 216 231 223; --brand-text-200: 179 207 194; --brand-text-300: 138 177 160; --brand-text-400: 93 144 124; --brand-text-500: 127 185 163; --brand-text-600: 140 199 176; --brand-text-700: 159 208 188; --brand-text-800: 182 220 203; --brand-text-900: 207 232 221; --brand-text-950: 227 242 235;
     /* gold */
     --gold-50: 42 35 24; --gold-100: 56 45 28; --gold-200: 84 67 42; --gold-300: 122 98 53;
@@ -74,6 +76,52 @@
 
   .dark .input:focus {
     @apply border-brand-400;
+  }
+
+  /* ---- Mode sombre « vivant » : profondeur, lumière, atmosphère ---- */
+
+  /* deux halos très doux derrière le contenu : émeraude en haut, or en bas (fixes au défilement) */
+  .dark body {
+    background-image:
+      radial-gradient(60rem 40rem at 60% -12%, rgb(30 128 98 / 0.17), transparent 60%),
+      radial-gradient(50rem 36rem at 105% 110%, rgb(217 162 66 / 0.07), transparent 60%);
+    background-attachment: fixed;
+  }
+
+  /* les ombres claires ne se voient pas sur fond sombre : ombres noires + un liseré de lumière en haut */
+  .dark .card,
+  .dark .shadow-card {
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.04),
+      0 1px 2px rgb(0 0 0 / 0.35),
+      0 10px 28px -14px rgb(0 0 0 / 0.65);
+  }
+
+  .dark .shadow-pop {
+    box-shadow:
+      0 0 0 1px rgb(var(--line)),
+      inset 0 1px 0 rgb(255 255 255 / 0.05),
+      0 24px 60px -12px rgb(0 0 0 / 0.75);
+  }
+
+  /* bouton principal : une lueur émeraude discrète */
+  .dark button.bg-brand-600,
+  .dark a.bg-brand-600 {
+    box-shadow: 0 8px 22px -10px rgb(30 128 98 / 0.65);
+  }
+
+  /* les champs sont « creusés » dans la carte : un peu plus sombres qu'elle */
+  .dark .input {
+    background-color: rgb(var(--canvas) / 0.6);
+  }
+
+  .dark .input:hover:not(:disabled):not(:focus) {
+    @apply border-brand-300;
+  }
+
+  .dark ::selection {
+    background-color: rgb(30 128 98 / 0.45);
+    color: rgb(var(--ink));
   }
 
   html {
@@ -169,6 +217,15 @@
 
   .scroll-thin::-webkit-scrollbar-track {
     background: transparent;
+  }
+
+  /* en sombre, la barre de défilement grise ne se voyait plus */
+  .dark .scroll-thin {
+    scrollbar-color: rgba(172, 186, 180, 0.28) transparent;
+  }
+
+  .dark .scroll-thin::-webkit-scrollbar-thumb {
+    background-color: rgba(172, 186, 180, 0.25);
   }
 
   .no-scrollbar::-webkit-scrollbar {
