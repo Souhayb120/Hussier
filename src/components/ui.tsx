@@ -3,8 +3,11 @@
  * ========================================================================== */
 
 import {
+  cloneElement,
   forwardRef,
+  isValidElement,
   useEffect,
+  useId,
   useRef,
   type ButtonHTMLAttributes,
   type InputHTMLAttributes,
@@ -109,15 +112,22 @@ export function Field({
   children: ReactNode
   className?: string
 }) {
+  // Tie the label to its field (screen readers read the label, a click on it focuses the field).
+  // Only for a single field child (Input, Select, Textarea…), not for a wrapping <div>.
+  const autoId = useId()
+  const field =
+    isValidElement<{ id?: string }>(children) && children.type !== 'div' ? children : null
+  const fieldId = field ? (field.props.id ?? autoId) : undefined
+
   return (
     <div className={cn('flex flex-col', className)}>
       {label && (
-        <label className="label">
+        <label className="label" htmlFor={fieldId}>
           {label}
           {required && <span className="ms-1 text-red-500">*</span>}
         </label>
       )}
-      {children}
+      {field ? cloneElement(field, { id: fieldId }) : children}
       {error ? (
         <span className="error-text">{error}</span>
       ) : hint ? (

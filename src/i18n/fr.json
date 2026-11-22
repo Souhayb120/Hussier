@@ -521,7 +521,9 @@
     "date": "Date invalide.",
     "number": "Veuillez saisir un nombre valide.",
     "positive": "Le montant ne peut pas être négatif.",
-    "paidExceedsTotal": "Le montant payé ne peut pas dépasser le montant total."
+    "paidExceedsTotal": "Le montant payé ne peut pas dépasser le montant total.",
+    "min8": "Au moins 8 caractères.",
+    "passwordMismatch": "Les deux mots de passe ne correspondent pas."
   },
   "notFound": {
     "title": "Page introuvable",
@@ -706,5 +708,26 @@
   "theme": {
     "toDark": "Passer en mode sombre",
     "toLight": "Passer en mode clair"
+  },
+  "profile": {
+    "menu": "Mon profil",
+    "title": "Mon profil",
+    "subtitle": "Vos informations personnelles et votre mot de passe.",
+    "office": "Étude",
+    "noOffice": "Plateforme (aucune étude)",
+    "adminManaged": "L'identifiant et le rôle sont gérés par l'administrateur de l'étude.",
+    "infoTitle": "Mes informations",
+    "save": "Enregistrer",
+    "saved": "Profil mis à jour.",
+    "emailTaken": "Cette adresse e-mail est déjà utilisée par un autre compte.",
+    "passwordTitle": "Mot de passe",
+    "passwordHint": "Saisissez votre mot de passe actuel, puis le nouveau.",
+    "currentPassword": "Mot de passe actuel",
+    "newPassword": "Nouveau mot de passe",
+    "confirmPassword": "Confirmer le nouveau mot de passe",
+    "changePassword": "Changer le mot de passe",
+    "passwordChanged": "Mot de passe modifié.",
+    "wrongPassword": "Le mot de passe actuel est incorrect.",
+    "samePassword": "Le nouveau mot de passe doit être différent de l'actuel."
   }
 }

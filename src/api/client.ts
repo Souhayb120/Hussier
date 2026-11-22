@@ -308,6 +308,21 @@ export interface UserResponse {
   role: Role
   licenceNumber?: string | null
   createdAt?: string
+  /** Nom de l'étude (null pour le super admin). */
+  tenantName?: string | null
+}
+
+/** Ce que l'utilisateur connecté peut modifier dans son propre profil. */
+export interface ProfilePayload {
+  email: string
+  nom?: string
+  prenom?: string
+  phone?: string
+}
+
+export interface PasswordChangePayload {
+  currentPassword: string
+  newPassword: string
 }
 
 export interface UserPayload {
@@ -712,6 +727,12 @@ export const api = {
     update: (id: string, body: UserPayload) =>
       request<UserResponse>(`/users/${id}`, { method: 'PUT', body: JSON.stringify(body) }),
     remove: (id: string) => request<void>(`/users/${id}`, { method: 'DELETE' }),
+    /** Profil de l'utilisateur connecté (tous les rôles). */
+    me: () => request<UserResponse>('/users/me'),
+    updateMe: (body: ProfilePayload) =>
+      request<UserResponse>('/users/me', { method: 'PUT', body: JSON.stringify(body) }),
+    changePassword: (body: PasswordChangePayload) =>
+      request<void>('/users/me/password', { method: 'PUT', body: JSON.stringify(body) }),
   },
 
   tenants: {

@@ -10,6 +10,7 @@ import DashboardPage from './pages/DashboardPage'
 import CasesPage from './pages/CasesPage'
 import CaseDetailPage from './pages/CaseDetailPage'
 import DocumentsPage from './pages/DocumentsPage'
+import ProfilePage from './pages/ProfilePage'
 import MissionsPage from './pages/MissionsPage'
 import MesMissionsPage from './pages/MesMissionsPage'
 import MissionDetailPage from './pages/MissionDetailPage'
@@ -93,6 +94,9 @@ export default function App() {
             </RequireRole>
           }
         />
+
+        {/* Mon profil : tous les rôles */}
+        <Route path="profil" element={<ProfilePage />} />
 
         <Route
           path="documents"

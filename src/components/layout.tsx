@@ -13,6 +13,7 @@ import {
   Moon,
   Scale,
   Sun,
+  UserRound,
   Users,
   X,
 } from 'lucide-react'
@@ -301,6 +302,14 @@ function UserMenu() {
             <p className="text-sm font-semibold text-ink">{displayName}</p>
             <p className="text-2xs text-ink-muted">{t(`roles.${user.role}`)}</p>
           </div>
+          <NavLink
+            to="/profil"
+            onClick={() => setOpen(false)}
+            className="flex w-full items-center gap-2.5 px-4 py-3 text-sm font-medium text-ink transition hover:bg-canvas"
+          >
+            <UserRound aria-hidden="true" className="h-4 w-4" />
+            {t('profile.menu')}
+          </NavLink>
           <button
             type="button"
             onClick={() => {

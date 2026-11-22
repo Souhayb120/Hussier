@@ -113,6 +113,26 @@ export const userSchema = z.object({
   active: z.boolean().optional(),
 })
 
+// « Mon profil » : ce que l'utilisateur peut modifier lui-même
+export const profileSchema = z.object({
+  email: z.string().trim().min(1, { message: 'validation.required' }).email({ message: 'validation.email' }),
+  nom: z.string().trim().optional().or(z.literal('')),
+  prenom: z.string().trim().optional().or(z.literal('')),
+  phone: z.string().trim().optional().or(z.literal('')),
+})
+
+// 8 caractères minimum, comme le back-end (@Size(min = 8))
+export const passwordChangeSchema = z
+  .object({
+    currentPassword: requiredString(),
+    newPassword: z.string().min(8, { message: 'validation.min8' }),
+    confirmPassword: requiredString(),
+  })
+  .refine((values) => values.newPassword === values.confirmPassword, {
+    message: 'validation.passwordMismatch',
+    path: ['confirmPassword'],
+  })
+
 export const tenantSchema = z.object({
   name: requiredString(),
   slug: requiredString(),
@@ -156,5 +176,7 @@ export type PresenceValues = z.infer<typeof presenceSchema>
 export type DocumentValues = z.infer<typeof documentSchema>
 export type BillingValues = z.infer<typeof billingSchema>
 export type UserValues = z.infer<typeof userSchema>
+export type ProfileValues = z.infer<typeof profileSchema>
+export type PasswordChangeValues = z.infer<typeof passwordChangeSchema>
 export type TenantValues = z.infer<typeof tenantSchema>
 export type TenantAdminValues = z.infer<typeof tenantAdminSchema>
