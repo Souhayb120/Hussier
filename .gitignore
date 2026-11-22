@@ -2,6 +2,14 @@ node_modules
 dist
 dist-ssr
 *.local
+
+# local config: never commit
+.env
+.env.*
+!.env.example
+
+# Git Bash crash dumps
+*.stackdump
 .vite
 npm-debug.log*
 yarn-debug.log*
