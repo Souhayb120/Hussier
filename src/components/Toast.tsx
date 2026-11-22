@@ -64,7 +64,12 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     <ToastContext.Provider value={value}>
       {children}
       {createPortal(
-        <div className="pointer-events-none fixed inset-x-0 top-4 z-[60] flex flex-col items-center gap-2 px-4 sm:items-end sm:pe-6">
+        // always mounted so screen readers announce each new message
+        <div
+          role="status"
+          aria-live="polite"
+          className="pointer-events-none fixed inset-x-0 top-4 z-[60] flex flex-col items-center gap-2 px-4 sm:items-end sm:pe-6"
+        >
           {items.map((item) => {
             const Icon = ICONS[item.type]
             return (
@@ -77,7 +82,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
                   'transition hover:bg-canvas',
                 )}
               >
-                <Icon className={cn('mt-0.5 h-5 w-5 shrink-0', STYLES[item.type])} />
+                <Icon aria-hidden="true" className={cn('mt-0.5 h-5 w-5 shrink-0', STYLES[item.type])} />
                 <span className="text-sm text-ink">{item.message}</span>
               </button>
             )

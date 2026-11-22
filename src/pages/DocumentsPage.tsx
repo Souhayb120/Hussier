@@ -1,8 +1,8 @@
 import { useEffect, useState, type ReactNode } from 'react'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
-import { ArrowDown, ArrowUp, ChevronsUpDown, Download, Eye, FileText, FolderOpen, X } from 'lucide-react'
+import { ArrowDown, ArrowUp, ChevronsUpDown, Download, Eye, FileText, FolderOpen, Trash2, X } from 'lucide-react'
 import {
   api,
   DOCUMENT_KINDS,
@@ -12,9 +12,11 @@ import {
   type DocumentStatus,
 } from '../api/client'
 import { useToast } from '../components/Toast'
+import { useAuth } from '../auth/AuthProvider'
 import {
   Button,
   Card,
+  ConfirmDialog,
   EmptyState,
   Input,
   Pagination,
@@ -39,8 +41,16 @@ export default function DocumentsPage() {
   const { toast } = useToast()
   const navigate = useNavigate()
   const fmt = useFormatters()
+  const queryClient = useQueryClient()
+  const { can } = useAuth()
+  // ADMIN only; an approved document is locked (the back-end refuses it too)
+  const canRemove = (doc: DocumentResponse) => can('documents:delete') && doc.status !== 'APPROVED'
+  // says which document: two drafts of the same case differ by their creation time
+  const deleteLabel = (doc: DocumentResponse) =>
+    `${t('common.delete')} : ${t(`documentKind.${doc.kind}`)} ${doc.caseRef ?? ''} · ${fmt.dateTime(doc.createdAt)}`
 
   const [page, setPage] = useState(0)
+  const [pendingDelete, setPendingDelete] = useState<DocumentResponse | null>(null)
   const [size, setSize] = useState(10)
   const [search, setSearch] = useState('')
   const [kind, setKind] = useState<'ALL' | DocumentKind>('ALL')
@@ -95,6 +105,23 @@ export default function DocumentsPage() {
   })
 
   const rows = query.data?.content ?? []
+
+  const deleteM = useMutation({
+    mutationFn: (id: string) => api.documents.remove(id),
+    onSuccess: () => {
+      // last row of a page that is not the first: go back one page instead of showing an empty one
+      if (rows.length === 1 && page > 0) setPage(page - 1)
+      // 'documents' also refreshes the documents tab of the case page
+      queryClient.invalidateQueries({ queryKey: ['documents'] })
+      queryClient.invalidateQueries({ queryKey: ['case'] })
+      toast(t('documents.deleted'))
+      setPendingDelete(null)
+    },
+    onError: (error) => {
+      toast(t(apiErrorKey(error)), 'error')
+      setPendingDelete(null)
+    },
+  })
 
   // Un clic sur une colonne trie dessus ; un deuxième clic inverse l'ordre.
   const changeSort = (field: DocumentSortField) => {
@@ -292,6 +319,20 @@ export default function DocumentsPage() {
                       </Button>
                     </div>
                   )}
+                  {canRemove(doc) && (
+                    <div className="flex">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="text-red-600 hover:bg-red-50"
+                        icon={<Trash2 className="h-4 w-4" />}
+                        aria-label={deleteLabel(doc)}
+                        onClick={() => setPendingDelete(doc)}
+                      >
+                        {t('common.delete')}
+                      </Button>
+                    </div>
+                  )}
                 </li>
               )
             })}
@@ -396,6 +437,18 @@ export default function DocumentsPage() {
                           >
                             <FolderOpen className="h-4 w-4" />
                           </Button>
+                          {canRemove(doc) && (
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="text-red-600 hover:bg-red-50"
+                              aria-label={deleteLabel(doc)}
+                              title={t('common.delete')}
+                              onClick={() => setPendingDelete(doc)}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          )}
                         </div>
                       </td>
                     </tr>
@@ -419,6 +472,17 @@ export default function DocumentsPage() {
           />
         )}
       </Card>
+
+      <ConfirmDialog
+        open={pendingDelete !== null}
+        onClose={() => setPendingDelete(null)}
+        onConfirm={() => pendingDelete && deleteM.mutate(pendingDelete.id)}
+        title={t('documents.confirmDeleteTitle')}
+        message={t('documents.confirmDelete')}
+        confirmLabel={t('common.delete')}
+        cancelLabel={t('common.cancel')}
+        loading={deleteM.isPending}
+      />
     </div>
   )
 }
