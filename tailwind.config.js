@@ -14,27 +14,27 @@ export default {
       // Les couleurs viennent des variables CSS de src/styles/index.css :
       // elles changent quand <html> a la classe "dark" (mode sombre).
       colors: {
-        // Vert institutionnel profond (justice / Maroc) — token vert principal.
+        // Vert du drapeau marocain #006233 (« Vert Maroc ») : boutons, liens, navigation.
         brand: scale('brand', FULL),
-        // Accent « brass » — or discret (sceaux, papier officiel).
+        // Accent or laiton (en attente, à approuver, avertissements).
         gold: scale('gold', SHORT),
-        // Neutres chauds (encre légèrement verte).
+        // Texte presque noir, légèrement vert.
         ink: {
           DEFAULT: color('ink'),
           muted: color('ink-muted'),
           soft: color('ink-soft'),
         },
-        // « Papier » : fond ivoire chaud (vert très foncé en sombre).
+        // Fond blanc chaud (vert-noir profond en sombre).
         canvas: color('canvas'),
         surface: color('surface'),
         line: color('line'),
         // Brique (destructif) — rouge maçonné, réservé aux actions graves.
         red: scale('red', SHORT),
-        // Neutres chauds (remplace le slate froid).
+        // Neutres chauds.
         slate: scale('slate', FULL),
-        // Info « bleu-vert » atténué (remplace le sky SaaS).
+        // Info : bleu ciel, distinct du vert.
         sky: scale('sky', FULL),
-        // Vert « actif » / « réglé » (profond, pour les succès).
+        // Succès : vert « feuille » plus jaune que la marque (en cours, approuvé, payé).
         emerald: scale('emerald', FULL),
         // Mauve neutre discret (rares accents, supprimés progressivement).
         violet: scale('violet', SHORT),
@@ -61,9 +61,9 @@ export default {
         display: ['Amiri', '"IBM Plex Sans Arabic"', 'serif'],
       },
       boxShadow: {
-        card: '0 1px 2px rgba(7, 56, 45, 0.04), 0 4px 12px -6px rgba(7, 56, 45, 0.08)',
-        pop: '0 16px 48px -12px rgba(4, 42, 33, 0.28)',
-        focus: '0 0 0 3px rgba(11, 77, 60, 0.18)',
+        card: '0 1px 2px rgba(2, 52, 29, 0.04), 0 4px 12px -6px rgba(2, 52, 29, 0.08)',
+        pop: '0 16px 48px -12px rgba(1, 33, 18, 0.28)',
+        focus: '0 0 0 3px rgba(0, 98, 51, 0.2)',
       },
       borderRadius: {
         xl: '0.75rem',

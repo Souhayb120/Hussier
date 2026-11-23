@@ -8,7 +8,7 @@ import type { LandingCopy, LandingLang, LandingTheme } from './content'
 export function BrandMark({ lang, tight }: { lang: LandingLang; tight?: boolean }) {
   return (
     <span className="flex items-center gap-2.5">
-      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#173D35] text-white">
+      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#00421F] text-white">
         <Scale className="h-5 w-5" />
       </span>
       <span
@@ -41,6 +41,7 @@ export function LandingHeader({ copy, lang, onLangChange, theme, onThemeToggle }
   const otherLang: LandingLang = lang === 'ar' ? 'fr' : 'ar'
   const links = [
     { href: '#workflow', label: copy.nav.workflow },
+    { href: '#video', label: copy.video.eyebrow },
     { href: '#features', label: copy.nav.features },
     { href: '#faq', label: copy.nav.faq },
   ]

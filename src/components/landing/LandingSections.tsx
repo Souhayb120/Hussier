@@ -9,6 +9,7 @@ import {
   Folder,
   Lock,
   MapPin,
+  Play,
   Plus,
   Server,
   ShieldCheck,
@@ -99,7 +100,7 @@ export function HeroSection({ copy }: { copy: LandingCopy }) {
           <div
             role="img"
             aria-label={m.ariaLabel}
-            className="absolute inset-x-0 bottom-9 overflow-hidden rounded-[18px] border border-[color:var(--mf-line)] bg-[var(--mf-surface)] shadow-[0_40px_80px_-40px_rgba(15,43,37,0.45)]"
+            className="absolute inset-x-0 bottom-9 overflow-hidden rounded-[18px] border border-[color:var(--mf-line)] bg-[var(--mf-surface)] shadow-[0_40px_80px_-40px_rgba(1,33,18,0.45)]"
           >
             <div className="flex items-center gap-1.5 border-b border-[color:var(--mf-line-soft)] bg-[var(--mf-bg)] px-3.5 py-2.5">
               {[0, 1, 2].map((i) => (
@@ -115,7 +116,7 @@ export function HeroSection({ copy }: { copy: LandingCopy }) {
                   <div className="text-[11px] text-[color:var(--mf-subtle)]">{m.date}</div>
                   <div className="mf-display text-[17px] font-semibold text-[color:var(--mf-heading)] sm:text-[18px]">{m.title}</div>
                 </div>
-                <span className="whitespace-nowrap rounded-full bg-[#173D35] px-3 py-1 text-[11px] font-semibold text-white sm:text-[12px]">{m.newCase}</span>
+                <span className="whitespace-nowrap rounded-full bg-[#00421F] px-3 py-1 text-[11px] font-semibold text-white sm:text-[12px]">{m.newCase}</span>
               </div>
               <div className="grid grid-cols-3 gap-2 sm:gap-2.5">
                 {m.kpis.map((k, i) => (
@@ -134,7 +135,7 @@ export function HeroSection({ copy }: { copy: LandingCopy }) {
                     </div>
                     <div className={cn('h-1 overflow-hidden rounded', k.pending ? 'bg-[var(--mf-bronze-soft)]' : 'bg-[var(--mf-bar)]')}>
                       <div
-                        className={cn('mf-fill h-full rounded', k.pending ? 'bg-[#A67C45]' : i === 0 ? 'bg-[#173D35]' : 'bg-[#245748]')}
+                        className={cn('mf-fill h-full rounded', k.pending ? 'bg-[#A67C45]' : i === 0 ? 'bg-[#00421F]' : 'bg-[#006233]')}
                         style={{ width: `${k.progress}%`, animationDelay: `${1 + i * 0.2}s` }}
                       />
                     </div>
@@ -154,7 +155,7 @@ export function HeroSection({ copy }: { copy: LandingCopy }) {
                     <span className="mf-swap-a rounded-full bg-[var(--mf-tint-bronze)] px-2.5 text-center text-[color:var(--mf-bronze-text)] [grid-area:1/1]">
                       {m.rowSwap.pending}
                     </span>
-                    <span className="mf-swap-b rounded-full bg-[#173D35] px-2.5 text-center text-white [grid-area:1/1]">{m.rowSwap.approved}</span>
+                    <span className="mf-swap-b rounded-full bg-[#00421F] px-2.5 text-center text-white [grid-area:1/1]">{m.rowSwap.approved}</span>
                   </span>
                 </div>
               </div>
@@ -232,11 +233,11 @@ export function WorkflowSection({ copy }: { copy: LandingCopy }) {
   const last = w.steps.length - 1
   return (
     <section id="workflow" className="scroll-mt-24 px-4 sm:px-6">
-      <div className="relative mx-auto max-w-[1240px] overflow-hidden rounded-[32px] bg-[#173D35] text-[#EDF2EF] sm:rounded-[40px]">
+      <div className="relative mx-auto max-w-[1240px] overflow-hidden rounded-[32px] bg-[#00421F] text-[#EEF5F0] sm:rounded-[40px]">
         <div className="relative mx-auto max-w-[1200px] px-6 py-16 sm:px-12 lg:py-[88px]">
           <div className="mf-rv mb-12 flex max-w-[660px] flex-col gap-3 lg:mb-16">
             <H2 light>{w.title}</H2>
-            <p className="m-0 text-[#BFD0C8]">{w.lead}</p>
+            <p className="m-0 text-[#BFD6C8]">{w.lead}</p>
           </div>
           <div className="relative">
             <div aria-hidden="true" className="absolute start-5 end-[calc(20%-42px)] top-[19px] hidden h-0.5 rounded bg-white/10 lg:block" />
@@ -250,7 +251,7 @@ export function WorkflowSection({ copy }: { copy: LandingCopy }) {
                     <span
                       className={cn(
                         'mf-dot mf-display flex h-10 w-10 items-center justify-center rounded-full border-2 font-semibold',
-                        ai ? 'border-[#C9A36A] bg-[#C9A36A] text-[#14201C]' : final ? 'border-[#F7F4EC] bg-[#F7F4EC] text-[#173D35]' : 'border-[#C9A36A] bg-[#173D35] text-[#F7F4EC]',
+                        ai ? 'border-[#C9A36A] bg-[#C9A36A] text-[#111412]' : final ? 'border-[#F7F4EC] bg-[#F7F4EC] text-[#00421F]' : 'border-[#C9A36A] bg-[#00421F] text-[#F7F4EC]',
                       )}
                     >
                       {final ? <Check className="h-[18px] w-[18px]" strokeWidth={2.6} /> : i + 1}
@@ -258,13 +259,13 @@ export function WorkflowSection({ copy }: { copy: LandingCopy }) {
                     <span
                       className={cn(
                         'self-start rounded-full px-2.5 text-xs',
-                        ai ? 'bg-[#E2C691] font-semibold text-[#14201C]' : final ? 'bg-[#F7F4EC] font-semibold text-[#173D35]' : 'border border-white/20 text-[#CFE0D8]',
+                        ai ? 'bg-[#E2C691] font-semibold text-[#111412]' : final ? 'bg-[#F7F4EC] font-semibold text-[#00421F]' : 'border border-white/20 text-[#BFD6C8]',
                       )}
                     >
                       {s.role}
                     </span>
                     <h3 className="mf-display m-0 text-[19px] font-semibold text-white">{s.title}</h3>
-                    <p className="m-0 text-[15px] text-[#BFD0C8]">{s.text}</p>
+                    <p className="m-0 text-[15px] text-[#BFD6C8]">{s.text}</p>
                   </li>
                 )
               })}
@@ -280,16 +281,35 @@ export function WorkflowSection({ copy }: { copy: LandingCopy }) {
 
 export function VideoSection({ copy }: { copy: LandingCopy }) {
   const v = copy.video
-  // pas de vidéo pour l'instant : on ne montre pas une section vide
-  if (!DEMO_VIDEO_URL) return null
   return (
     <section id="video" className="mx-auto max-w-[1200px] scroll-mt-24 px-4 pt-20 sm:px-6 lg:pt-[104px]">
       <div className="mf-rv mb-10 flex flex-col items-center gap-3 text-center">
         <H2>{v.title}</H2>
         <p className="m-0 max-w-[540px] text-[color:var(--mf-muted)]">{v.lead}</p>
       </div>
-      <div className="mf-rv mx-auto max-w-[980px] rounded-[32px] border border-[color:var(--mf-line)] bg-[var(--mf-surface)] p-2.5 shadow-[0_40px_80px_-50px_rgba(15,43,37,0.45)] sm:p-3">
-          <video src={DEMO_VIDEO_URL} controls preload="metadata" aria-label={v.label} className="aspect-video w-full rounded-[22px] bg-[#173D35]" />
+      <div className="mf-rv mx-auto max-w-[980px] rounded-[32px] border border-[color:var(--mf-line)] bg-[var(--mf-surface)] p-2.5 shadow-[0_40px_80px_-50px_rgba(1,33,18,0.45)] sm:p-3">
+        {DEMO_VIDEO_URL ? (
+          <video src={DEMO_VIDEO_URL} controls preload="metadata" aria-label={v.label} className="aspect-video w-full rounded-[22px] bg-[#00421F]" />
+        ) : (
+          // emplacement réservé : même cadre 16:9 que la vidéo, rien de cliquable (pas de faux bouton)
+          <div
+            role="img"
+            aria-label={`${v.label} : ${v.placeholder}`}
+            className="relative flex aspect-video w-full flex-col items-center justify-center gap-4 overflow-hidden rounded-[22px] bg-[#00421F] text-center"
+          >
+            <div
+              aria-hidden="true"
+              className="absolute inset-0 bg-[radial-gradient(60%_70%_at_50%_40%,rgba(201,163,106,0.22),transparent_70%)]"
+            />
+            <span
+              aria-hidden="true"
+              className="relative flex h-16 w-16 items-center justify-center rounded-full border border-[#C9A36A]/70 bg-white/5 sm:h-20 sm:w-20"
+            >
+              <Play className="ms-1 h-7 w-7 text-[#E2C691] sm:h-8 sm:w-8" fill="currentColor" />
+            </span>
+            <p className="relative m-0 px-6 text-base font-medium text-[#F7F4EC] sm:text-lg">{v.placeholder}</p>
+          </div>
+        )}
       </div>
     </section>
   )
@@ -330,7 +350,7 @@ export function DocumentsSection({ copy }: { copy: LandingCopy }) {
         })}
         <a
           href="#contact"
-          className="mf-card mf-rv flex flex-col items-center justify-center gap-3.5 rounded-b-[22px] rounded-t-full border border-[#173D35] bg-[#173D35] px-6 pb-6 pt-16 text-center text-[#F7F4EC]"
+          className="mf-card mf-rv flex flex-col items-center justify-center gap-3.5 rounded-b-[22px] rounded-t-full border border-[#00421F] bg-[#00421F] px-6 pb-6 pt-16 text-center text-[#F7F4EC]"
         >
           <span className="mf-display text-[20px] font-semibold leading-snug">{d.ctaTitle}</span>
           <span className="inline-flex items-center gap-2 font-semibold text-[#E2C691]">
@@ -379,7 +399,7 @@ export function AiSection({ copy }: { copy: LandingCopy }) {
 
         <div role="img" aria-label={a.doc.ariaLabel} className="mf-rv relative py-7">
           <div aria-hidden="true" className="absolute inset-y-0 inset-x-[10%] rounded-b-[32px] rounded-t-full bg-[var(--mf-tint-green)]" />
-          <div className="relative mx-[4%] flex flex-col gap-3 rounded-[18px] border border-[color:var(--mf-line)] bg-[var(--mf-paper)] px-6 py-7 shadow-[0_30px_60px_-36px_rgba(20,32,28,0.4)] sm:mx-[6%] sm:px-7">
+          <div className="relative mx-[4%] flex flex-col gap-3 rounded-[18px] border border-[color:var(--mf-line)] bg-[var(--mf-paper)] px-6 py-7 shadow-[0_30px_60px_-36px_rgba(1,33,18,0.4)] sm:mx-[6%] sm:px-7">
             <div className="flex justify-between gap-2 text-xs text-[color:var(--mf-subtle)]">
               <span>{a.doc.caseRef}</span>
               <span className="rounded-full bg-[var(--mf-tint-bronze)] px-2.5 font-semibold text-[color:var(--mf-bronze-text)]">{a.doc.badge}</span>
@@ -398,7 +418,7 @@ export function AiSection({ copy }: { copy: LandingCopy }) {
               <span className="border-t border-[color:var(--mf-faint)] pt-1.5 text-xs text-[color:var(--mf-subtle)]">{a.doc.signature}</span>
               <span className="inline-flex gap-2">
                 <span className="rounded-full border border-[color:var(--mf-line-2)] px-3.5 py-1.5 text-[13px] font-semibold text-[color:var(--mf-heading)]">{a.changes}</span>
-                <span className="rounded-full bg-[#173D35] px-4 py-1.5 text-[13px] font-semibold text-white">{a.approve}</span>
+                <span className="rounded-full bg-[#00421F] px-4 py-1.5 text-[13px] font-semibold text-white">{a.approve}</span>
               </span>
             </div>
           </div>
@@ -487,20 +507,20 @@ export function ContactSection({ copy, lang }: { copy: LandingCopy; lang: Landin
 
   return (
     <section id="contact" className="scroll-mt-24 px-4 pb-20 sm:px-6 lg:pb-[104px]">
-      <div className="relative mx-auto max-w-[1240px] overflow-hidden rounded-[32px] bg-[#173D35] sm:rounded-[40px]">
+      <div className="relative mx-auto max-w-[1240px] overflow-hidden rounded-[32px] bg-[#00421F] sm:rounded-[40px]">
         <div className="relative grid items-center gap-10 p-6 sm:p-10 lg:grid-cols-2 lg:gap-14 lg:p-[72px]">
-          <div className="mf-rv flex flex-col gap-4 text-[#EDF2EF]">
+          <div className="mf-rv flex flex-col gap-4 text-[#EEF5F0]">
             <H2 light>{c.title}</H2>
-            <p className="m-0 text-[#BFD0C8]">{c.lead}</p>
+            <p className="m-0 text-[#BFD6C8]">{c.lead}</p>
             {(CONTACT_EMAIL || CONTACT_PHONE) && (
               <div className="flex flex-col gap-1.5 text-[15px]">
                 {CONTACT_EMAIL && (
-                  <a href={`mailto:${CONTACT_EMAIL}`} dir="ltr" className="self-start text-[#DCE7E1] hover:text-white">
+                  <a href={`mailto:${CONTACT_EMAIL}`} dir="ltr" className="self-start text-[#DCEBE2] hover:text-white">
                     {CONTACT_EMAIL}
                   </a>
                 )}
                 {CONTACT_PHONE && (
-                  <a href={`tel:${CONTACT_PHONE.replace(/\s/g, '')}`} dir="ltr" className="self-start text-[#DCE7E1] hover:text-white">
+                  <a href={`tel:${CONTACT_PHONE.replace(/\s/g, '')}`} dir="ltr" className="self-start text-[#DCEBE2] hover:text-white">
                     {CONTACT_PHONE}
                   </a>
                 )}
@@ -579,7 +599,7 @@ export function LandingFooter({ copy, lang }: { copy: LandingCopy; lang: Landing
         </nav>
         <nav aria-label={f.contact} className="flex flex-col gap-2 text-[15px]">
           <div className="text-sm font-semibold text-[color:var(--mf-heading)]">{f.contact}</div>
-          {DEMO_VIDEO_URL && <a href="#video" className={linkCls}>{copy.video.eyebrow}</a>}
+          <a href="#video" className={linkCls}>{copy.video.eyebrow}</a>
           <a href="#contact" className={linkCls}>{copy.contactCta}</a>
           <Link to="/login" className={linkCls}>{copy.login}</Link>
         </nav>

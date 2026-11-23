@@ -37,11 +37,12 @@ const VARIANTS: Record<Variant, string> = {
   danger: 'bg-red-600 text-white hover:bg-red-700 active:bg-red-800 disabled:bg-red-300',
 }
 
+// Sur écran tactile, cibles d'au moins 44 px (SKILL.md, priorité 2) ; à la souris, tailles d'origine.
 const SIZES: Record<Size, string> = {
-  sm: 'h-9 gap-1.5 rounded-md px-3 text-sm',
-  md: 'h-10 gap-2 rounded-lg px-4 text-sm',
+  sm: 'h-9 gap-1.5 rounded-md px-3 text-sm [@media(pointer:coarse)]:h-11',
+  md: 'h-10 gap-2 rounded-lg px-4 text-sm [@media(pointer:coarse)]:h-11',
   lg: 'h-11 gap-2 rounded-lg px-5 text-[0.95rem]',
-  icon: 'h-9 w-9 rounded-md',
+  icon: 'h-9 w-9 rounded-md [@media(pointer:coarse)]:h-11 [@media(pointer:coarse)]:w-11',
 }
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {

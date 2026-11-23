@@ -342,7 +342,7 @@ export function AttachmentsPanel({
                       <span className="truncate font-medium text-ink">{file.originalName}</span>
                       {/* Dans le dossier : on montre les fichiers venus du terrain */}
                       {!isMission && file.missionId && (
-                        <span className="inline-flex shrink-0 items-center gap-1 rounded-md bg-amber-50 px-2 py-0.5 text-2xs font-medium text-amber-700">
+                        <span className="inline-flex shrink-0 items-center gap-1 rounded-md bg-gold-50 px-2 py-0.5 text-2xs font-medium text-gold-700">
                           <ClipboardList className="h-3 w-3" />
                           {t('attachments.fromMission')}
                         </span>

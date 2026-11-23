@@ -11,7 +11,7 @@ import {
   VideoSection,
   WorkflowSection,
 } from '../components/landing/LandingSections'
-import { DEMO_VIDEO_URL, LANDING_COPY, type LandingLang, type LandingTheme } from '../components/landing/content'
+import { LANDING_COPY, type LandingLang, type LandingTheme } from '../components/landing/content'
 import '../components/landing/landing.css'
 
 /**
@@ -74,7 +74,8 @@ export default function LandingPage() {
         {/* short path: what it is → how it works → what you get → questions → contact */}
         <HeroSection copy={copy} />
         <WorkflowSection copy={copy} />
-        {DEMO_VIDEO_URL && <VideoSection copy={copy} />}
+        {/* vidéo de démonstration : emplacement réservé tant que DEMO_VIDEO_URL est vide */}
+        <VideoSection copy={copy} />
         <FeaturesSection copy={copy} />
         <FaqSection copy={copy} />
         <ContactSection copy={copy} lang={lang} />

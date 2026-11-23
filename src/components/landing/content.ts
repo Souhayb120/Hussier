@@ -10,7 +10,10 @@ export type LandingTheme = 'light' | 'dark'
 export const CONTACT_EMAIL: string = ''
 export const CONTACT_PHONE: string = ''
 
-/** Lien de la vidéo de démonstration ; `null` affiche l'emplacement réservé. */
+/**
+ * Vidéo de démonstration. `null` = emplacement réservé (cadre 16:9 « bientôt »).
+ * Pour l'ajouter : mettre le fichier dans public/ (ex. public/demo.mp4) puis écrire '/demo.mp4' ici.
+ */
 export const DEMO_VIDEO_URL: string | null = null
 
 interface Item {
