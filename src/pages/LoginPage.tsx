@@ -17,7 +17,7 @@ import {
 import { loginSchema, type LoginValues } from '../lib/validators'
 import { useAuth } from '../auth/AuthProvider'
 import { Button, Field, Input } from '../components/ui'
-import { GeometricPattern } from '../components/GeometricPattern'
+import { LoginIllustration } from '../components/LoginIllustration'
 import { cn } from '../lib/utils'
 
 const DEMO_ACCOUNTS: Array<{ username: string; password: string; role: string }> = [
@@ -68,8 +68,6 @@ export default function LoginPage() {
     <div className="grid min-h-screen bg-canvas lg:grid-cols-2">
       {/* Panneau de marque */}
       <div className="relative hidden overflow-hidden bg-brand-900 p-12 text-white lg:flex lg:flex-col lg:justify-between">
-        <GeometricPattern className="pointer-events-none absolute inset-0 h-full w-full text-white opacity-[0.05]" />
-
         <div className="relative flex items-center gap-3">
           <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/10 ring-1 ring-white/15">
             <Scale className="h-6 w-6" />
@@ -81,6 +79,9 @@ export default function LoginPage() {
         </div>
 
         <div className="relative max-w-md">
+          {/* image du projet : arc marocain, drapeau, balance de la justice, actes scellés */}
+          {/* hauteur liée à l'écran : tient sur un portable de 800 px de haut sans défilement */}
+          <LoginIllustration className="mb-6 h-[clamp(9rem,26vh,16rem)] w-auto" />
           <h1 className="text-3xl font-bold leading-snug">{t('auth.heroTitle')}</h1>
           <p className="mt-4 text-white/75">{t('auth.heroText')}</p>
 
